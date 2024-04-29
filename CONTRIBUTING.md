@@ -1,8 +1,4 @@
-## Signing
-
-Please sign [the Contributor License Agreement](https://cla-assistant.io/DenizenScript/Denizen-For-Bukkit).
-
-## Mini-license pre-warning
+## License
 
 By contributing to the project, you give up all rights to your contribution\*.
 
