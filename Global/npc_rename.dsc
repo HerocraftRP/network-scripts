@@ -20,10 +20,11 @@ npc_rename_me_command:
   description: no
   usage: /npc_rename_me absolutely not
   script:
-    - define entity <server.match_player[<context.args.get[1]>].flag[temp.last_npc_interacted]>
+    - adjust <queue> linked_player:<server.match_player[<context.args.get[1]>]> if:<player.exists.not>
+    - define entity <player.flag[temp.last_npc_interacted]>
     - define name <[entity].flag[true_name]>
     - if <[entity].has_flag[rep_display]>:
-      - define name "<[name]><&nl><&e><[entity].flag[rep_display].to_titlecase> Reputation<&co> <player.flag[job.<[entity].flag[rep_display]>.reputation]||0>"
+      - define name "<[name]> <&e>(Your Reputation<&co> <player.flag[job.<[entity].flag[rep_display]>.reputation]||0>)"
     - adjust <[entity]> custom_name:<[name]>
     - wait 1t
     - adjust <[entity]> custom_name

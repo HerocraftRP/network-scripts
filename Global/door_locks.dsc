@@ -1,15 +1,25 @@
 door_lock_create:
   type: task
   debug: false
-  definitions: uuid
+  definitions: uuid|location
   script:
+    - if !<[location].exists>:
+      - define location <player.cursor_on>
     - define uuid <util.random_uuid> if:<[uuid].exists.not>
-    - define door_blocks <player.cursor_on.flood_fill[4]>
+    - define door_blocks <[location].flood_fill[4]>
     - foreach <[door_blocks]>:
       - flag <[value]> on_right_click:door_lock_interact
       - flag <[value]> door.lock:<[uuid]>
       - flag <[value]> door.locked:true
       - flag <[value]> door.group:<[door_blocks]>
+
+master_key:
+  type: item
+  debug: false
+  material: tripwire_hook
+  display name: <&6>Skeleton Key
+  flags:
+    right_click_script: door_lock_cancel
 
 door_lock_interact:
   type: task
@@ -19,15 +29,15 @@ door_lock_interact:
       - if !<context.location.flag[door.locked]>:
         - stop
       - else:
-        - narrate "<&e>This door is locked."
+        - narrate "<&e>This is locked."
     - else:
-      - if <player.item_in_hand.has_flag[lock_uuid]> && <player.item_in_hand.flag[lock_uuid]>:
+      - if ( <player.item_in_hand.has_flag[lock_uuid]> && <player.item_in_hand.flag[lock_uuid]> == <context.location.flag[door.lock]> ) || <player.item_in_hand.script.name||null> == master_key:
         - if <context.location.flag[door.locked]>:
-          - run start_timed_action "def:<&e>Unlocking Door|2s|door_unlock|<context.location>" def.can_move:false
+          - run start_timed_action "def:<&e>Unlocking...|2s|door_unlock|<context.location>" def.can_move:false
         - else:
-          - run start_timed_action "def:<&e>Locking Door|2s|door_lock|<context.location>" def.can_move:false
+          - run start_timed_action "def:<&e>Locking...|2s|door_lock|<context.location>" def.can_move:false
       - else:
-        - run start_timed_action "def:<&c>Lockpicking Door|10s|door_lockpick|<context.location>" def.can_move:false def.must_stay_sneak:true def.animation_task:door_lockpick_animation
+        - run start_timed_action "def:<&c>Lockpicking...|10s|door_lockpick|<context.location>" def.can_move:false def.must_stay_sneak:true def.animation_task:door_lockpick_animation
     - determine cancelled
 
 door_lock_key:

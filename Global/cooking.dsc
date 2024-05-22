@@ -74,8 +74,20 @@ cooking_get_water:
   type: task
   debug: false
   script:
+    - determine passively cancelled
     - ratelimit <player> 5t
-    - if <player.item_in_hand.material.name> == bucket:
+    - if <player.item_in_hand.material.name> == bucket || <player.item_in_hand.material.name> == glass_bottle || <player.item_in_hand.material.name> == toughasnails_empty_canteen:
       - wait 1t
+      - run start_timed_action "def:<&6>Retrieving Water|5s|cooking_get_water_callback|<player.item_in_hand>" def.can_swap_items:false def.can_move:false
+
+cooking_get_water_callback:
+  type: task
+  debug: false
+  definitions: item_in_hand
+  script:
+    - if <player.item_in_hand.material.name> == bucket:
       - inventory set slot:<player.held_item_slot> o:water_bucket
-      - narrate "<&e>You retrieve water from the well"
+    - else if <player.item_in_hand.material.name> == glass_bottle:
+      - inventory set slot:<player.held_item_slot> o:potion[potion_effects=li@map@[type=WATER;upgraded=false;extended=false]|]
+    - else if <player.item_in_hand.material.name> == toughasnails_empty_canteen:
+      - inventory set slot:<player.held_item_slot> o:toughasnails_water_canteen

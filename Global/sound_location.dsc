@@ -1,10 +1,3 @@
-test_event:
-  type: world
-  debug: false
-  events:
-    on time changes in world:
-      - flag server test:<util.time_now>
-
 sound_command:
   type: command
   name: sound_location

@@ -2,13 +2,12 @@ unbundle_bundle:
   type: task
   debug: false
   script:
-    - if <player.is_sneaking>:
-        - define job <context.item.script.name.before[_]>
-        - define item <context.item.script.name.after[_].before[_bundle]>
-        - define amount <server.flag[google_data.<[job]>.<[item]>.bundle_size]>
-        - flag player temp.timed_action.item:<[item]>
-        - flag player temp.timed_action.amount:<[amount]>
-        - run start_timed_action "def:<&6>Unbundling...|5s|unbundle_callback|<context.item_in_hand>" def.must_stay_sneak:true def.can_swap_items:false def.animation_task:unbundle_animation
+      - define job <player.item_in_hand.script.name.before[_]>
+      - define item <player.item_in_hand.script.name.before[_bundle]>
+      - define amount <server.flag[google_data.<[job]>.<[item].after[_]>.bundle_size]>
+      - flag player temp.timed_action.item:<[item]>
+      - flag player temp.timed_action.amount:<[amount]>
+      - run start_timed_action "def:<&6>Unbundling...|5s|unbundle_callback|<player.item_in_hand>" def.can_swap_items:false def.animation_task:unbundle_animation
 
 unbundle_animation:
   type: task
@@ -21,4 +20,6 @@ unbundle_callback:
   debug: false
   script:
     - take iteminhand
-    - give item:<player.flag[temp.timed_action.item]> quantity:<player.flag[temp.timed_action.amount]>
+    - give item:empty_bundle
+    - repeat <player.flag[temp.timed_action.amount]>:
+      - give item:<item[<player.flag[temp.timed_action.item]>].with_flag[UUID=<util.random_uuid>]>

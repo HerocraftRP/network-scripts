@@ -35,6 +35,7 @@ block_properties:
         - determine passively cancelled
         - inventory open d:generic[title=<context.location.flag[infinite_chest]>;size=27;contents=<context.location.inventory.list_contents>]
     on player right clicks block location_flagged:on_right_click ignorecancelled:true:
+        - stop if:<context.location.if_null[null].equals[null]>
         - if <context.location.flag[on_right_click].object_type> == List:
           - foreach <context.location.flag[on_right_click]>:
             - inject <[value]>

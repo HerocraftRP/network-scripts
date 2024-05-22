@@ -4,171 +4,308 @@ blacksmith_data:
   data:
     craftables:
       stone:
+        need_shift: true
+        shift: <[location].center.below[0.62].forward[0.25]>
         items:
-          magistuarmory_stone_stylet:
+          blacksmith_ magistuarmory_stone_stylet:
             material_cost:
               stone: 3
               wooden_tool_handle: 2
             rep_needed: 0
             rep_gained: 0.1
-          magistuarmory_stone_shortsword:
+            need_shift: true
+            shift: <[location].above[0.1].forward[0.4].right[0.2]>
+          blacksmith_ magistuarmory_stone_shortsword:
             material_cost:
               stone: 6
               wooden_tool_handle: 2
             rep_needed: 5
             rep_gained: 0.1
-          magistuarmory_stone_katzbalger:
+            need_shift: true
+            shift: <[location].above[0.1].forward[0.4].right[0.2]>
+          blacksmith_ magistuarmory_stone_katzbalger:
             material_cost:
               stone: 10
               wooden_tool_handle: 2
             rep_needed: 10
             rep_gained: 0.1
-          magistuarmory_stone_pike:
+            need_shift: true
+            shift: <[location].above[0.1].forward[0.4].right[0.2]>
+          blacksmith_ magistuarmory_stone_pike:
             material_cost:
               stone: 10
               wooden_tool_handle: 2
             rep_needed: 20
             rep_gained: 0.1
-          magistuarmory_stone_ahlspiess:
+            need_shift: true
+            shift: <[location].above[0.1].forward[0.4].right[0.2]>
+          blacksmith_ magistuarmory_stone_ahlspiess:
             material_cost:
               stone: 15
               wooden_tool_handle: 2
             rep_needed: 25
             rep_gained: 0.1
-          magistuarmory_stone_estoc:
+            need_shift: true
+            shift: <[location].above[0.1].forward[0.4].right[0.2]>
+          blacksmith_ magistuarmory_stone_estoc:
             material_cost:
               stone: 15
               wooden_tool_handle: 2
             rep_needed: 30
             rep_gained: 0.1
-          magistuarmory_stone_bastardsword:
+            need_shift: true
+            shift: <[location].above[0.1].forward[0.4].right[0.2]>
+          blacksmith_ magistuarmory_stone_bastardsword:
             material_cost:
               stone: 15
               wooden_tool_handle: 2
             rep_needed: 35
             rep_gained: 0.1
-          magistuarmory_stone_claymore:
+            need_shift: true
+            shift: <[location].above[0.1].forward[0.4].right[0.2]>
+          blacksmith_ magistuarmory_stone_claymore:
             material_cost:
               stone: 15
               wooden_tool_handle: 2
             rep_needed: 40
             rep_gained: 0.1
-          magistuarmory_stone_zweihander:
+            need_shift: true
+            shift: <[location].above[0.1].forward[0.4].right[0.2]>
+          blacksmith_ magistuarmory_stone_zweihander:
             material_cost:
               stone: 15
               wooden_tool_handle: 2
             rep_needed: 45
             rep_gained: 0.1
-          magistuarmory_stone_flamebladedsword:
-            material_cost:
-              stone: 15
-              wooden_tool_handle: 2
-            rep_needed: 50
-            rep_gained: 0.1
-          magistuarmory_stone_lochaberaxe:
+            need_shift: true
+            shift: <[location].above[0.1].forward[0.4].right[0.2]>
+          blacksmith_ magistuarmory_stone_lochaberaxe:
             material_cost:
               stone: 15
               wooden_tool_handle: 2
             rep_needed: 55
             rep_gained: 0.1
-          magistuarmory_stone_concavehalberd:
+            need_shift: true
+            shift: <[location].above[0.1].forward[0.4].right[0.2]>
+          blacksmith_ magistuarmory_stone_concavehalberd:
             material_cost:
               stone: 15
               wooden_tool_handle: 2
             rep_needed: 60
             rep_gained: 0.1
-          magistuarmory_stone_heavymace:
+            need_shift: true
+            shift: <[location].above[0.1].forward[0.4].right[0.2]>
+          blacksmith_ magistuarmory_stone_heavymace:
             material_cost:
               stone: 15
               wooden_tool_handle: 2
             rep_needed: 65
             rep_gained: 0.1
-          magistuarmory_stone_heavywarhammer:
+            need_shift: true
+            shift: <[location].above[0.1].forward[0.4].right[0.2]>
+          blacksmith_ magistuarmory_stone_heavywarhammer:
             material_cost:
               stone: 15
               wooden_tool_handle: 2
             rep_needed: 70
             rep_gained: 0.1
-          magistuarmory_stone_lucernhammer:
+            need_shift: true
+            shift: <[location].above[0.1].forward[0.4].right[0.2]>
+          blacksmith_ magistuarmory_stone_lucernhammer:
             material_cost:
               stone: 15
               wooden_tool_handle: 2
             rep_needed: 75
             rep_gained: 0.1
-          magistuarmory_stone_morgenstern:
+            need_shift: true
+            shift: <[location].above[0.1].forward[0.4].right[0.2]>
+          blacksmith_ magistuarmory_stone_morgenstern:
             material_cost:
               stone: 15
               wooden_tool_handle: 2
             rep_needed: 80
             rep_gained: 0.1
-          magistuarmory_stone_guisarme:
+            need_shift: true
+            shift: <[location].above[0.1].forward[0.4].right[0.2]>
+          blacksmith_ magistuarmory_stone_guisarme:
             material_cost:
               stone: 15
               wooden_tool_handle: 2
             rep_needed: 85
             rep_gained: 0.1
-          aquaculture_stone_fillet_knife:
-            material_cost:
-              stone: 15
-              wooden_tool_handle: 2
-            rep_needed: 90
-            rep_gained: 0.1
-          magistuarmory_stone_heatershield:
+            need_shift: true
+            shift: <[location].above[0.1].forward[0.4].right[0.2]>
+          blacksmith_ magistuarmory_stone_heatershield:
             material_cost:
               stone: 15
               wooden_tool_handle: 2
             rep_needed: 95
             rep_gained: 0.1
-          magistuarmory_stone_target:
+            need_shift: true
+            shift: <[location].above[0.1].forward[0.4].right[0.2]>
+          blacksmith_ magistuarmory_stone_target:
             material_cost:
               stone: 15
               wooden_tool_handle: 2
             rep_needed: 100
             rep_gained: 0.1
-          magistuarmory_stone_buckler:
+            need_shift: true
+            shift: <[location].above[0.1].forward[0.4].right[0.2]>
+          blacksmith_ magistuarmory_stone_buckler:
             material_cost:
               stone: 15
               wooden_tool_handle: 2
             rep_needed: 105
             rep_gained: 0.1
-          magistuarmory_stone_rondache:
+            need_shift: true
+            shift: <[location].above[0.1].forward[0.4].right[0.2]>
+          blacksmith_ magistuarmory_stone_rondache:
             material_cost:
               stone: 15
               wooden_tool_handle: 2
             rep_needed: 110
             rep_gained: 0.1
-          magistuarmory_stone_tartsche:
+            need_shift: true
+            shift: <[location].above[0.1].forward[0.4].right[0.2]>
+          blacksmith_ magistuarmory_stone_tartsche:
             material_cost:
               stone: 15
               wooden_tool_handle: 2
             rep_needed: 115
             rep_gained: 0.1
-          magistuarmory_stone_ellipticalshield:
+            need_shift: true
+            shift: <[location].above[0.1].forward[0.4].right[0.2]>
+          blacksmith_ magistuarmory_stone_ellipticalshield:
             material_cost:
               stone: 15
               wooden_tool_handle: 2
             rep_needed: 120
             rep_gained: 0.1
-          magistuarmory_stone_roundshield:
+            need_shift: true
+            shift: <[location].above[0.1].forward[0.4].right[0.2]>
+          blacksmith_ magistuarmory_stone_roundshield:
             material_cost:
               stone: 15
               wooden_tool_handle: 2
             rep_needed: 125
             rep_gained: 0.1
-          magistuarmory_stone_pavese:
+            need_shift: true
+            shift: <[location].above[0.1].forward[0.4].right[0.2]>
+          blacksmith_ magistuarmory_stone_pavese:
             material_cost:
               stone: 15
               wooden_tool_handle: 2
             rep_needed: 130
             rep_gained: 0.1
-          magistuarmory_stone_kiteshield:
+            need_shift: true
+            shift: <[location].above[0.1].forward[0.4].right[0.2]>
+          blacksmith_ magistuarmory_stone_kiteshield:
             material_cost:
               stone: 15
               wooden_tool_handle: 2
             rep_needed: 135
             rep_gained: 0.1
+            need_shift: true
+            shift: <[location].above[0.1].forward[0.4].right[0.2]>
+      iron_ingot:
+        need_shift: false
+        items:
+          blacksmith_ magistuarmory_iron_stylet:
+            material_cost:
+              stone: 3
+              wooden_tool_handle: 2
+            rep_needed: 0
+            rep_gained: 0.1
+            need_shift: true
+            shift: <[location].above[0.1].right[0.2]>
 
+blacksmith_copper_ingot:
+  type: item
+  material: copper_ingot
+  display name: <&6>Copper Ingot
+  flags:
+    interaction:
+      1:
+        script: mining_packaging_interact
+        display: <&e>Bundle
+  lore:
+    - "<&7>___________________"
+    - ""
+    - <&a>Interaction 1<&co><&e> Bundle
+    - "<&7>___________________"
 
+blacksmith_iron_ingot:
+  type: item
+  material: iron_ingot
+  display name: <&6>Iron Ingot
+  flags:
+    interaction:
+      1:
+        script: mining_packaging_interact
+        display: <&e>Bundle
+  lore:
+    - "<&7>___________________"
+    - ""
+    - <&a>Interaction 1<&co><&e> Bundle
+    - "<&7>___________________"
+
+blacksmith_silver_ingot:
+  type: item
+  material: epicsamurai_silver_ingot
+  display name: <&6>Silver Ingot
+  flags:
+    interaction:
+      1:
+        script: mining_packaging_interact
+        display: <&e>Bundle
+  lore:
+    - "<&7>___________________"
+    - ""
+    - <&a>Interaction 1<&co><&e> Bundle
+    - "<&7>___________________"
+
+blacksmith_steel_ingot:
+  type: item
+  material: epicsamurai_steel_ingot
+  display name: <&6>Steel Ingot
+  flags:
+    interaction:
+      1:
+        script: mining_packaging_interact
+        display: <&e>Bundle
+  lore:
+    - "<&7>___________________"
+    - ""
+    - <&a>Interaction 1<&co><&e> Bundle
+    - "<&7>___________________"
+
+blacksmith_armor_stand:
+  type: entity
+  debug: false
+  entity_type: armor_stand
+  mechanisms:
+    armor_pose: <map.with[head].as[4.71,0,0]>
+    marker: true
+    gravity: false
+    visible: false
+
+blacksmith_material_interact:
+  type: task
+  debug: false
+  script:
+    - define location <context.location>
+    - if <player.item_in_hand.material.name> == air:
+      - if <[location].has_flag[armor_stand]>:
+        - inventory set slot:<player.held_item_slot> o:<[location].flag[armor_stand].equipment_map.get[helmet]>
+        - remove <[location].flag[armor_stand]>
+        - flag <[location]> armor_stand:!
+    - else if !<[location].has_flag[armor_stand]>:
+      - if <script[blacksmith_data].data_key[data.craftables.<player.item_in_hand.material.name>.need_shift]>:
+        - spawn <entity[blacksmith_armor_stand].with[equipment=<list[air|air|air|<player.item_in_hand.material.name>]>]> <script[blacksmith_data].parsed_key[data.craftables.<player.item_in_hand.material.name>.shift]> save:as
+      - else:
+        - spawn <entity[blacksmith_armor_stand].with[equipment=<list[air|air|air|<player.item_in_hand.material.name>]>]> <[location].center.below[0.65].forward[0.8]> save:as
+      - inventory set slot:<player.held_item_slot> o:air
+      - flag <[location]> armor_stand:<entry[as].spawned_entity>
 
 blacksmith_interact:
   type: task
@@ -198,14 +335,34 @@ blacksmith_cancelled:
   script:
     - foreach <player.flag[temp.timed_action.cost]> key:needed_item as:quantity:
       - give item:<[needed_item]> quantity:<[quantity]>
+    - if <player.flag[temp.timed_action.smithing_location].has_flag[armor_stand]>:
+      - remove <player.flag[temp.timed_action.smithing_location].flag[armor_stand]>
+    - flag <player.flag[temp.timed_action.smithing_location]> armor_stand:!
 
 blacksmithing_animation:
   type: task
   debug: false
   script:
+    - if !<player.flag[temp.timed_action.smithing_location].has_flag[armor_stand]>:
+      - flag <player> timed_action:!
+      - stop
     - animate animation:ARM_SWING <player>
     - wait 7t
-    - playsound sound:BLOCK_ANVIL_LAND <player.flag[temp.timed_action.smithing_location]> volume:0.25
+    - flag <player> temp.timed_action.count:<player.flag[temp.timed_action.count].add[1]||1>
+    - if <player.flag[temp.timed_action.count]> == 8:
+      - playeffect effect:redstone special_data:1.75|white at:<player.flag[temp.timed_action.smithing_location].center.above[0.8]> quantity:20 offset:0.25,0.25,0.25
+      - playsound sound:create:confirm <player> volume:0.5 custom
+      - if <script[blacksmith_data].data_key[data.craftables.<player.flag[temp.timed_action.material]>.items.<player.flag[temp.timed_action.smithing_result]>.need_shift]>:
+        - define location <player.flag[temp.timed_action.smithing_location].flag[armor_stand].location>
+        - remove <player.flag[temp.timed_action.smithing_location].flag[armor_stand]>
+        - define new_location <script[blacksmith_data].parsed_key[data.craftables.<player.flag[temp.timed_action.material]>.items.<player.flag[temp.timed_action.smithing_result]>.shift]>
+        - spawn <entity[blacksmith_armor_stand].with[equipment=<list[air|air|air|<player.flag[temp.timed_action.smithing_result]>]>]> <[new_location]> save:as
+        - flag <player.flag[temp.timed_action.smithing_location]> armor_stand:<entry[as].spawned_entity>
+      - equip <player.flag[temp.timed_action.smithing_location].flag[armor_stand]> head:<player.flag[temp.timed_action.smithing_result]>
+      - wait 2t
+      - playsound sound:BLOCK_ANVIL_LAND <player.flag[temp.timed_action.smithing_location]> volume:0.25
+    - else:
+      - playsound sound:BLOCK_ANVIL_LAND <player.flag[temp.timed_action.smithing_location]> volume:0.25
 
 blacksmith_job_inventory:
   type: inventory
@@ -220,27 +377,39 @@ blacksmith_callback:
   type: task
   debug: false
   script:
+    - if <player.flag[temp.timed_action.smithing_location].flag[armor_stand].equipment_map.get[helmet].material.name> != <player.flag[temp.timed_action.material]>:
+      - flag <player> temp.timed_action:!
+      - flag <player> timed_action:!
     - define data <script[blacksmith_data].data_key[data.craftables.<player.flag[temp.timed_action.material]>.items.<player.flag[temp.timed_action.smithing_result]>]>
     - define result_item <item[<player.flag[temp.timed_action.smithing_result]>]>
     - define durability_percentage <player.flag[job.blacksmith.reputation].if_null[0].div[<[data].get[rep_needed].add[100]>]>
     - define durability <[result_item].max_durability.sub[<[durability_percentage].mul[<[result_item].max_durability>]>]>
     - give item:<[result_item].with[durability=<[durability].round_down>]>
+    - remove <player.flag[temp.timed_action.smithing_location].flag[armor_stand]>
     - playsound sound:ENTITY_ITEM_PICKUP <player>
-    - run job_get_rep def:woodwork|<[data].get[rep_gained]>
+    - run job_get_rep def:blacksmith|<[data].get[rep_gained]>
 
 blacksmith_inventory_open:
   type: task
-  debug: true
+  debug: false
   script:
     - determine passively cancelled
     - wait 1t
     - stop if:<player.has_flag[temp.timed_action]>
+    - if <script[blacksmith_data].data_key[data.craftables].keys.contains[<player.item_in_hand.material.name>]>:
+      - inject blacksmith_material_interact
+      - stop
+    - else if <player.item_in_hand.material.name> == air:
+      - inject blacksmith_material_interact
+      - stop
+    - define material <context.location.flag[armor_stand].equipment_map.get[helmet].material.name||air>
+    - if <[material]> == air:
+      - stop
     - if <player.flag[temp.job.name]||null> != blacksmith:
       - narrate "<&c>You are not signed in for this job."
       - stop
     - stop if:<player.item_in_hand.material.name.equals[magistuarmory_blacksmith_hammer].not>
     - define inv <inventory[blacksmith_job_inventory]>
-    - define material stone
     - foreach <server.flag[job_data.reputation_tables.blacksmith.<[material]>]> key:repNeeded as:item:
       - if <player.flag[job.blacksmith.reputation]||0> < <[repNeeded]>:
         - foreach stop

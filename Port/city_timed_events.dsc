@@ -10,7 +10,7 @@ city_timed_events:
       - run toggle_bridge
       - run chime_bells
       - foreach <server.online_players.filter[has_flag[temp.job.name]]>:
-        - if <script[job_data].data_key[data.jobs.<player.flag[temp.job.name]>.job_shift]> == day:
+        - if <script[job_data].data_key[data.jobs.<[value].flag[temp.job.name]>.job_shift]> == day:
           - run job_sign_out player:<[value]>
 
 toggle_bridge:

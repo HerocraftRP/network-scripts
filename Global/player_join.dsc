@@ -3,14 +3,30 @@ player_join:
   debug: false
   events:
     on player join:
-      - execute as_server "hiddenNames nameplateVisible <player.name> false"
-      - cast effect:xaeroworldmap_no_world_map duration:24h no_ambient no_icon no_clear hide_particles
-      - cast effect:xaerominimap_no_minimap duration:24h no_ambient no_icon no_clear hide_particles
-      - flag <player> temp:!
       - determine passively NONE
-      - wait 5s
-      - adjust <player> gamemode:adventure
       - execute as_player vrc silent
-      - teleport <player> <server.flag[spawn]>
+      - wait 1t
+      - adjust <player> gamemode:adventure
+      - execute as_server "hiddenNames nameplateVisible <player.name> false"
+      - wait 10t
+      - run sql_restore_inventory if:<player.has_flag[initialized_now].not>
+      - flag <player> temp:!
+      - heal <player> 100
+      - adjust <player> food_level:5 if:<player.food_level.is_less_than[5]>
+      - adjust <player> thirst:5 if:<player.thirst.is_less_than[5]>
+      - wait 1s
+      - flag server name_map.<player.flag[data.name]>:<player>
+      - run sql_get_player_data
+      - adjust <player> name:<player.flag[data.name]>
+      - define guild <player.flag[character.guild.name]||no_guild>
+      - foreach <script[guild_data].data_key[data.<[guild]>.modifiers_by_rep.1]>:
+        - wait 1t
+        - if <[key]> == stamina_vessels:
+          - adjust <player> stamina_vessels:<[value]>
+        - if <[key]> == health:
+          - foreach <[value]> key:part as:health:
+            - part MAX part:<[part]> amount:<[health]>
     on player quits:
+      - run sql_set_inventory
+      - run sql_set_player_data
       - determine NONE

@@ -17,7 +17,7 @@ entity_flags:
     on entity_flagged:no_fall_damage_once damaged by FALL:
       - flag <context.entity> no_fall_damage_once:!
       - determine cancelled
-    on entity_flagged:no_damage damaged:
+    on entity_flagged:no_damage damaged by entity:
       - determine cancelled
     on entity_flagged:no_damage_once damaged:
       - flag <context.entity> invulnerable_once:!
@@ -85,15 +85,17 @@ entity_flags:
     # Player Flag and Server Flag, with preference on Player
     # Player Flag "join_location" - will teleport the player on join, clear flag afterwards
     # Server Flag "join_location" - will teleport the player on join, if no player flag is present
-    after player joins bukkit_priority:LOWEST priority:-100 server_flagged:join_location:
+    after player joins:
+        - wait 1s
         - if <server.has_flag[join_location.<player.uuid>]>:
           - teleport <player> <server.flag[join_location.<player.uuid>].parsed>
           - flag server join_location.<player.uuid>:!
-        - else if <server.has_flag[join_location.location]>:
-          - teleport <server.flag[join_location.location].parsed>
-        - else:
-          - flag server join_location:!
-    on entity_flagged:on_entity_added added to world:
+          - stop
+        - if <server.has_flag[join_location.main]>:
+          - teleport <server.flag[join_location.main].parsed>
+          - stop
+        - teleport <server.worlds.first.spawn_location>
+    on modded entity_flagged:on_entity_added joins world:
       - if <context.entity.flag[on_entity_added].object_type> == List:
         - foreach <context.entity.flag[on_entity_added]>:
           - inject <[value]>
@@ -148,12 +150,30 @@ entity_flags:
           - inject <[value]>
       - else:
         - inject <context.entity.flag[on_damaged]>
+    on modded entity_flagged:on_damaged hurt:
+      - if <context.entity.flag[on_damaged].object_type> == List:
+        - foreach <context.entity.flag[on_damaged]>:
+          - inject <[value]>
+      - else:
+        - inject <context.entity.flag[on_damaged]>
+    on entity_flagged:on_damaging damages entity bukkit_priority:low:
+      - if <context.entity.flag[on_damaging].object_type> == List:
+        - foreach <context.entity.flag[on_damaging]>:
+          - inject <[value]>
+      - else:
+        - inject <context.entity.flag[on_damaging]>
     on entity_flagged:on_death dies bukkit_priority:low:
       - if <context.entity.flag[on_death].object_type> == List:
         - foreach <context.entity.flag[on_death]>:
           - inject <[value]>
       - else:
         - inject <context.entity.flag[on_death]>
+    on modded entity_flagged:on_modded_death dies bukkit_priority:low:
+      - if <context.entity.flag[on_modded_death].object_type> == List:
+        - foreach <context.entity.flag[on_modded_death]>:
+          - inject <[value]>
+      - else:
+        - inject <context.entity.flag[on_modded_death]>
     on entity_flagged:on_breed breeds bukkit_priority:low:
       - if <context.entity.flag[on_breed].object_type> == List:
         - foreach <context.entity.flag[on_breed]>:
@@ -263,3 +283,11 @@ entity_flags:
           - inject <[value]>
       - else:
         - inject <context.dropped_by.flag[on_drops_item]>
+    on player consumed skill:
+      - if <context.name> == epicfight:basic_attack:
+        - if <player.has_flag[on_basic_attack]>:
+          - if <player.flag[on_basic_attack].object_type> == List:
+            - foreach <player.flag[on_basic_attack]>:
+              - inject <[value]>
+          - else:
+            - inject <player.flag[on_basic_attack]>

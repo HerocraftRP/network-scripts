@@ -34,11 +34,21 @@ apply_biome_teleport:
     - narrate "<&6>Biome Name<&co> <&e><[name]>"
     - teleport <player> <[target_loc]>
 
-apply_biome_mark_bad_spot:
+apply_biome_mark_location:
   type: command
   debug: false
-  name: report_bad_biome
-  usage: /report_bad_biome
-  description: reports an area needing biome work to Xeane
+  name: mark_biome
+  usage: /mark_biome
+  description: marks a biome to be placed here
+  permission: herocraft.admin
   script:
-    - flag server bad_biomes:->:<player.location>
+    - flag server biome_locations.<context.args.get[1]>:->:<player.location>
+
+apply_biomes_to_location:
+  type: task
+  debug: false
+  script:
+    - foreach <server.flag[biome_locations]> key:biome_name as:locations:
+      - foreach <[location]> as:block:
+        - adjust <[block].flood_fill[10]> biome:<biome[herocraft:<[biome_name]>]>
+        - wait 1t

@@ -29,7 +29,7 @@ job_data:
       cooking:
         category: production
         job_shift: unlimited
-      wizard:
+      mage:
         category: guild
         job_shift: unlimited
       ranger:
@@ -61,25 +61,17 @@ jobs_initialize_data:
   type: world
   debug: false
   build:
-    - flag server job_data:!
-    # all jobs
-    - foreach <script[job_data].data_key[data.jobs].keys> as:job:
-      - flag server job_data.all.<[job]>
-    # Reputation Tables for crafting
-    - foreach <list[blacksmith|woodwork|tailoring]> as:job:
-      - if <script[<[job]>_data].exists>:
-        - foreach <script[<[job]>_data].data_key[data.craftables].keys> as:type:
+    - flag server profession_data:!
+    # Capability Tables for crafting
+    - foreach <script[capabilities_data].data_key[capability].keys> as:capability:
+      - foreach next if:<script[capabilities_data].data_key[capability.<[capability]>.type].ends_with[production].not>
+      - define production_type <script[capabilities_data].data_key[capability.<[capability]>.type]>
+      - if <script[capabilities_data].data_key[capability.<[capability]>.crafting_menu]>:
+        - foreach <script[capabilities_data].data_key[capability.<[capability]>.materials].keys> as:material:
           - define map <map>
-          - foreach <script[<[job]>_data].data_key[data.craftables.<[type]>.items].keys> as:material:
-            - define map <[map].with[<[material]>].as[<script[<[job]>_data].data_key[data.craftables.<[type]>.items.<[material]>.rep_needed]>]>
-          - flag server job_data.reputation_tables.<[job]>.<[type]>:<[map].sort_by_value.invert>
-    # Reputation Conflicts between jobs
-    - foreach <script[job_data].data_key[data.jobs].keys> as:thisJob:
-      - foreach <script[job_data].data_key[data.jobs].keys> as:checkJob:
-        - if <[thisJob]> == <[checkJob]>:
-          - foreach next
-        - if <script[job_data].data_key[data.jobs.<[thisJob]>.category]> == <script[job_data].data_key[data.jobs.<[checkJob]>.category]>:
-          - flag server job_data.reputation_conflicts.<[thisJob]>:->:<[checkJob]>
+          - foreach <script[capabilities_data].data_key[capability.<[capability]>.materials.<[material]>.items].keys> as:item:
+            - define map <[map].with[<[item]>].as[<script[capabilities_data].data_key[capability.<[capability]>.materials.<[material]>.items.<[item]>.capability_needed]>]>
+          - flag server profession_data.capability_tables.<[capability]>.<[material]>:<[map].sort_by_value.invert>
   events:
     after server start:
       - run <script> path:build
@@ -96,9 +88,9 @@ job_get_rep:
       - stop
     - define current_rep <player.flag[job.<[job]>.reputation]||0>
     - flag <player> job.<[job]>.reputation:<[current_rep].add[<[rep]>]>
-    - foreach <server.flag[job_data.reputation_conflicts.<[job]>]> as:conflictJob:
-      - define newRep <element[0].max[<player.flag[job.<[conflictJob]>.reputation].sub[<[rep]>].if_null[0]>]>
-      - flag <player> job.<[conflictJob]>.reputation:<[newRep]>
+    #- foreach <server.flag[job_data.reputation_conflicts.<[job]>]> as:conflictJob:
+      #- define newRep <element[0].max[<player.flag[job.<[conflictJob]>.reputation].sub[<[rep]>].if_null[0]>]>
+      #- flag <player> job.<[conflictJob]>.reputation:<[newRep]>
 
 job_sign_in:
   type: task
@@ -110,15 +102,16 @@ job_sign_in:
       - if <player.flag[temp.job.name]> == <[job]>:
         - run job_sign_out
       - else:
-        - narrate "<&6>You can't work here right now."
+        - narrate "<&c>You can't work here right now."
+        - narrate "<&6>You are already signed in for <&b><player.flag[temp.job.name]><&6>."
     - else:
       - define shift <script[job_data].data_key[data.jobs.<[job]>.job_shift]>
       - if !<script[job_data].data_key[data.shifts.<[shift]>].contains[<player.location.world.time.period>]>:
-        - narrate "<&6>You can't work here right now."
+        - narrate "<&c>You can only work here during the <[shift]>."
         - stop
       - flag player temp.job.name:<[job]>
       - flag server jobs.<[job]>.members:->:<player>
-      - narrate "<&6>You are now signed in for <[job]>."
+      - narrate "<&6>You are now signed in for <&b><[job]><&6>."
 
 job_sign_in_command:
   type: command

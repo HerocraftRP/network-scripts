@@ -12,7 +12,7 @@ world_protection:
       - determine cancelled
     on player stands on material:
       - determine cancelled
-    on player right clicks *_trapdoor bukkit_priority:LOWEST:
+    on player right clicks *_trapdoor bukkit_priority:LOWEST server_flagged:protected:
       - determine cancelled
 
 admin_mode:

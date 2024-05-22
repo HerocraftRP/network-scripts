@@ -3,6 +3,6 @@ murder_swim:
   debug: false
   enabled: true
   events:
-    on tick every:20:
+    on tick every:20 server_flagged:switches.swim:
       - foreach <server.online_players.filter[location.material.name.equals[water]]>:
         - adjust <[value]> velocity:0,-1,0 if:<[value].swimming.not>

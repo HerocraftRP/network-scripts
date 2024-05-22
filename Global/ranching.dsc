@@ -103,35 +103,11 @@ ranch_interact:
     - wait 15s
     - adjust <player> show_entity:<context.entity>
 
-flint_butchering_knife:
+ranch_butchering_knife:
   type: item
   debug: false
   display name: <&r>Flint Butchering Knife
   material: farmersdelight_flint_knife
-
-iron_butchering_knife:
-  type: item
-  debug: false
-  display name: <&r>Iron Butchering Knife
-  material: farmersdelight_iron_knife
-
-golden_butchering_knife:
-  type: item
-  debug: false
-  display name: <&r>Golden Butchering Knife
-  material: farmersdelight_golden_knife
-
-diamond_butchering_knife:
-  type: item
-  debug: false
-  display name: <&r>Diamond Butchering Knife
-  material: farmersdelight_diamond_knife
-
-netherite_butchering_knife:
-  type: item
-  debug: false
-  display name: <&r>Netherite Butchering Knife
-  material: farmersdelight_netherite_knife
 
 ranching_animation:
   type: task
@@ -164,12 +140,12 @@ ranch_callback:
     - foreach <script[ranch_interact].data_key[data.ranchables.<[mob].entity_type>.material_given]>:
       - give item:<item[<[value]>].with_flag[uuid=<util.random_uuid>]>
     - playsound sound:ENTITY_ITEM_PICKUP <player>
-    - run job_get_rep def:ranching|<script[farming_data].data_key[data.ranchables.<[mob].entity_type>.reputation_gained]>
+    - run job_get_rep def:ranching|<script[ranch_interact].data_key[data.ranchables.<[mob].entity_type>.reputation_gained]>
     - adjust <[mob]> has_ai:true
     - adjust <player> hide_entity:<[mob]>
     - run narrate_empty_inventory_slots
 
-test_thing:
+ranch_no_chicken_eggs:
   type: world
   debug: false
   events:

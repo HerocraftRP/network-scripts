@@ -12,11 +12,12 @@ start_timed_action:
     - flag <player> timed_action.location:<player.location.with_pose[0,0]>
     - if !<[can_swap_items]||true>:
       - define held_item <player.item_in_hand>
-    - flag <player> timed_action.queue:<queue>
+    - flag <player> temp.timed_action.queue:<queue>
     - bossbar timed_action_<player.uuid> players:<player> "title:<[action]>" color:BLUE progress:0
     - define totalDuration <duration[<[duration]>].in_seconds.mul[4].round_up>
     - repeat <[totalDuration]>:
       - if !<player.is_online> || !<player.has_flag[timed_action]>:
+        - run cancel_timed_action def:<[cancel_script]||null>
         - stop
       - if !<[can_swap_items]||true>:
         - if <player.item_in_hand> != <[held_item]>:
@@ -34,7 +35,7 @@ start_timed_action:
       - if <[distance_from_origin].exists> && <player.location.distance[<player.flag[timed_action.location]>]> > <[distance_from_origin]>:
         - run cancel_timed_action def:<[cancel_script]||null>
         - stop
-      - if <[must_stare_at_target].exists> && <player.target> != <[target]>:
+      - if <[must_stare_at_target].exists> && <player.target||null> != <[target]>:
         - run cancel_timed_action def:<[cancel_script]||null>
         - stop
       - if <[must_stare_at_block].exists> && <player.cursor_on[6]> != <[target]>:
@@ -44,7 +45,7 @@ start_timed_action:
         - stop
       - bossbar update timed_action_<player.uuid> progress:<[value].div[<[totalDuration]>]> color:BLUE
       - if <[animation_task]||null> != null && <[value].mod[4]> == 0:
-        - run <[animation_task]>
+        - run <[animation_task]> def:<[callback_data]>
       - wait 5t
     - wait 5t
     - if <[animation_task]||null> != null:
@@ -67,11 +68,11 @@ cancel_timed_action_move:
     - stop if:<player.location.with_pose[0,0].equals[<player.flag[timed_action.location]>]>
     - if <[cancel_script]||null> != null:
       - run <[cancel_script]>
-    - flag <player> temp.timed_action:!
     - flag <player> on_move:!
-    - if <player.flag[timed_action.queue].is_valid>:
+    - if <player.has_flag[temp.timed_action.queue]>:
       - bossbar update timed_action_<player.uuid> title:<&c>Interrupted color:RED progress:1
     - flag <player> timed_action:!
+    - flag <player> temp.timed_action:!
     - wait 3s
     - if !<player.has_flag[timed_action]> && <player.bossbar_ids.contains[timed_action_<player.uuid>]>:
       - bossbar remove timed_action_<player.uuid>
@@ -83,11 +84,11 @@ cancel_timed_action:
   script:
     - if <[cancel_script]||null> != null:
       - run <[cancel_script]>
-    - flag <player> temp.timed_action:!
     - flag <player> on_move:!
-    - if <player.flag[timed_action.queue].is_valid>:
+    - if <player.has_flag[temp.timed_action.queue]>:
       - bossbar update timed_action_<player.uuid> title:<&c>Interrupted color:RED progress:1
     - flag <player> timed_action:!
+    - flag <player> temp.timed_action:!
     - wait 3s
     - if !<player.has_flag[timed_action]> && <player.bossbar_ids.contains[timed_action_<player.uuid>]>:
       - bossbar remove timed_action_<player.uuid>

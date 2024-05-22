@@ -12,7 +12,7 @@ bank_inventory_sanitize:
   type: task
   debug: false
   script:
-    - if <context.item.material.name> == air || <context.item.material.name.starts_with[calemieconomy_]>:
+    - if <context.item.material.name> == air || <context.item.has_flag[money]>:
       - if <context.click> != NUMBER_KEY:
         - stop
     - determine cancelled

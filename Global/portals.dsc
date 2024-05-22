@@ -8,6 +8,7 @@ portal_config:
     - azure_bluet
     - sunflower
     - light
+    - mcwpaths*
   messages:
     not_enough_arguments: <&c>Not Enough Arguments
     bad_arguments: <&c>Bad Arguments
@@ -55,14 +56,14 @@ dtd_command:
   debug: false
   name: dtd
   usage: /dtd
-  permission: adriftus.staff
+  permission: herocraft.dtd
   description: dtd portals
   permission message: Restricted.
   allowed help:
   - determine <player.has_permission[adriftus.staff]>
   tab completions:
     1: save|remove|forward_portal|backward_portal
-    2: <list[coordinates].include[<player.flag[dtd.locations].keys||<list[]>>].include[<server.online_players.parse[name]>]>
+    2: <list[coordinates].include[<player.flag[data.dtd.locations].keys||<list[]>>].include[<server.online_players.parse[name]>]>
   script:
     ## Arg1 = Portal
     - if <context.args.get[1].advanced_matches[*_portal]>:
@@ -89,8 +90,8 @@ dtd_command:
         - run open_portal def:dtd|<context.args.get[1].before[_]>|<location[<context.args.get[3].to[5].separated_by[,]>,<player.location.world.name>]>|<[duration]>
         - stop
       ## Arg2 = Saved Location
-      - if <player.has_flag[dtd.locations.<context.args.get[2]>]>:
-        - run open_portal def:dtd|<context.args.get[1].before[_]>|<player.flag[dtd.locations.<context.args.get[2]>.location]>|<[duration]>
+      - if <player.has_flag[data.dtd.locations.<context.args.get[2]>]>:
+        - run open_portal def:dtd|<context.args.get[1].before[_]>|<player.flag[data.dtd.locations.<context.args.get[2]>.location]>|<[duration]>|<player.flag[data.dtd.locations.<context.args.get[2]>.server]>
       ## Arg2 = Player
       - if <server.match_player[<context.args.get[2]>].exists>:
         - run open_portal def:dtd|<context.args.get[1].before[_]>|<server.match_player[<context.args.get[2]>].location>|<[duration]>
@@ -102,8 +103,9 @@ dtd_command:
       - if !<context.args.get[2].to_lowercase.matches_character_set[abcdefghijklmnopqrstuvwxyz_]>:
         - narrate <script[portal_config].parsed_key[messages.bad_arguments]>
         - stop
-      - define map <map[dtd.locations.<context.args.get[2]>.location=<player.location>]>
-      - flag player dtd.locations.<context.args.get[2]>.location:<player.location>
+      - define map <map[data.dtd.locations.<context.args.get[2]>.location=<player.location>]>
+      - flag player data.dtd.locations.<context.args.get[2]>.location:<player.location>
+      - flag player data.dtd.locations.<context.args.get[2]>.server:<bungee.server>
       - narrate <script[portal_config].parsed_key[messages.saved_location]>
     ## Arg1 = remove
     - else if <context.args.get[1]> == remove:
@@ -113,10 +115,10 @@ dtd_command:
       - if !<context.args.get[2].to_lowercase.matches_character_set[abcdefghijklmnopqrstuvwxyz_]>:
         - narrate <script[portal_config].parsed_key[messages.bad_arguments]>
         - stop
-      - if !<player.has_flag[dtd.locations.<context.args.get[2]>]>:
+      - if !<player.has_flag[data.dtd.locations.<context.args.get[2]>]>:
         - narrate <script[portal_config].parsed_key[messages.no_saved_with_name]>
         - stop
-      - flag player dtd.locations.<context.args.get[2]>:!
+      - flag player data.dtd.locations.<context.args.get[2]>:!
       - narrate <script[portal_config].parsed_key[messages.removed_location]>
     - else:
         - narrate <script[portal_config].parsed_key[messages.bad_arguments]>
@@ -124,7 +126,7 @@ dtd_command:
 open_portal:
   type: task
   debug: false
-  definitions: type|direction|destination|duration
+  definitions: type|direction|destination|duration|server
   script:
     - define particle <script[portal_config].parsed_key[types.<[type]>.particle]>
     - define particle_quantity <script[portal_config].parsed_key[types.<[type]>.particle_quantity]>
@@ -136,8 +138,11 @@ open_portal:
     - else:
       - define target <player.location.above[0.2].backward_flat[2]>
     - define cube <player.location.above[0.2].to_cuboid[<[target].above[1.2]>]>
-    - if <[cube].blocks.filter[material.is_solid].size> >= 1:
-      - narrate <script[portal_config].parsed_key[messages.no_room]>
+    #- if <[cube].blocks.filter[material.is_solid].size> >= 1:
+      #- narrate <script[portal_config].parsed_key[messages.no_room]>
+      #- stop
+    - if <bungee.connected> && <[server].exists> && <[server]> != <bungee.server>:
+      - inject cross_server_portal
       - stop
     - if !<[destination].chunk.is_loaded>:
       - chunkload <[destination].chunk> duration:10s
@@ -261,7 +266,7 @@ cross_server_portal:
     - flag <[target].above> destination.server:<[server]>
     - define offset <[offset].mul[2]>
     - define quantity2 <[particle_quantity].div[2]>
-    #- bungeerun <[server]> cross_server_portal_destination def:<[destination]>|<[duration]>
+    - bungeerun <[server]> cross_server_portal_destination def:<[destination]>|<[duration]>
     - runlater portal_close delay:<[duration].from_now> def:<[target]>|<[old_block1]>|<[old_block2]>
     - if <[use_velocity]>:
       - while <util.time_now.is_after[<[duration]>].not>:

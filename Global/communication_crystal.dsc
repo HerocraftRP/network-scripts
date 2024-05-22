@@ -2,14 +2,20 @@ communication_crystal:
   type: item
   debug: false
   display name: <&6>Communication Crystal
-  material: paper
+  material: herocraft_communication_crystal
   mechanisms:
     custom_model_data: 1
   lore:
     - <&b>Hold in your <&l>9<&r><&b>th pocket.
-    - <&e>Sneak while using to share contact info
+    - "<&7>___________________"
+    - ""
+    - <&a>Interaction 1<&co><&e> Give Contact
+    - "<&7>___________________"
   flags:
     right_click_script: communication_crystal_use
+    interaction:
+      1:
+        script: communication_give_contact
 
 communication_crystal_clickable:
   type: item
@@ -37,21 +43,30 @@ communication_crystal_use:
   debug: false
   script:
     - ratelimit <player> 2t
-    - if <player.is_sneaking> && <player.target.exists>:
-      - if <player.target.flag[comm_crystal_contacts.<player.uuid>].exists>:
-        - narrate "<&e>They already have your contact info."
-        - stop
-      - narrate "<&e>Contact Info given."
-      - narrate "<&e>You received Contact Info for <player.flag[name]||<player.name>>" targets:<player.target>
-      - flag <player.target> comm_crystal_contacts.<player.uuid>.player:<player>
-      - flag <player.target> comm_crystal_contacts.<player.uuid>.name:<player.flag[name]>
-      - stop
     - if <player.has_flag[temp.communication_crystal.call]>:
       - run communication_crystal_end_call def:<player>
     - else:
       - run communication_crystal_choose_call
 
-
+communication_give_contact:
+  type: task
+  debug: false
+  script:
+    - define target <player.precise_target[4]||null>
+    - if <[target]> == null:
+      - narrate "<&c>You need to look at someone to give your contact info to."
+      - stop
+    - if <[target].entity_type> != PLAYER:
+      - narrate "<&c>They don't want your contact info."
+      - stop
+    - if <player.target.has_flag[character.known_people.<player.flag[data.name]>_<player.uuid>]>:
+      - narrate "<&c>They already have your contact info."
+      - stop
+    - narrate "<&e>Contact Info given."
+    - narrate "<&e>You received Contact Info for <player.flag[data.name]>" targets:<player.target>
+    - flag <[target]> character.known_people.<player.flag[data.name]>_<player.uuid>.player:<player>
+    - flag <[target]> character.known_people.<player.flag[data.name]>_<player.uuid>.name:<player.flag[data.name]>
+    - stop
 
 communication_crystal_choose_call_type:
   type: task
@@ -69,11 +84,11 @@ communication_crystal_choose_call:
   debug: false
   script:
     - define inv <inventory[communication_crystal_call_inventory]>
-    - if !<player.has_flag[comm_crystal_contacts]>:
+    - if !<player.has_flag[character.known_people]>:
       - narrate "<&e>You have no contacts."
       - stop
-    - foreach <player.flag[comm_crystal_contacts].keys> as:uuid:
-      - define name <player.flag[comm_crystal_contacts.<[uuid]>.name]>
+    - foreach <player.flag[character.known_people].keys> as:uuid:
+      - define name <player.flag[character.known_people.<[uuid]>.name]>
       - give item:<item[communication_crystal_clickable].with[display=<[name]>].with_flag[target:<[name]>]> to:<[inv]>
     - inventory open d:<[inv]>
 

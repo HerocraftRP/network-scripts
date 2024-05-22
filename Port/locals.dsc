@@ -61,6 +61,7 @@ create_local:
     professions: <list[ARMORER|BUTCHER|CARTOGRAPHER|CLERIC|FARMER|FISHERMAN|FLETCHER|LEATHERWORKER|LIBRARIAN|MASON|NITWIT|NONE|SHEPHERD|TOOLSMITH|WEAPONSMITH]>
   script:
     - define local <entity[villager]>
+    - stop if:<server.flag[local_locations.<[locationID]>.location].exists.not>
     - define location <server.flag[local_locations.<[locationID]>.location]>
     - spawn villager <server.flag[local_locations.<[locationID]>.location].with_pitch[<util.random.decimal[-10].to[10]>]> save:local
     - define local <entry[local].spawned_entity>
@@ -88,8 +89,23 @@ create_local:
     - flag <[local]> on_spawn:villager_spawn_check
     - flag <[local]> locationID:<[locationID]>
     - flag <[local]> right_click_script:local_interact
+    - flag <[local]> on_entity_added:local_check_for_overspawn
     - flag server local_locations.<[LocationID]>.local:<[local]>
     - flag server locals:->:<[local]>
+
+local_check_for_overspawn:
+  type: task
+  debug: false
+  script:
+    - wait 1t
+    - if <server.flag[local_locations.<context.entity.flag[locationID]>.local]> != <context.entity>:
+      - remove <context.entity>
+
+local_interact:
+  type: task
+  debug: false
+  script:
+    - determine cancelled
 
 villager_spawn_check:
   type: task
@@ -104,8 +120,10 @@ local_autospawn:
   definitions: amountTotal
   script:
     - foreach <server.flag[local_locations]> as:locationData:
-      - define location <[locationData].get[location]>
-      - if !<server.flag[local_locations.<[key]>.local].exists>:
+      - define location <[locationData].get[location]||null>
+      - if <[location].object_type> != location:
+        - foreach next
+      - if !<server.has_flag[local_locations.<[key]>.local]>:
         - run create_local def:<[key]>
         - define amountCurrent:++
         - stop if:<[amountCurrent].equals[<[amountTotal]>]>
@@ -239,43 +257,8 @@ local_call_for_help:
   type: task
   debug: false
   script:
-    - flag server locals_killed:++
-    - flag server local_locations.<context.entity.flag[LocationID]>.local:!
+    - wait 1t
+    - if !<context.entity.is_spawned>:
+      - flag server locals_killed:++
+      - flag server local_locations.<context.entity.flag[LocationID]>.local:!
     #- run ping_guards def:<context.entity.location>|local_assaulted
-
-local_interact:
-  type: task
-  debug: false
-  script:
-    - determine passively cancelled
-    - ratelimit <player> 2t
-    - if <player.has_flag[temp.job]> && <player.flag[temp.job.name]> == mugging && <player.item_in_hand.material.name> != air:
-      - run start_timed_action "def:<&c>Robbing Local|10s|rob_local|<context.entity>" def.can_move:false def.animation_task:rob_local_animation
-
-rob_local_animation:
-  type: task
-  debug: false
-  script:
-    - animate <player> animation:ARM_SWING
-
-rob_local:
-  type: task
-  debug: false
-  definitions: local
-  script:
-    - if <[local].has_flag[last_robbed]>:
-      - if <[local].flag[last_robbed].from_now.is_less_than[10m]>:
-        - narrate "<&e>The local did not have any money."
-        - stop
-    - if <util.random_chance[75]>:
-      - narrate "<&c>You got caught!!"
-      - stop
-      - bossbar update timed_action_<player.uuid> title:<&c>Failed! progress:1 color:RED
-      - wait 3s
-      - if !<player.has_flag[timed_action]> && <player.bossbar_ids.contains[timed_action_<player.uuid>]>:
-        - bossbar remove timed_action_<player.uuid>
-      - stop
-    - flag <[local]> last_robbed:<util.time_now>
-    - run job_get_rep def:mugging|0.1
-    - narrate "<&e>Succesfully robbed Local"
-    - give <item[calemieconomy_coin_copper]>

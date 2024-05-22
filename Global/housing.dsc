@@ -1,3 +1,19 @@
+house_extend:
+  type: task
+  debug: false
+  definitions: uuid
+  script:
+    - define blocks <player.location.flood_fill[20]>
+    - foreach <[blocks]>:
+      - if <server.flag[housing.<[uuid]>.blocks].contains[<[value]>]>:
+        - foreach next
+      - flag <[value]> on_place:housing_place_check
+      - flag <[value]> on_break:housing_break_check
+      - flag <[value]> on_right_click:housing_use_check
+      - flag <[value]> housing.id:<[uuid]>
+      - flag server housing.<[uuid]>.members:<map>
+      - flag server housing.<[uuid]>.blocks:->:<[value]>
+
 house_create:
   type: task
   debug: false
@@ -27,7 +43,7 @@ house_create:
 house_set_door:
   type: task
   debug: false
-  definitions: uuid|location|price|owner
+  definitions: uuid|location|price|owner|just_door
   script:
     - if !<[location].exists>:
       - define location <player.cursor_on>
@@ -39,7 +55,7 @@ house_set_door:
       - define uuid <entry[uuid].created_queue.determination.first>
     - flag server housing.<[uuid]>.doors:->:<[location]>
     - define outside_cuboid <[normalized_angle].backward[2].left[1].to_cuboid[<[normalized_angle].backward[1].right[1]>]>
-    - define inside_cuboid <[normalized_angle].forward[2].left[1].to_cuboid[<[normalized_angle].forward[1].right[1]>]>
+    - define inside_cuboid <[normalized_angle].forward[2].left[1].to_cuboid[<[normalized_angle].right[1]>]>
     - note <[outside_cuboid]> as:housing_<[uuid]>_exit
     - note <[inside_cuboid]> as:housing_<[uuid]>_entrance
     - flag <cuboid[housing_<[uuid]>_entrance]> player_enters:housing_enter
@@ -48,10 +64,17 @@ house_set_door:
     - flag <cuboid[housing_<[uuid]>_exit]> housing.id:<[uuid]>
     - flag <[location].flood_fill[3]> housing.id:<[uuid]>
     - narrate "Door for house <[uuid]> set to <[location]>"
+    - if <[just_door]||false>:
+      - stop
     - repeat 4:
       - define sign <[normalized_angle].backward[<[value]>].find_blocks[*sign].within[2].first||null>
       - if <[sign]> != null:
         - repeat stop
+    - if <[normalized_angle].forward_flat.below.to_cuboid[<[normalized_angle].forward_flat.below[2]>].blocks.filter[material.name.equals[air]].size> == 2:
+      - repeat 100:
+        - if <[normalized_angle].forward_flat.below[<[value]>].material.name> == air:
+          - modifyblock <[normalized_angle].forward_flat.below[<[value]>] > ladder[direction=<player.location.direction[<[normalized_angle]>]>]
+    - run door_lock_create def.location:<[normalized_angle]>
     - if <[sign]> == null:
       - narrate "<&c>Unable to automatically find sign."
       - narrate "<&a>UUID<&co> <[uuid]>"

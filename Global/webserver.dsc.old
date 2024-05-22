@@ -1,0 +1,40 @@
+server_start:
+  type: world
+  debug: false
+  data:
+    port_map:
+      herocraft: 25590
+      overworld: 25592
+  events:
+    on server start:
+      - run start_server
+    on server  request method:post:
+      - define script_name <context.headers.get[script].first>
+      - define definitions <context.body.unescaped>
+      - run <[script_name]> def:<list[<[definitions]>]>
+
+remote_test:
+  type: task
+  debug: false
+  definitions: server|arg1|arg2|arg3
+  script:
+    - announce "command received from <[server]><&co> <[arg1]> - <[arg2]> - <[arg3]>"
+
+start_server:
+  type: task
+  debug: true
+  script:
+    - if !<server.has_flag[name]>:
+      - run send_to_discord "def:SERVER MISSING NAME"
+      - stop
+    - server start port:<script[server_start].data_key[data.port_map.<server.flag[name]>]>
+
+run_script_on_server:
+  type: task
+  debug: true
+  definitions: server|script_name|definitions
+  script:
+    - define port <script[server_start].data_key[data.port_map.<[server]>]||null>
+    - if <[port]> == null:
+      - stop
+    - ~get method:POST http://127.0.0.1:<[port]> headers:<map.with[sending_server].as[<server.flag[name]>].with[script].as[<[script_name]>]> data:<[definitions]>

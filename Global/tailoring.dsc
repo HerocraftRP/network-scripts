@@ -212,7 +212,6 @@ tailoring_callback:
   script:
     - give item:<player.flag[temp.timed_action.tailor_result]>
     - playsound sound:ENTITY_ITEM_PICKUP <player>
-    - run job_get_rep def:tailor|<script[tailoring_data].data_key[data.craftables.default.items.<player.flag[temp.timed_action.tailor_result]>.rep_gained]>
 
 
 tailoring_inventory_open:
@@ -228,7 +227,7 @@ tailoring_inventory_open:
     - stop if:<player.item_in_hand.material.name.advanced_matches[*_needle].not>
     - define inv <inventory[tailoring_job_inventory]>
     - foreach <server.flag[job_data.reputation_tables.tailoring.default]> key:repNeeded as:item:
-      - if <player.flag[job.tailoring.reputation]||0> < <[repNeeded]>:
+      - if <player.flag[character.capabilities.tailoring]||0> < <[repNeeded]>:
         - foreach stop
       - define craftCost <script[tailoring_data].data_key[data.craftables.default.items.<[item]>.material_cost]>
       - define lore <list[<&e>------------|<&e>Crafting Cost:]>

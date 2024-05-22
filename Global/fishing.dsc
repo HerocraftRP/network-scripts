@@ -1,84 +1,190 @@
 fishing_cod_bundle:
   type: item
-  material: paper
+  material: herocraft_bundle
   display name: <&6>Bundle of Cod
   flags:
-    right_click_script: unbundle_bundle
-  mechanisms:
-    custom_model_data: 2
+    interaction:
+      1:
+        script: unbundle_bundle
+        display: <&e>Unbundle
+  lore:
+    - "<&7>___________________"
+    - ""
+    - <&a>Interaction 1<&co><&e> Unbundle
+    - "<&7>___________________"
+
 
 fishing_salmon_bundle:
   type: item
-  material: paper
+  material: herocraft_bundle
   display name: <&6>Bundle of Salmon
   flags:
-    right_click_script: unbundle_bundle
-  mechanisms:
-    custom_model_data: 2
+    interaction:
+      1:
+        script: unbundle_bundle
+        display: <&e>Unbundle
+  lore:
+    - "<&7>___________________"
+    - ""
+    - <&a>Interaction 1<&co><&e> Unbundle
+    - "<&7>___________________"
 
 fishing_ink_sac_bundle:
   type: item
-  material: paper
+  material: herocraft_bundle
   display name: <&6>Bundle of Ink Sacs
   flags:
-    right_click_script: unbundle_bundle
-  mechanisms:
-    custom_model_data: 2
+    interaction:
+      1:
+        script: unbundle_bundle
+        display: <&e>Unbundle
+  lore:
+    - "<&7>___________________"
+    - ""
+    - <&a>Interaction 1<&co><&e> Unbundle
+    - "<&7>___________________"
 
 fishing_bone_bundle:
   type: item
-  material: paper
+  material: herocraft_bundle
   display name: <&6>Bundle of Bones
   flags:
-    right_click_script: unbundle_bundle
-  mechanisms:
-    custom_model_data: 2
+    interaction:
+      1:
+        script: unbundle_bundle
+        display: <&e>Unbundle
+  lore:
+    - "<&7>___________________"
+    - ""
+    - <&a>Interaction 1<&co><&e> Unbundle
+    - "<&7>___________________"
 
 fishing_kelp_bundle:
   type: item
-  material: paper
+  material: herocraft_bundle
   display name: <&6>Bundle of Kelp
   flags:
-    right_click_script: unbundle_bundle
-  mechanisms:
-    custom_model_data: 2
+    interaction:
+      1:
+        script: unbundle_bundle
+        display: <&e>Unbundle
+  lore:
+    - "<&7>___________________"
+    - ""
+    - <&a>Interaction 1<&co><&e> Unbundle
+    - "<&7>___________________"
+
+fishing_cod:
+  type: item
+  material: cod
+  display name: <&6>Cod
+  flags:
+    interaction:
+      1:
+        script: fishing_packaging_interact
+        display: <&e>Bundle
+  lore:
+    - "<&7>___________________"
+    - ""
+    - <&a>Interaction 1<&co><&e> Bundle
+    - "<&7>___________________"
+
+fishing_salmon:
+  type: item
+  material: cod
+  display name: <&6>salmon
+  flags:
+    interaction:
+      1:
+        script: fishing_packaging_interact
+        display: <&e>Bundle
+  lore:
+    - "<&7>___________________"
+    - ""
+    - <&a>Interaction 1<&co><&e> Bundle
+    - "<&7>___________________"
+
+fishing_ink_sac:
+  type: item
+  material: cod
+  display name: <&6>Ink Sac
+  flags:
+    interaction:
+      1:
+        script: fishing_packaging_interact
+        display: <&e>Bundle
+  lore:
+    - "<&7>___________________"
+    - ""
+    - <&a>Interaction 1<&co><&e> Bundle
+    - "<&7>___________________"
+
+fishing_bone:
+  type: item
+  material: cod
+  display name: <&6>Bone
+  flags:
+    interaction:
+      1:
+        script: fishing_packaging_interact
+        display: <&e>Bundle
+  lore:
+    - "<&7>___________________"
+    - ""
+    - <&a>Interaction 1<&co><&e> Bundle
+    - "<&7>___________________"
+
+fishing_kelp:
+  type: item
+  material: cod
+  display name: <&6>Kelp
+  flags:
+    interaction:
+      1:
+        script: fishing_packaging_interact
+        display: <&e>Bundle
+  lore:
+    - "<&7>___________________"
+    - ""
+    - <&a>Interaction 1<&co><&e> Bundle
+    - "<&7>___________________"
 
 fishing_table:
   type: data
   data:
     loot_table_per_level:
       0:
-        cod: 20
+        fishing_cod: 20
         leather_boots[durability=60]: 30
       1:
-        cod: 20
-        salmon: 20
+        fishing_cod: 20
+        fishing_salmon: 20
         leather_boots[durability=60]: 30
       2:
-        cod: 20
-        salmon: 20
-        ink_sac: 20
+        fishing_cod: 20
+        fishing_salmon: 20
+        fishing_ink_sac: 20
         leather_boots[durability=60]: 20
       3:
-        cod: 20
-        salmon: 20
-        ink_sac: 20
-        bone: 10
+        fishing_cod: 20
+        fishing_salmon: 20
+        fishing_ink_sac: 20
+        fishing_bone: 10
         leather_boots[durability=60]: 15
       4:
-        cod: 20
-        salmon: 20
-        ink_sac: 20
+        fishing_cod: 20
+        fishing_salmon: 20
+        fishing_ink_sac: 20
         leather_boots[durability=60]: 10
-        bone: 10
-        kelp: 10
+        fishing_bone: 10
+        fishing_kelp: 10
       5:
-        cod: 20
-        salmon: 20
-        ink_sac: 20
+        fishing_cod: 20
+        fishing_salmon: 20
+        fishing_ink_sac: 20
         leather_boots[durability=60]: 5
-        bone: 10
-        kelp: 10
+        fishing_bone: 10
+        fishing_kelp: 10
 
 fishing:
   type: world
@@ -187,14 +293,17 @@ fishing_packaging_interact:
   script:
     - determine passively cancelled
     - ratelimit <player> 1t
+    - if !<player.inventory.contains_item[empty_bundle]>:
+      - narrate "<&c>You need an empty bundle for this."
+      - stop
     - wait 1t
     - define item <player.item_in_hand>
-    - if <script[fishing_packaging].data_key[data.stack_sizes.<[item].material.name>].exists>:
-      - define quantity <script[fishing_packaging].data_key[data.stack_sizes.<[item].material.name>]>
-      - if <player.inventory.contains_item[<[item].material.name>].quantity[<[quantity]>]>:
-        - run start_timed_action "def:<&6>Packaging <[item].material.name.replace[_].with[<&sp>].to_titlecase>|2s|fishing_packaging" def.can_swap_items:false def.can_move:false
+    - if <script[fishing_packaging].data_key[data.stack_sizes.<[item].script.name>].exists>:
+      - define quantity <script[fishing_packaging].data_key[data.stack_sizes.<[item].script.name>]>
+      - if <player.inventory.contains_item[<[item].script.name>].quantity[<[quantity]>]>:
+        - run start_timed_action "def:<&6>Packaging <[item].display>|4s|fishing_packaging" def.can_swap_items:false def.can_move:false
       - else:
-        - narrate "<&c>You need atleast <[quantity]> <[item].material.name.replace[_].with[<&sp>].to_titlecase>"
+        - narrate "<&c>You need atleast <[quantity]> <[item].display>"
     - else:
       - narrate "<&c>You don't have anything I can work with."
 
@@ -209,9 +318,13 @@ fishing_packaging:
       bone: 20
       kelp: 19
   script:
+    - if !<player.inventory.contains_item[empty_bundle]>:
+      - narrate "<&c>You need an empty bundle for this."
+      - stop
+    - take item:empty_bundle quantity:1
     - define item <player.item_in_hand>
     - if <script[fishing_packaging].data_key[data.stack_sizes.<[item].material.name>].exists>:
       - define quantity <script[fishing_packaging].data_key[data.stack_sizes.<[item].material.name>]>
-      - if <player.inventory.contains_item[<[item].material.name>].quantity[<[quantity]>]>:
+      - if <player.inventory.contains_item[<[item].script.name>].quantity[<[quantity]>]>:
         - take item:<[item].material.name> quantity:<[quantity]>
         - give item:fishing_<[item].material.name>_bundle

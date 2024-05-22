@@ -5,7 +5,7 @@ woodwork_data:
     craftables:
       oak_planks:
         items:
-          wooden_tool_handle:
+          oak_slab:
             material_cost:
               oak_planks: 5
             rep_needed: 0
@@ -17,19 +17,84 @@ woodwork_data:
             rep_needed: 5
             rep_gained: 0.1
             needs_downshift: false
-          oak_slab:
+          stripped_oak_log:
             material_cost:
-              oak_planks: 5
+              oak_planks: 10
             rep_needed: 10
             rep_gained: 0.1
             needs_downshift: false
-
-wooden_tool_handle:
-  type: item
-  debug: false
-  material: tconstruct_tool_handle
-  mechanisms:
-    raw_nbt: <map.with[Material].as[string:tconstruct:wood]>
+          wooden_tool_handle:
+            material_cost:
+              oak_planks: 15
+            rep_needed: 0
+            rep_gained: 0.1
+            needs_downshift: false
+          oak_fence:
+            material_cost:
+              oak_planks: 20
+            rep_needed: 0
+            rep_gained: 0.1
+            needs_downshift: false
+          oak_fence_gate:
+            material_cost:
+              oak_planks: 25
+            rep_needed: 0
+            rep_gained: 0.1
+            needs_downshift: false
+          oak_door:
+            material_cost:
+              oak_planks: 25
+            rep_needed: 0
+            rep_gained: 0.1
+            needs_downshift: false
+          oak_trapdoor:
+            material_cost:
+              oak_planks: 30
+            rep_needed: 0
+            rep_gained: 0.1
+            needs_downshift: false
+          oak_pressure_plate:
+            material_cost:
+              oak_planks: 35
+            rep_needed: 0
+            rep_gained: 0.1
+            needs_downshift: false
+          oak_button:
+            material_cost:
+              oak_planks: 40
+            rep_needed: 0
+            rep_gained: 0.1
+            needs_downshift: false
+          oak_sign:
+            material_cost:
+              oak_planks: 45
+            rep_needed: 0
+            rep_gained: 0.1
+            needs_downshift: false
+          oak_hanging_sign:
+            material_cost:
+              oak_planks: 50
+            rep_needed: 0
+            rep_gained: 0.1
+            needs_downshift: false
+          farmersdelight_oak_cabinet:
+            material_cost:
+              oak_planks: 55
+            rep_needed: 0
+            rep_gained: 0.1
+            needs_downshift: false
+          create_oak_window:
+            material_cost:
+              oak_planks: 60
+            rep_needed: 0
+            rep_gained: 0.1
+            needs_downshift: false
+          aquaculture_oak_fish_mount:
+            material_cost:
+              oak_planks: 65
+            rep_needed: 0
+            rep_gained: 0.1
+            needs_downshift: false
 
 woodwork_job_inventory:
   type: inventory
@@ -102,7 +167,6 @@ woodwork_callback:
   script:
     - give item:<player.flag[temp.timed_action.woodwork_result]>
     - playsound sound:ENTITY_ITEM_PICKUP <player>
-    - run job_get_rep def:woodwork|<script[woodwork_data].data_key[data.craftables.<player.flag[temp.timed_action.material]>.items.<player.flag[temp.timed_action.woodwork_result]>.rep_gained]>
 
 woodwork_test:
   type: task
@@ -136,7 +200,7 @@ woodwork_inventory_open:
     - define inv <inventory[woodwork_job_inventory]>
     - define material <player.item_in_hand.material.name>
     - foreach <server.flag[job_data.reputation_tables.woodwork.<[material]>]> key:repNeeded as:item:
-      - if <player.flag[job.woodwork.reputation]||0> >= <[repNeeded]>:
+      - if <player.flag[character.capabilities.woodwork]||0> >= <[repNeeded]>:
         - define craftCost <script[woodwork_data].data_key[data.craftables.<[material]>.items.<[item]>.material_cost]>
         - define lore <list[<&e>------------|<&e>Crafting Cost:]>
         - foreach <[craftCost]> key:material as:quantity:
