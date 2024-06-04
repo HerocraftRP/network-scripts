@@ -3,10 +3,12 @@ world_protection:
   debug: false
   events:
     on player places block bukkit_priority:LOWEST:
+      - stop if:<bungee.server.equals[apartments]>
       - determine passively cancelled if:<player.has_flag[admin_mode].not>
       - wait 1t
       - inventory update
     on player breaks block bukkit_priority:LOWEST:
+      - stop if:<bungee.server.equals[apartments]>
       - determine cancelled if:<player.has_flag[admin_mode].not>
     on block explodes:
       - determine cancelled
@@ -33,4 +35,7 @@ cancel:
   type: task
   debug: false
   script:
-    - determine cancelled
+    - determine cancelled if:<player.item_in_hand.material.name.ends_with[spell_book].not||true>
+    - inventory close if:<context.location.inventory.exists>
+    - wait 1t
+    - inventory close if:<context.location.inventory.exists>

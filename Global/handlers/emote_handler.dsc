@@ -6,20 +6,20 @@ emote_handler:
       Hands up: false
       Salute: true
       Lay on back: true
-    can_multi_emote:
-      Hands up: true
-      Salute: false
-      Lay on back: false
   events:
     on player plays emote:
+      - if <player.gamemode.equals[spectator]> || <context.name.exists.not> || <player.has_flag[temp.emote.name]>:
+        - wait 1t
+        - run cancel_emotes
+        - stop
+      - ratelimit <player> 1t
       - define name <context.name.replace[<&dq>].with[]>
       - if <script.data_key[data.cancel_on_move.<[name]>]||false>:
         - run add_framework_flag def:on_move|cancel_emote
         - flag player temp.emote.location:<player.location.simple>
-      - if <player.has_flag[temp.emote.name]> && !<script.data_key[data.can_multi_emote.<player.flag[temp.emote.name]>]||false>:
-        - run cancel_emotes
       - flag player temp.emote.name:<[name]>
     on player stops emote:
+      - ratelimit <player> 1t
       - if <player.has_flag[temp.emote]>:
         - run remove_framework_flag def:on_move|cancel_emote
         - flag <player> temp.emote:!

@@ -21,7 +21,7 @@ bank_inventory_save:
   type: task
   debug: false
   script:
-    - flag <player> bank.contents:<player.open_inventory.map_slots>
+    - flag <player> character.bank.contents:<player.open_inventory.map_slots>
 
 bank_interact:
   type: task
@@ -33,9 +33,9 @@ bank_inventory_open:
   type: task
   debug: false
   script:
-    - if <player.has_flag[bank.contents]>:
+    - if <player.has_flag[character.bank.contents]>:
       - define inventory <inventory[bank_inventory]>
-      - foreach <player.flag[bank.contents]>:
+      - foreach <player.flag[character.bank.contents]>:
         - inventory set slot:<[key]> d:<[inventory]> o:<[value]>
       - inventory open d:<[inventory]>
       - stop
@@ -56,7 +56,7 @@ bank_safety_box_inventory:
   type: inventory
   debug: false
   inventory: chest
-  title: <&6>Bank
+  title: <&6>Safety Box
   size: 9
   data:
     on_close: bank_safety_box_save
@@ -75,10 +75,11 @@ bank_safety_box_open:
   type: task
   debug: false
   script:
-    - if <player.has_flag[bank.safe_box]>:
+    - if <player.has_flag[character.bank.safe_box]>:
       - define inventory <inventory[bank_safety_box_inventory]>
-      - foreach <player.flag[bank.safe_box]>:
-        - inventory set slot:<[key]> d:<[inventory]> o:<[value]>
+      - if <player.has_flag[character.bank.safe_box]>:
+        - foreach <player.flag[character.bank.safe_box]>:
+          - inventory set slot:<[key]> d:<[inventory]> o:<[value]>
       - inventory open d:<[inventory]>
       - stop
     - define inventory <inventory[bank_safety_box_inventory]>
@@ -88,4 +89,4 @@ bank_safety_box_save:
   type: task
   debug: false
   script:
-    - flag <player> bank.safe_box:<player.open_inventory.map_slots>
+    - flag <player> character.bank.safe_box:<player.open_inventory.map_slots>

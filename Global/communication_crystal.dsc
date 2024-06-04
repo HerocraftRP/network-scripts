@@ -6,7 +6,6 @@ communication_crystal:
   mechanisms:
     custom_model_data: 1
   lore:
-    - <&b>Hold in your <&l>9<&r><&b>th pocket.
     - "<&7>___________________"
     - ""
     - <&a>Interaction 1<&co><&e> Give Contact
@@ -65,7 +64,8 @@ communication_give_contact:
     - narrate "<&e>Contact Info given."
     - narrate "<&e>You received Contact Info for <player.flag[data.name]>" targets:<player.target>
     - flag <[target]> character.known_people.<player.flag[data.name]>_<player.uuid>.player:<player>
-    - flag <[target]> character.known_people.<player.flag[data.name]>_<player.uuid>.name:<player.flag[data.name]>
+    - flag <[target]> character.known_people.<player.flag[data.name]>_<player.uuid>.character_name:<player.flag[data.name]>
+    - flag <[target]> character.known_people.<player.flag[data.name]>_<player.uuid>.name:<player.flag[character.name.display]>
     - stop
 
 communication_crystal_choose_call_type:
@@ -73,7 +73,9 @@ communication_crystal_choose_call_type:
   debug: false
   script:
     - determine passively cancelled
-    - define target <server.match_player[<context.item.flag[target]>]||null>
+    - define target <server.match_player[<context.item.flag[name]>]||null>
+    - if <[target].flag[data.name]> != <context.item.flag[character]>:
+      - define target null
     - inject communication_crystal_start_call
     # LATER FOR MULTI-SERVER
     #- else:
@@ -88,8 +90,10 @@ communication_crystal_choose_call:
       - narrate "<&e>You have no contacts."
       - stop
     - foreach <player.flag[character.known_people].keys> as:uuid:
-      - define name <player.flag[character.known_people.<[uuid]>.name]>
-      - give item:<item[communication_crystal_clickable].with[display=<[name]>].with_flag[target:<[name]>]> to:<[inv]>
+      - define display_name <player.flag[character.known_people.<[uuid]>.name]>
+      - define name <player.flag[character.known_people.<[uuid]>.player].name>
+      - define character <player.flag[character.known_people.<[uuid]>.character_name]>
+      - give item:<item[communication_crystal_clickable].with[display=<[display_name]>].with_flag[name:<[name]>].with_flag[character:<[character]>]> to:<[inv]>
     - inventory open d:<[inv]>
 
 communication_crystal_start_call:

@@ -1,8 +1,9 @@
 mage_beginner_book:
   type: item
-  display name: <&d>Beginner Mage Book
+  display name: <&d>Beginner Spell Creation Book
   material: ars_nouveau_novice_spell_book
   flags:
+    spellbook: true
     interaction:
       1:
         script: mage_book_teleport
@@ -10,7 +11,7 @@ mage_beginner_book:
   lore:
     - "<&7>___________________"
     - ""
-    - <&a>Interaction 1<&co> <&d>Teleport<&co> <&6>Mage Tower
+    - <&a>Interaction 1<&co> <&d>Teleport<&co> <&6>Spell Creation Tower
     - "<&7>___________________"
 
 mage_book_teleport:
@@ -21,10 +22,10 @@ mage_book_teleport:
     - if !<bungee.connected> || <bungee.server> != herocraft:
       - narrate "<&c>You lack the ability to travel that far with your magic."
       - stop
-    - if !<player.has_flag[data.guild.name]> || <player.flag[data.guild.name]> != mage:
+    - if !<player.has_flag[character.guild.name]> || <player.flag[character.guild.name]> != mage:
       - narrate "<&c>You lack the magical prowess to harness this power."
       - stop
-    - define color <script[join_guild_animation].parsed_key[data.guild_colors.mage]>
+    - define color <script[guild_data].parsed_key[data.mage.color]>
     - define destination <server.flag[mage_tower.lower]>
     - define gamemode <player.gamemode>
     - define targets <player.location.find_players_within[100]>
@@ -61,10 +62,10 @@ mage_glyph_amplify:
   material: ars_nouveau_glyph_amplify
   display name: <&d>Mage Glyph<&co> <&e>Amplify
   lore:
-    - <&6>Guild<&co> <script[guild_data].parsed_key[data.mage.color]>Mage
-    - <&6>Reputation Needed<&co> <&e><script[guild_data].parsed_key[data.mage.skill_checks.amplify]>
+    - <&6>Skill<&co> <script[capabilities_data].parsed_key[capability.spell_creation.color]>Spell Creation
+    - <&6>Reputation Needed<&co> <&e><script[capabilities_data].parsed_key[capability.spell_creation.checks.amplify]>
   flags:
-    guild: mage
+    capability: spell_creation
     skill: amplify
     right_click_script: guild_learn_check
 
@@ -74,10 +75,10 @@ mage_glyph_underfoot:
   material: ars_nouveau_glyph_underfoot
   display name: <&d>Mage Glyph<&co> <&e>Underfoot
   lore:
-    - <&6>Guild<&co> <script[guild_data].parsed_key[data.mage.color]>Mage
-    - <&6>Reputation Needed<&co> <&e><script[guild_data].parsed_key[data.mage.skill_checks.underfoot]>
+    - <&6>Guild<&co> <script[capabilities_data].parsed_key[capability.spell_creation.color]>Spell Creation
+    - <&6>Reputation Needed<&co> <&e><script[capabilities_data].parsed_key[capability.spell_creation.checks.underfoot]>
   flags:
-    guild: mage
+    capability: spell_creation
     skill: underfoot
     right_click_script: guild_learn_check
 
@@ -87,10 +88,10 @@ mage_glyph_toss:
   material: ars_nouveau_glyph_toss
   display name: <&d>Mage Glyph<&co> <&e>Toss
   lore:
-    - <&6>Guild<&co> <script[guild_data].parsed_key[data.mage.color]>Mage
-    - <&6>Reputation Needed<&co> <&e><script[guild_data].parsed_key[data.mage.skill_checks.toss]>
+    - <&6>Guild<&co> <script[capabilities_data].parsed_key[capability.spell_creation.color]>Spell Creation
+    - <&6>Reputation Needed<&co> <&e><script[capabilities_data].parsed_key[capability.spell_creation.checks.toss]>
   flags:
-    guild: mage
+    capability: spell_creation
     skill: toss
     right_click_script: guild_learn_check
 
@@ -100,10 +101,10 @@ mage_glyph_bounce:
   material: ars_nouveau_glyph_bounce
   display name: <&d>Mage Glyph<&co> <&e>Bounce
   lore:
-    - <&6>Guild<&co> <script[guild_data].parsed_key[data.mage.color]>Mage
-    - <&6>Reputation Needed<&co> <&e><script[guild_data].parsed_key[data.mage.skill_checks.bounce]>
+    - <&6>Guild<&co> <script[capabilities_data].parsed_key[capability.spell_creation.color]>Spell Creation
+    - <&6>Reputation Needed<&co> <&e><script[capabilities_data].parsed_key[capability.spell_creation.checks.bounce]>
   flags:
-    guild: mage
+    capability: spell_creation
     skill: bounce
     right_click_script: guild_learn_check
 
@@ -113,9 +114,9 @@ mage_glyph_ignite:
   material: ars_nouveau_glyph_ignite
   display name: <&d>Mage Glyph<&co> <&e>Ignite
   lore:
-    - <&6>Guild<&co> <script[guild_data].parsed_key[data.mage.color]>Mage
-    - <&6>Reputation Needed<&co> <&e><script[guild_data].parsed_key[data.mage.skill_checks.ignite]>
+    - <&6>Guild<&co> <script[capabilities_data].parsed_key[capability.spell_creation.color]>Spell Creation
+    - <&6>Reputation Needed<&co> <&e><script[capabilities_data].parsed_key[capability.spell_creation.checks.ignite]>
   flags:
-    guild: mage
+    capability: spell_creation
     skill: ignite
     right_click_script: guild_learn_check

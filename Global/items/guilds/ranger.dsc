@@ -1,4 +1,4 @@
-ranger_book_fast_run:
+parkour_book_fast_run:
   type: item
   debug: false
   material: paper
@@ -6,14 +6,14 @@ ranger_book_fast_run:
   lore:
     - <&7>Allows you to sprint faster, while holding it down
     - <empty>
-    - <&6>Guild<&co> <script[guild_data].parsed_key[data.ranger.color]>Ranger
-    - <&6>Reputation Needed<&co> <&e><script[guild_data].parsed_key[data.ranger.skill_checks.FastRun]>
+    - <&6>Guild<&co> <script[capabilities_data].parsed_key[capability.parkour.color]>Parkour
+    - <&6>Reputation Needed<&co> <&e><script[capabilities_data].parsed_key[capability.parkour.checks.FastRun]>
   flags:
-    guild: ranger
+    capability: parkour
     skill: FastRun
     right_click_script: <list[guild_learn_check|ranger_add_parkour_skill]>
 
-ranger_book_dodge:
+parkour_book_dodge:
   type: item
   debug: false
   material: paper
@@ -21,14 +21,14 @@ ranger_book_dodge:
   lore:
     - <&7>Allows you to dodge rapidly
     - <empty>
-    - <&6>Guild<&co> <script[guild_data].parsed_key[data.ranger.color]>Ranger
-    - <&6>Reputation Needed<&co> <&e><script[guild_data].parsed_key[data.ranger.skill_checks.Dodge]>
+    - <&6>Guild<&co> <script[capabilities_data].parsed_key[capability.parkour.color]>Parkour
+    - <&6>Reputation Needed<&co> <&e><script[capabilities_data].parsed_key[capability.parkour.checks.Dodge]>
   flags:
-    guild: ranger
+    capability: parkour
     skill: Dodge
     right_click_script: <list[guild_learn_check|ranger_add_parkour_skill]>
 
-ranger_book_break_fall:
+parkour_book_break_fall:
   type: item
   debug: false
   material: paper
@@ -36,14 +36,14 @@ ranger_book_break_fall:
   lore:
     - <&7>Allows you to roll when you fall, lowering damage
     - <empty>
-    - <&6>Guild<&co> <script[guild_data].parsed_key[data.ranger.color]>Ranger
-    - <&6>Reputation Needed<&co> <&e><script[guild_data].parsed_key[data.ranger.skill_checks.Breakfall]>
+    - <&6>Guild<&co> <script[capabilities_data].parsed_key[capability.parkour.color]>Parkour
+    - <&6>Reputation Needed<&co> <&e><script[capabilities_data].parsed_key[capability.parkour.checks.Breakfall]>
   flags:
-    guild: ranger
+    capability: parkour
     skill: Breakfall
     right_click_script: <list[guild_learn_check|ranger_add_parkour_skill]>
 
-ranger_book_slide:
+parkour_book_slide:
   type: item
   debug: false
   material: paper
@@ -51,14 +51,14 @@ ranger_book_slide:
   lore:
     - <&7>Allows you to slide on the ground, while running
     - <empty>
-    - <&6>Guild<&co> <script[guild_data].parsed_key[data.ranger.color]>Ranger
-    - <&6>Reputation Needed<&co> <&e><script[guild_data].parsed_key[data.ranger.skill_checks.Slide]>
+    - <&6>Guild<&co> <script[capabilities_data].parsed_key[capability.parkour.color]>Parkour
+    - <&6>Reputation Needed<&co> <&e><script[capabilities_data].parsed_key[capability.parkour.checks.Slide]>
   flags:
-    guild: ranger
+    capability: parkour
     skill: Slide
     right_click_script: <list[guild_learn_check|ranger_add_parkour_skill]>
 
-ranger_book_leap:
+parkour_book_leap:
   type: item
   debug: false
   material: paper
@@ -66,10 +66,10 @@ ranger_book_leap:
   lore:
     - <&7>Allows you to leap very far horizontally.
     - <empty>
-    - <&6>Guild<&co> <script[guild_data].parsed_key[data.ranger.color]>Ranger
-    - <&6>Reputation Needed<&co> <&e><script[guild_data].parsed_key[data.ranger.skill_checks.CatLeap]>
+    - <&6>Guild<&co> <script[capabilities_data].parsed_key[capability.parkour.color]>Parkour
+    - <&6>Reputation Needed<&co> <&e><script[capabilities_data].parsed_key[capability.parkour.checks.CatLeap]>
   flags:
-    guild: ranger
+    capability: parkour
     skill: CatLeap
     right_click_script: <list[guild_learn_check|ranger_add_parkour_skill]>
 

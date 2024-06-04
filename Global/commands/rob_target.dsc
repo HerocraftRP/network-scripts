@@ -31,7 +31,8 @@ rob_local_callback:
       - if <[local].flag[last_robbed].from_now.is_less_than[10m]>:
         - narrate "<&e>The local did not have any money."
         - stop
-    - if <util.random_chance[75]>:
+    - define number <util.random_decimal.mul[100].round>
+    - if <[number]> < 75:
       - narrate "<&c>You got caught, the Guards have been alerted!!"
       - bossbar update timed_action_<player.uuid> title:<&c>Failed! progress:1 color:RED
       - look <[local]> <player.eye_location>
@@ -41,9 +42,8 @@ rob_local_callback:
         - bossbar remove timed_action_<player.uuid>
       - stop
     - flag <[local]> last_robbed:<util.time_now>
-    - run job_get_rep def:mugging|0.1
     - narrate "<&e>Succesfully robbed Local"
-    - if <util.random_chance[1]>:
+    - if <[number]> > 97:
       - give item:<item[criminal_shipping_manifest_small]>
     - else:
       - give <item[coin_copper]>

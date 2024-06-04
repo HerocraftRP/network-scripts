@@ -67,7 +67,7 @@ criminal_loot_gold_animation:
   script:
     - animate <player> animation:ARM_SWING
     - wait 7t
-    - playsound sound:BLOCK_NETHER_GOLD_ORE_HIT pitch:10 <player.location> volume:8
+    - playsound sound:BLOCK_NETHER_GOLD_ORE_HIT pitch:10 <player.location>  volume:0.1
 
 criminal_loot_gold_callback:
   type: task
@@ -75,7 +75,7 @@ criminal_loot_gold_callback:
   definitions: location
   script:
     - showfake <[location]> air players:<player> duration:5m
-    - playsound sound:entity_item_pickup <player>
+    - playsound sound:entity_item_pickup <player> volume:0.1
     - narrate "<&c>You stole a pile of coins"
     - give item:coin_copper quantity:10
 
@@ -92,7 +92,7 @@ criminal_loot_papers_animation:
   script:
     - animate <player> animation:ARM_SWING
     - wait 7t
-    - playsound sound:BLOCK_NETHER_GOLD_ORE_HIT pitch:10 <player.location> volume:8
+    - playsound sound:BLOCK_NETHER_GOLD_ORE_HIT pitch:10 <player.location>  volume:0.1
 
 criminal_loot_papers_callback:
   type: task
@@ -101,7 +101,7 @@ criminal_loot_papers_callback:
   script:
     - showfake <[location]> air players:<player> duration:5m
     - if <util.random_chance[10]>:
-      - playsound sound:entity_item_pickup <player>
+      - playsound sound:entity_item_pickup <player> volume:0.1
       - narrate "<&c>You found another Shipping Manifest!"
       - give item:criminal_shipping_manifest_large
     - else:
@@ -122,7 +122,7 @@ criminal_loot_small_chest_animation:
   script:
     - animate <player> animation:ARM_SWING
     - wait 7t
-    - playsound sound:BLOCK_NETHER_GOLD_ORE_HIT pitch:10 <player.location> volume:8
+    - playsound sound:BLOCK_NETHER_GOLD_ORE_HIT pitch:10 <player.location> volume:0.1
 
 criminal_loot_small_chest_callback:
   type: task
@@ -130,7 +130,7 @@ criminal_loot_small_chest_callback:
   definitions: location
   script:
     - flag <player> temp.criminal_job:!
-    - playsound sound:entity_item_pickup <player>
+    - playsound sound:entity_item_pickup <player> volume:0.1
     - narrate "<&c>You got the goods, and the Guards have been alerted!"
     - narrate "<&c>Get out of there!"
     - repeat <list[2|4|6].random>:
@@ -151,7 +151,7 @@ criminal_loot_large_chest_animation:
   script:
     - animate <player> animation:ARM_SWING
     - wait 7t
-    - playsound sound:BLOCK_NETHER_GOLD_ORE_HIT pitch:10 <player.location> volume:8
+    - playsound sound:BLOCK_NETHER_GOLD_ORE_HIT pitch:10 <player.location> volume:0.1
 
 criminal_loot_large_chest_callback:
   type: task
@@ -159,7 +159,7 @@ criminal_loot_large_chest_callback:
   definitions: location
   script:
     - flag <player> temp.criminal_job:!
-    - playsound sound:entity_item_pickup <player>
+    - playsound sound:entity_item_pickup <player> volume:0.1
     - narrate "<&c>You got the goods, and the Guards have been alerted!"
     - narrate "<&c>Get out of there!"
     - repeat <list[12|14|16].random>:
@@ -189,17 +189,29 @@ criminal_smuggle_job_villager:
   type: task
   debug: false
   script:
-    - if <player.flag[temp.criminal_job.id]> == <player.target.flag[criminal.id]>:
+    - if <player.flag[temp.criminal_job.id]||0> == <player.target.flag[criminal.id]>:
+      - if <player.item_in_hand.script.name> != criminal_stolen_goods:
+        - narrate "<&c>He does not want this item."
+        - stop
       - take iteminhand
-      - if <util.random_chance[50]>:
+      - define number <util.random_decimal.mul[100].round>
+    #- narrate "RNG #<&co> <[number]>"
+      - if <[number]> < 5:
+        - give coin_copper quantity:20
+        - narrate "<&e>He takes the goods, and hands you 20 copper coins."
+      - else if <[number]> < 30:
         - give coin_copper quantity:10
         - narrate "<&e>He takes the goods, and hands you 10 copper coins."
-      - else <util.random_chance[50]>:
+      - else if <[number]> < 85:
         - give coin_copper quantity:5
-        - narrate "<&e>He takes the goods, and hands you 10 copper coins."
+        - narrate "<&e>He takes the goods, and hands you 5 copper coins."
       - else:
         - narrate "<&c>He called the Guards on you!"
         - narrate "<&c>Get out of there!"
+      - flag player temp.criminal_job:!
+    - eLse:
+      - narrate "<&e>I have no business with you right now."
+      - narrate "<&c>You are not on a job right now."
 
 criminal_stealing_goods_start_job_smuggle:
   type: task
@@ -211,5 +223,5 @@ criminal_stealing_goods_start_job_smuggle:
     - flag <player> smuggle_cooldown:<util.time_now>
     - define job_id <server.flag[criminal_jobs.smuggle].keys.random>
     - flag <player> temp.criminal_job.id:<[job_id]>
-    - narrate "<&e>Head on down to the docks to the <&b>small boat <&e>with <&b>red <&e>sails."
+    - narrate "<&e>Head on down to the docks to the <&b>small barge <&e>with <&b>red <&e>sails."
     - narrate "<&c>Don't get caught."

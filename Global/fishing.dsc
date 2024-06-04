@@ -78,6 +78,7 @@ fishing_cod:
   type: item
   material: cod
   display name: <&6>Cod
+  allow in material recipes: true
   flags:
     interaction:
       1:
@@ -92,7 +93,8 @@ fishing_cod:
 fishing_salmon:
   type: item
   material: cod
-  display name: <&6>salmon
+  display name: <&6>Salmon
+  allow in material recipes: true
   flags:
     interaction:
       1:
@@ -108,6 +110,7 @@ fishing_ink_sac:
   type: item
   material: cod
   display name: <&6>Ink Sac
+  allow in material recipes: true
   flags:
     interaction:
       1:
@@ -123,6 +126,7 @@ fishing_bone:
   type: item
   material: cod
   display name: <&6>Bone
+  allow in material recipes: true
   flags:
     interaction:
       1:
@@ -138,6 +142,7 @@ fishing_kelp:
   type: item
   material: cod
   display name: <&6>Kelp
+  allow in material recipes: true
   flags:
     interaction:
       1:
@@ -189,6 +194,7 @@ fishing_table:
 fishing:
   type: world
   debug: false
+  enabled: false
   startup:
     - flag server fishing_loot_table:!
     - foreach <script[fishing_table].data_key[data.loot_table_per_level].keys> as:level:
@@ -270,10 +276,7 @@ fishing_start:
   type: task
   debug: false
   script:
-    - if <player.flag[temp.job.name]||null> != fishing:
-      - determine passively cancelled
-      - wait 1t
-      - narrate "<&c>You are not signed in for this job."
+    - stop
 
 fishing_packaging_command:
   type: command
@@ -298,14 +301,14 @@ fishing_packaging_interact:
       - stop
     - wait 1t
     - define item <player.item_in_hand>
-    - if <script[fishing_packaging].data_key[data.stack_sizes.<[item].script.name>].exists>:
+    - if <script[fishing_packaging].data_key[data.stack_sizes.<[item].material.name>].exists>:
       - define quantity <script[fishing_packaging].data_key[data.stack_sizes.<[item].script.name>]>
       - if <player.inventory.contains_item[<[item].script.name>].quantity[<[quantity]>]>:
         - run start_timed_action "def:<&6>Packaging <[item].display>|4s|fishing_packaging" def.can_swap_items:false def.can_move:false
       - else:
         - narrate "<&c>You need atleast <[quantity]> <[item].display>"
     - else:
-      - narrate "<&c>You don't have anything I can work with."
+      - narrate "<&c>I can work with this."
 
 fishing_packaging:
   type: task
@@ -326,5 +329,5 @@ fishing_packaging:
     - if <script[fishing_packaging].data_key[data.stack_sizes.<[item].material.name>].exists>:
       - define quantity <script[fishing_packaging].data_key[data.stack_sizes.<[item].material.name>]>
       - if <player.inventory.contains_item[<[item].script.name>].quantity[<[quantity]>]>:
-        - take item:<[item].material.name> quantity:<[quantity]>
+        - take item:<[item].script.name> quantity:<[quantity]>
         - give item:fishing_<[item].material.name>_bundle

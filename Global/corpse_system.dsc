@@ -4,19 +4,20 @@ corpse_system_events:
   events:
     on player dies:
       - determine passively NO_MESSAGE
+      - define location <context.entity.location>
+      - wait 1t
       - adjust <player> gamemode:spectator
       #- adjust <context.entity.location.world> spawn_location:<context.entity.location>
-      - adjust <player> bed_spawn_location:<context.entity.location>
+      - adjust <player> bed_spawn_location:<[location]>
       - adjust <player> spawn_forced:true
-      - define location <context.entity.location>
-      - teleport <context.entity.location>
+      - teleport <[location]>
       - wait 1t
       - title title:<&c>Downed stay:2s
-      - define corpse <context.entity.location.find_entities[corpse_corpse].within[5].first||null>
+      - define corpse <[location].find_entities[corpse_corpse].within[5].first||null>
       - repeat 4:
         - if <[corpse].equals[null]>:
           - wait 5t
-          - define corpse <context.entity.location.find_entities[corpse_corpse].within[5].first||null>
+          - define corpse <[location].find_entities[corpse_corpse].within[5].first||null>
         - else:
           - repeat stop
       - if <[corpse].equals[null]>:
@@ -70,8 +71,6 @@ corpse_giveup:
       - flag <player.flag[dead].vehicle> carried_corpse:!
     - run remove_framework_flag def:on_teleport|cancel
     - run corpse_revive def:<player.flag[dead]> def.new_life:true
-    - wait 1t
-    - teleport <player> <server.flag[respawn_points].random>
 
 corpse_resurrect:
   type: task
@@ -150,11 +149,12 @@ corpse_interact:
   script:
     - determine passively cancelled
     - ratelimit <player> 2t
+    - stop if:<player.location.distance[<context.entity.location>].is_more_than[2]>
     - stop if:<player.gamemode.equals[spectator]>
     - wait 1t
     - stop if:<player.has_flag[carried_corpse]>
     - if !<player.is_sneaking>:
-      - run start_timed_action "def:<&e>Picking Up Body...|3s|corpse_pickup|<context.entity>" def.can_move:false
+      - run start_timed_action "def:<&e>Picking Up Body...|3s|corpse_pickup|<context.entity>" def.distance_from_origin:2
     - else:
       - run start_timed_action "def:<&c>Looting Corpse...|5s|corpse_inventory_open|<context.entity>" def.can_move:false def.must_stay_sneak:true def.animation_task:loot_corpse_animation
 
@@ -211,7 +211,7 @@ corpse_drop:
   debug: false
   script:
     - adjust <player> walk_speed:0.2
-    - flag <player> on_sneak:!
+    - run remove_framework_flag def:on_sneak|corpse_drop_start
     - if <player.flag[carried_corpse].is_spawned>:
       - run remove_framework_flag def:on_teleport|cancel|<player.flag[carried_corpse]>
       - define corpse <player.flag[carried_corpse]>
@@ -233,6 +233,17 @@ corpse_drop:
         - flag <[cart]> right_click_script:get_corpse_entity
         - flag <[cart]> carried_corpse:<player.flag[carried_corpse]>
     - flag <player> carried_corpse:!
+
+corpse_remove_carried:
+  type: task
+  debug: false
+  definitions: target
+  script:
+    - define target <player> if:<[target].exists.not>
+    - adjust <[target]> walk_speed:0.2
+    - run remove_framework_flag def:on_sneak|corpse_drop_start|<[target]>
+    - remove <[target].flag[carried_corpse]>
+    - flag <[target]> carried_corpse:!
 
 corpse_revive:
   type: task
@@ -268,6 +279,8 @@ corpse_revive:
     - note remove as:CORPSE_<player.uuid>
     - if <[new_life]||false>:
       - title title:<&a>Revived "subtitle:New Life Rule applied!" stay:3s
+      - wait 1t
+      - teleport <player> <server.flag[respawn_points].random>
     - else:
       - title title:<&a>Revived
     - flag <player> dead:!

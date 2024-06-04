@@ -13,11 +13,40 @@ farming_wheat_bundle:
     - <&a>Interaction 1<&co><&e> Unbundle
     - "<&7>___________________"
 
+farming_FARMERSDELIGHT_rice_bundle:
+  type: item
+  material: herocraft_bundle
+  display name: <&6>Bundle of Rice
+  flags:
+    interaction:
+      1:
+        script: unbundle_bundle
+        display: <&e>Unbundle
+  lore:
+    - "<&7>___________________"
+    - ""
+    - <&a>Interaction 1<&co><&e> Unbundle
+    - "<&7>___________________"
 
 farming_carrot_bundle:
   type: item
   material: herocraft_bundle
   display name: <&6>Bundle of Carrots
+  flags:
+    interaction:
+      1:
+        script: unbundle_bundle
+        display: <&e>Unbundle
+  lore:
+    - "<&7>___________________"
+    - ""
+    - <&a>Interaction 1<&co><&e> Unbundle
+    - "<&7>___________________"
+
+farming_melon_bundle:
+  type: item
+  material: herocraft_bundle
+  display name: <&6>Bundle of Melon
   flags:
     interaction:
       1:
@@ -45,11 +74,41 @@ farming_farmersdelight_onion_bundle:
     - <&a>Interaction 1<&co><&e> Unbundle
     - "<&7>___________________"
 
+farming_apple_bundle:
+  type: item
+  material: herocraft_bundle
+  display name: <&6>Bundle of Apple
+  flags:
+    interaction:
+      1:
+        script: unbundle_bundle
+        display: <&e>Unbundle
+  lore:
+    - "<&7>___________________"
+    - ""
+    - <&a>Interaction 1<&co><&e> Unbundle
+    - "<&7>___________________"
+
 
 farming_farmersdelight_cabbage_bundle:
   type: item
   material: herocraft_bundle
   display name: <&6>Bundle of Cabbages
+  flags:
+    interaction:
+      1:
+        script: unbundle_bundle
+        display: <&e>Unbundle
+  lore:
+    - "<&7>___________________"
+    - ""
+    - <&a>Interaction 1<&co><&e> Unbundle
+    - "<&7>___________________"
+
+farming_potato_bundle:
+  type: item
+  material: herocraft_bundle
+  display name: <&6>Bundle of Potatoes
   flags:
     interaction:
       1:
@@ -77,11 +136,42 @@ farming_farmersdelight_tomato_bundle:
     - <&a>Interaction 1<&co><&e> Unbundle
     - "<&7>___________________"
 
+farming_pumpkin_bundle:
+  type: item
+  material: herocraft_bundle
+  display name: <&6>Bundle of Pumpkins
+  flags:
+    interaction:
+      1:
+        script: unbundle_bundle
+        display: <&e>Unbundle
+  lore:
+    - "<&7>___________________"
+    - ""
+    - <&a>Interaction 1<&co><&e> Unbundle
+    - "<&7>___________________"
 
 farming_wheat:
   type: item
   material: wheat
   display name: <&6>Wheat
+  allow in material recipes: true
+  flags:
+    interaction:
+      1:
+        script: farming_packaging_interact
+        display: <&e>Bundle
+  lore:
+    - "<&7>___________________"
+    - ""
+    - <&a>Interaction 1<&co><&e> Bundle
+    - "<&7>___________________"
+
+farming_farmersdelight_rice:
+  type: item
+  material: FARMERSDELIGHT_RICE
+  display name: <&6>Rice
+  allow in material recipes: true
   flags:
     interaction:
       1:
@@ -97,6 +187,23 @@ farming_farmersdelight_onion:
   type: item
   material: farmersdelight_onion
   display name: <&6>Onion
+  allow in material recipes: true
+  flags:
+    interaction:
+      1:
+        script: farming_packaging_interact
+        display: <&e>Bundle
+  lore:
+    - "<&7>___________________"
+    - ""
+    - <&a>Interaction 1<&co><&e> Bundle
+    - "<&7>___________________"
+
+farming_melon:
+  type: item
+  material: MELON
+  display name: <&6>Melon
+  allow in material recipes: true
   flags:
     interaction:
       1:
@@ -112,6 +219,23 @@ farming_carrot:
   type: item
   material: carrot
   display name: <&6>Carrot
+  allow in material recipes: true
+  flags:
+    interaction:
+      1:
+        script: farming_packaging_interact
+        display: <&e>Bundle
+  lore:
+    - "<&7>___________________"
+    - ""
+    - <&a>Interaction 1<&co><&e> Bundle
+    - "<&7>___________________"
+
+farming_apple:
+  type: item
+  material: APPLE
+  display name: <&6>Apple
+  allow in material recipes: true
   flags:
     interaction:
       1:
@@ -127,6 +251,23 @@ farming_farmersdelight_cabbage:
   type: item
   material: farmersdelight_cabbage
   display name: <&6>Cabbage
+  allow in material recipes: true
+  flags:
+    interaction:
+      1:
+        script: farming_packaging_interact
+        display: <&e>Bundle
+  lore:
+    - "<&7>___________________"
+    - ""
+    - <&a>Interaction 1<&co><&e> Bundle
+    - "<&7>___________________"
+
+farming_potato:
+  type: item
+  material: POTATO
+  display name: <&6>Potato
+  allow in material recipes: true
   flags:
     interaction:
       1:
@@ -142,6 +283,23 @@ farming_farmersdelight_tomato:
   type: item
   material: farmersdelight_tomato
   display name: <&6>Tomato
+  allow in material recipes: true
+  flags:
+    interaction:
+      1:
+        script: farming_packaging_interact
+        display: <&e>Bundle
+  lore:
+    - "<&7>___________________"
+    - ""
+    - <&a>Interaction 1<&co><&e> Bundle
+    - "<&7>___________________"
+
+farming_pumpkin:
+  type: item
+  material: PUMPKIN
+  display name: <&6>Pumpkin
+  allow in material recipes: true
   flags:
     interaction:
       1:
@@ -270,6 +428,7 @@ farming_packaging:
   data:
     stack_sizes:
       farming_wheat: <server.flag[google_data.farming.wheat.bundle_size]>
+      farming_farmersdelight_rice: <server.flag[google_data.farming.farmersdelight_rice.bundle_size]>
       farming_carrot: <server.flag[google_data.farming.carrot.bundle_size]>
       farming_farmersdelight_onion: <server.flag[google_data.farming.farmersdelight_onion.bundle_size]>
       farming_farmersdelight_cabbage: <server.flag[google_data.farming.farmersdelight_cabbage.bundle_size]>

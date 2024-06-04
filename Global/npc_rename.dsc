@@ -7,7 +7,7 @@ npc_rename_me:
     - define entity <context.entity>
     - define name <[entity].flag[true_name]>
     - if <[entity].has_flag[rep_display]>:
-      - define name "<[name]> <&e>(Your Reputation<&co> <player.flag[job.<[entity].flag[rep_display]>.reputation]||0>)"
+      - define name "<[name]> <&e>(Your Capability<&co> <player.flag[character.capabilities.<[entity].flag[rep_display]>]||0>)"
     - adjust <[entity]> custom_name:<[name]>
     - wait 1t
     - adjust <context.entity> custom_name
@@ -24,7 +24,7 @@ npc_rename_me_command:
     - define entity <player.flag[temp.last_npc_interacted]>
     - define name <[entity].flag[true_name]>
     - if <[entity].has_flag[rep_display]>:
-      - define name "<[name]> <&e>(Your Reputation<&co> <player.flag[job.<[entity].flag[rep_display]>.reputation]||0>)"
+      - define name "<[name]> <&e>(Your Capability<&co> <player.flag[character.capabilities.<[entity].flag[rep_display]>]||0>)"
     - adjust <[entity]> custom_name:<[name]>
     - wait 1t
     - adjust <[entity]> custom_name

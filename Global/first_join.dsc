@@ -3,16 +3,18 @@ first_join:
   debug: false
   events:
     on player joins bukkit_priority:LOWEST priority:-9999:
-      - wait 1t
-      - if !<player.has_flag[initialized]>:
-        - flag <player> initialized:0
+      - flag <player> data:!
+      - flag <player> character:!
+      - ~run sql_get_player_data
+      - if !<player.has_flag[data.characters.<player.uuid>_<player.flag[data.name]>.game_initialized]>:
+        - flag <player> data.characters.<player.uuid>_<player.flag[data.name]>.game_initialized:0
         - flag <player> initialized_now
       - repeat 100:
-        - define phase <player.flag[initialized].add[1]>
+        - define phase <player.flag[data.characters.<player.uuid>_<player.flag[data.name]>.game_initialized].add[1]>
         - if <script[init_<[phase]>].exists>:
           - inject init_<[phase]>
         - else:
-          - stop
+          - repeat stop
       - wait 5s
       - flag <player> initialized_now:!
       #- if !<player.has_flag[sql_init.inventory]>:
@@ -27,10 +29,21 @@ init_1:
     - inventory set slot:8 "o:<item[wallet].with[lore=<&6>Owner<&co> <&e><player.name>].with_flag[owner:<player.uuid>].with_flag[value:50]>"
     - give item:TOUGHASNAILS_WATER_CANTEEN
     - inventory set slot:9 o:communication_crystal d:<player.inventory>
-    - flag player initialized:1
     - flag <player> comm_crystal_icon:stone
-    - flag <player> data.name:<player.name>
-    - flag <player> data.color:<&7>
+    - flag <player> character.knowledge.total:25
+    - flag <player> character.knowledge.current:25
     - run parcool_limitation_defaults
     - run sql_init_inventory
-    - run sql_init_player_data
+    - flag player data.characters.<player.uuid>_<player.flag[data.name]>.game_initialized:1
+
+init_2:
+  type: task
+  debug: false
+  script:
+    - if !<player.has_flag[character.name.color]>:
+      - flag <player> character.name.color:<&r>
+    - if !<player.has_flag[character.name.full_display]>:
+      - flag <player> character.name.full_display:<player.flag[character.name.color]><player.flag[data.name]>
+    - if !<player.has_flag[character.vision_level]>:
+      - flag <player> character.vision_level:1
+    - flag player data.characters.<player.uuid>_<player.flag[data.name]>.game_initialized:2

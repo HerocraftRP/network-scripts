@@ -10,19 +10,15 @@ apply_for_guild_command:
     - if <[target]> == null:
       - stop
     - adjust <queue> linked_player:<[target]>
-    - define guild <context.args.get[1]>
-    - if <player.has_flag[character.guild.name]>:
-      - narrate "<&c>You already have a guild! <&nl>You have already chosen the <&b><player.flag[character.guild.name].to_titlecase>s Guild"
-      - stop
+    - define skill <context.args.get[1]>
     - if !<player.inventory.contains_item[coin_gold].quantity[1]>:
-      - narrate "<&c>It costs <&b>1 gold coin<&c> to apply for the Guild"
+      - narrate "<&c>It costs <&b>1 gold coin<&c> to apply for the School"
       - wait 1t
       - inventory close
       - stop
     - take item:coin_gold quantity:1
-    - flag player <[guild]>_guild_invite:<util.random_uuid>
-    - give item:<item[<[guild]>_contract].with_flag[on_drop:<list[guild_throw_book|remove_context_entity]>].with[display=<script[<[guild]>_contract].parsed_key[title]>]>
-    - narrate "<&e>You hand over a <&6>Gold Coin<&e>, and they hand you a <script[<[guild]>_contract].parsed_key[title]>"
+    - give item:<item[<[skill]>_contract].with_flag[on_drop:<list[guild_throw_book|remove_context_entity]>].with[display=<script[<[skill]>_contract].parsed_key[title]>]>
+    - narrate "<&e>You hand over a <&6>Gold Coin<&e>, and they hand you a <script[<[skill]>_contract].parsed_key[title]>"
     - wait 1t
     - inventory close
 
@@ -43,49 +39,50 @@ give_guild_contract:
     - flag <player> <[guild]>_guild_invite:<[uuid]>
     - give item:<[guild]>_contract
 
-mage_contract:
+spell_creation_contract:
     type: book
-    title: <script[guild_data].parsed_key[data.mage.color]>Mage Contract
+    debug: false
+    title: <script[capabilities_data].parsed_key[capability.spell_creation.color]>Skill Contract
     author: Grand Archfuh'qer
     signed: true
     text:
-    - <&l><player.flag[data.name]>,<&r><&nl>You have been invited to the <script[guild_data].parsed_key[data.mage.color]>Mage's Guild<&r>, this book will explain the offer.
+    - <&l><player.flag[data.name]>,<&r><&nl>You have been invited to learn <script[capabilities_data].parsed_key[capability.spell_creation.color]>Spell Creation<&r>, this book will explain the offer.
     - If you agree to this magically binding contract you shall be forever bound to it.
-    - If at any point you should leave our guild, you will lose all gained knowledge and benfits
-    - Place your left finger and press down hard to accept the terms outlined in this book<&nl><&nl>"<&7><element[PRESS HERE].on_click[/guild_accept mage <player.flag[mage_guild_invite]>]>"
+    - You will gain the knowledge required to begin your journey of the Spell Creation skill.
+    - Place your left finger and press down hard to accept the terms outlined in this book<&nl><&nl><&dq><&7><element[PRESS HERE].on_click[/guild_accept spell_creation]><&dq>
 
-warrior_contract:
+endurance_contract:
     type: book
-    title: <script[guild_data].parsed_key[data.warrior.color]>Warrior Contract
+    title: <script[guild_data].parsed_key[data.warrior.color]>Skill Contract
     author: Sir the Goons'how
     signed: true
     text:
-    - <&l><player.flag[data.name]>,<&r><&nl>You have been invited to the <script[guild_data].parsed_key[data.warrior.color]>Warrior's Guild<&r>, this book will explain the offer.
+    - <&l><player.flag[data.name]>,<&r><&nl>You have been invited to learn <script[capabilities_data].parsed_key[capability.endurance.color]>Endurance<&r>, this book will explain the offer.
     - If you agree to this magically binding contract you shall be forever bound to it.
-    - If at any point you should leave our guild, you will lose all gained knowledge and benfits
-    - Place your left finger and press down hard to accept the terms outlined in this book<&nl><&nl>"<&7><element[PRESS HERE].on_click[/guild_accept warrior <player.flag[warrior_guild_invite]>]>"
+    - You will gain the knowledge required to begin your journey of the Endurance skill.
+    - Place your left finger and press down hard to accept the terms outlined in this book<&nl><&nl>"<&7><element[PRESS HERE].on_click[/guild_accept endurance]>"
 
-ranger_contract:
+parkour_contract:
     type: book
-    title: <script[guild_data].parsed_key[data.ranger.color]>Ranger Contract
+    title: <script[guild_data].parsed_key[data.ranger.color]>Skill Contract
     author: Leetil Deek
     signed: true
     text:
-    - <&l><player.flag[data.name]>,<&r><&nl>You have been invited to the <script[guild_data].parsed_key[data.ranger.color]>Ranger's Guild<&r>, this book will explain the offer.
+    - <&l><player.flag[data.name]>,<&r><&nl>You have been invited to learn <script[capabilities_data].parsed_key[capability.parkour.color]>Parkour<&r>, this book will explain the offer.
     - If you agree to this magically binding contract you shall be forever bound to it.
-    - If at any point you should leave our guild, you will lose all gained knowledge and benfits
-    - Place your left finger and press down hard to accept the terms outlined in this book<&nl><&nl>"<&7><element[PRESS HERE].on_click[/guild_accept ranger <player.flag[ranger_guild_invite]>]>"
+    - You will gain the knowledge required to begin your journey of the Parkour skill.
+    - Place your left finger and press down hard to accept the terms outlined in this book<&nl><&nl>"<&7><element[PRESS HERE].on_click[/guild_accept parkour]>"
 
-merchant_contract:
+mercantile_contract:
     type: book
-    title: <script[guild_data].parsed_key[data.merchant.color]>Merchant Contract
+    title: <script[guild_data].parsed_key[data.merchant.color]>Skill Contract
     author: Leetil Deek
     signed: true
     text:
-    - <&l><player.flag[data.name]>,<&r><&nl>You have been invited to the <script[guild_data].parsed_key[data.merchant.color]>Merchant's Guild<&r>, this book will explain the offer.
+    - <&l><player.flag[data.name]>,<&r><&nl>You have been invited to learn <script[capabilities_data].parsed_key[capability.mercantile.color]>Mercantile<&r>, this book will explain the offer.
     - If you agree to this magically binding contract you shall be forever bound to it.
-    - If at any point you should leave our guild, you will lose all gained knowledge and benfits
-    - Place your left finger and press down hard to accept the terms outlined in this book<&nl><&nl>"<&7><element[PRESS HERE].on_click[/guild_accept merchant <player.flag[merchant_guild_invite]>]>"
+    - You will gain the knowledge required to begin your journey of the Mercantile skill.
+    - Place your left finger and press down hard to accept the terms outlined in this book<&nl><&nl>"<&7><element[PRESS HERE].on_click[/guild_accept mercantile]>"
 
 guild_accept_command:
   type: command
@@ -100,50 +97,32 @@ guild_accept_command:
     4: stop
     5: it
   script:
-    - if <player.has_flag[character.guild.name]>:
-      - take iteminhand
-      - narrate "<&c>You are no longer welcome here! <&nl>You have already chosen the <&b><player.flag[character.guild.name].to_titlecase>s Guild"
+    - if !<player.item_in_hand.book_title.ends_with[Contract]||true>:
       - stop
-    - if <context.args.size> != 2:
+    - if <context.args.size> != 1:
       - stop
-    - define guild <context.args.get[1].to_lowercase>
-    - if !<list[ranger|warrior|mage|merchant].contains[<[guild]>]>:
+    - define skill <context.args.get[1].to_lowercase>
+    - if !<script[capabilities_data].data_key[capability].keys.contains[<[skill]>]>:
       - stop
-    - if <player.flag[<[guild]>_guild_invite]> != <context.args.get[2]>:
-      - narrate "<&c>The magical seal rejects you, as it was not made for you."
-      - stop
-    - flag player character.guild.name:<[guild]>
-    - run join_guild_animation def:<[guild]>
+    - run join_guild_animation def:<[skill]>
     - narrate "<&6>You feel a wave of energy course through you."
     - take iteminhand
 
 join_guild_animation:
   type: task
   debug: false
-  definitions: guild
+  definitions: skill
   script:
     - playsound sound:soulslikeuniverse:victory_from_boss custom <player> volume:0.5
-    - adjust <player> gravity:false
-    - adjust <player> walk_speed:0.01
-    - adjust <player> velocity:0,0.05,0
-    - define color2 <script[guild_data].parsed_key[data.<[guild]>.color]>
+    - define color <script[capabilities_data].parsed_key[capability.<[skill]>.color]>
     - repeat 30:
-      - playeffect effect:redstone special_data:5|black quantity:10 offset:0.5,0.5,0.5 at:<player.location.above[0.7]>
+      - playeffect effect:redstone special_data:5|<[color]> quantity:10 offset:0.5,0.5,0.5 at:<player.location.above[0.7]>
       - wait 2t
     - repeat 40:
-      - playeffect effect:redstone special_data:5|black quantity:10 offset:0.5,0.5,0.5 at:<player.location.above[0.7]>
-      - playeffect effect:redstone special_data:1|<[color2]> quantity:20 offset:0.6,0.6,0.6 at:<player.location.above[0.7]>
+      - playeffect effect:redstone special_data:5|<[color]> quantity:10 offset:0.5,0.5,0.5 at:<player.location.above[0.7]>
       - wait 2t
     - playeffect effect:explosion_huge at:<player.location.above[0.7]> quantity:5 offset:0.2,0.2,0.2
     - playsound sound:relda:wraith1 pitch:0.1 <player> custom
     - playsound sound:relda:wraith1 pitch:2 <player> custom
-    - title "title:<[color2]><[guild].to_titlecase>s Guild" subtitle:Welcome.... fade_in:2s stay:3s fade_out:10t
-    - adjust <player> gravity:true
-    - adjust <player> walk_speed:0.2
-    - foreach <script[guild_data].data_key[data.<[guild]>.modifiers_by_rep.1]>:
-      - wait 1t
-      - if <[key]> == stamina_vessels:
-        - adjust <player> stamina_vessels:<[value]>
-      - if <[key]> == health:
-        - foreach <[value]> key:part as:health:
-          - part MAX part:<[part]> amount:<[health]>
+    - title "title:<script[capabilities_data].parsed_key[capability.spell_creation.color]>Skill Acquired" subtitle:<[skill].replace[_].with[<&sp>].to_titlecase> fade_in:2s stay:3s fade_out:10t
+    - flag player character.capabilities_enabled.<[skill]>

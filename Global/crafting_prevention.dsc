@@ -1,16 +1,3 @@
-crafting_prevention:
-  type: world
-  debug: false
-  enabled: false
-  data:
-    whitelisted_recipes:
-      farmersdelight_wheat_dough_from_water: true
-      farmersdelight_egg_sandwich: true
-  events:
-    on player crafts item:
-      - if !<script.data_key[data.whitelisted_recipes.<context.recipe_id.replace[<&co>].with[_]>].exists>:
-        - determine cancelled
-
 nuke_crafting_recipes:
   type: task
   debug: false

@@ -248,6 +248,8 @@ wallet_process:
   script:
     - if !<context.item.has_flag[money]> && !<context.cursor_item.has_flag[money]>:
       - determine cancelled
+    - if <context.cursor_item.has_flag[money]> && <context.item.material.name> != air:
+      - determine cancelled
     - if <context.clicked_inventory.script.name||null> == wallet_gui && <list[1|2|3].contains[<context.slot>]>:
       - inventory flag slot:<player.held_item_slot> value:<player.item_in_hand.flag[value].add[<context.cursor_item.flag[money].mul[<context.cursor_item.quantity>]>]>
       - adjust <player> item_on_cursor:air

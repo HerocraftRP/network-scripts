@@ -284,7 +284,7 @@ entity_flags:
       - else:
         - inject <context.dropped_by.flag[on_drops_item]>
     on player consumed skill:
-      - if <context.name> == epicfight:basic_attack:
+      - if <context.name> == epicfight<&co>basic_attack:
         - if <player.has_flag[on_basic_attack]>:
           - if <player.flag[on_basic_attack].object_type> == List:
             - foreach <player.flag[on_basic_attack]>:

@@ -38,7 +38,7 @@ door_lock_interact:
           - run start_timed_action "def:<&e>Locking...|2s|door_lock|<context.location>" def.can_move:false
       - else:
         - run start_timed_action "def:<&c>Lockpicking...|10s|door_lockpick|<context.location>" def.can_move:false def.must_stay_sneak:true def.animation_task:door_lockpick_animation
-    - determine cancelled
+    - determine cancelled if:<player.item_in_hand.material.name.ends_with[spell_book].not>
 
 door_lock_key:
   type: item

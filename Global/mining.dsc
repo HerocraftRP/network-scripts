@@ -13,10 +13,10 @@ mining_stone_bundle:
     - <&a>Interaction 1<&co><&e> Unbundle
     - "<&7>___________________"
 
-mining_copper_nugget_bundle:
+mining_create_copper_nugget_bundle:
   type: item
   material: herocraft_bundle
-  display name: <&6>Bundle of Copper Nugger
+  display name: <&6>Bundle of Copper Nugget
   flags:
     interaction:
       1:
@@ -43,7 +43,7 @@ mining_iron_nugget_bundle:
     - <&a>Interaction 1<&co><&e> Unbundle
     - "<&7>___________________"
 
-mining_silver_nugget_bundle:
+mining_epicsamurai_silver_nugget_bundle:
   type: item
   material: herocraft_bundle
   display name: <&6>Bundle of Silver Nugget
@@ -58,7 +58,7 @@ mining_silver_nugget_bundle:
     - <&a>Interaction 1<&co><&e> Unbundle
     - "<&7>___________________"
 
-mining_steel_nugget_bundle:
+mining_epicsamurai_steel_nugget_bundle:
   type: item
   material: herocraft_bundle
   display name: <&6>Bundle of Steel Nugget
@@ -88,10 +88,10 @@ mining_stone:
     - <&a>Interaction 1<&co><&e> Bundle
     - "<&7>___________________"
 
-mining_copper_nugget:
+mining_create_copper_nugget:
   type: item
   material: create_copper_nugget
-  display name: <&6>Copper Nugger
+  display name: <&6>Copper Nugget
   flags:
     interaction:
       1:
@@ -192,11 +192,11 @@ mining_packaging:
     - if !<player.inventory.contains_item[empty_bundle]>:
       - narrate "<&c>You need an empty bundle for this."
       - stop
-    - take item:empty_bundle quantity:1
     - define item <player.item_in_hand>
     - if <script[mining_packaging].data_key[data.stack_sizes.<[item].script.name>].exists>:
       - define quantity <script[mining_packaging].parsed_key[data.stack_sizes.<[item].script.name>]>
       - if <player.inventory.contains_item[<[item].script.name>].quantity[<[quantity]>]>:
+        - take item:empty_bundle quantity:1
         - take item:<[item].script.name> quantity:<[quantity]>
         - give item:<[item].script.name>_bundle
 
@@ -259,13 +259,13 @@ mining_animation:
     - wait 7t
     - stop if:<player.has_flag[temp.timed_action].not>
     - flag player temp.mining.<[location].simple>.count:++
-    - playsound sound:BLOCK_NETHERITE_BLOCK_BREAK <[location]> volume:0.5
+    - playsound sound:BLOCK_NETHERITE_BLOCK_BREAK <[location]> volume:0.1 sound_category:PLAYER
     - blockcrack <[location]> progress:<player.flag[temp.mining.<[location].simple>.count]> players:<player> duration:10m
     - if <player.flag[temp.mining.<[location].simple>.count].mod[3]> != 0:
       - stop
     - wait 2t
-    - give item:<item[<script[mining_interact].data_key[data.mineables.<[location].material.name>.material_given]>].with_flag[uuid:<util.random_uuid>]>
-    - playsound sound:ENTITY_ITEM_PICKUP <player>
+    - give item:<item[<script[capabilities_data].data_key[capability.mining.harvests.<[location].material.name>.material_given]>].with_flag[uuid:<util.random_uuid>]>
+    - playsound sound:ENTITY_ITEM_PICKUP <player> sound_category:PLAYER volume:0.1
 
 mining_callback:
   type: task

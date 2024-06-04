@@ -64,6 +64,7 @@ jobs_initialize_data:
     - flag server profession_data:!
     # Capability Tables for crafting
     - foreach <script[capabilities_data].data_key[capability].keys> as:capability:
+      - foreach next if:<script[capabilities_data].data_key[capability.<[capability]>.no_parse].exists>
       - foreach next if:<script[capabilities_data].data_key[capability.<[capability]>.type].ends_with[production].not>
       - define production_type <script[capabilities_data].data_key[capability.<[capability]>.type]>
       - if <script[capabilities_data].data_key[capability.<[capability]>.crafting_menu]>:

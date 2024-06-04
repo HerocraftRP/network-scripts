@@ -114,7 +114,7 @@ item_flags:
           - inject <[value]>
       - else:
         - inject <context.item.flag[on_recipe_formed]>
-    on player places item_flagged:on_place:
+    on player places item_flagged:on_place ignorecancelled:true:
       - if <context.item_in_hand.flag[on_place].object_type> == List:
         - foreach <context.item_in_hand.flag[on_place]>:
           - inject <[value]>
@@ -126,3 +126,9 @@ item_flags:
           - inject <[value]>
       - else:
         - inject <context.item.flag[right_click_entity]>
+    on player consumes item_flagged:on_consume:
+      - if <context.item.flag[on_consume].object_type> == List:
+        - foreach <context.item.flag[on_consume]>:
+          - inject <[value]>
+      - else:
+        - inject <context.item.flag[on_consume]>

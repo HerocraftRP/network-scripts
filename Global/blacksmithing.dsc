@@ -387,7 +387,6 @@ blacksmith_callback:
     - give item:<[result_item].with[durability=<[durability].round_down>]>
     - remove <player.flag[temp.timed_action.smithing_location].flag[armor_stand]>
     - playsound sound:ENTITY_ITEM_PICKUP <player>
-    - run job_get_rep def:blacksmith|<[data].get[rep_gained]>
 
 blacksmith_inventory_open:
   type: task

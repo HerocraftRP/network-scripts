@@ -62,6 +62,14 @@ shop_data:
             trade_condition_tag: true
             item1: COIN_SILVER[quantity=2]
             result: ranch_butchering_knife
+        2:
+            trade_condition_tag: true
+            item1: COIN_SILVER[quantity=2]
+            result: shears
+        3:
+            trade_condition_tag: true
+            item1: COIN_SILVER[quantity=2]
+            result: bucket
     fishing_tools:
       title: <&6>Fishing Tools
       trades:
@@ -139,6 +147,10 @@ shop_data:
             trade_condition_tag: <player.flag[job.mining.reputation].is_more_than[499]||0>
             item1: COIN_NETHERITE[quantity=5]
             result: netherite_pickaxe
+        7:
+            trade_condition_tag: true
+            item1: COIN_COPPER[quantity=5]
+            result: lantern
     cooking_tools:
       title: <&6>Cooking Tools
       trades:
@@ -279,19 +291,15 @@ shop_data:
         1:
             trade_condition_tag: true
             item1: COIN_COPPER[quantity=2]
-            result: alcocraftplus_mug_of_digger_bitter
+            result: brewery_beer_wheat
         2:
             trade_condition_tag: true
             item1: COIN_COPPER[quantity=2]
-            result: alcocraftplus_mug_of_ice_beer
+            result: brewery_beer_barley
         3:
             trade_condition_tag: true
             item1: COIN_COPPER[quantity=2]
-            result: alcocraftplus_mug_of_leprechaun_cider
-        4:
-            trade_condition_tag: true
-            item1: COIN_COPPER[quantity=2]
-            result: alcocraftplus_mug_of_night_rauch
+            result: brewery_beer_hops
     bundle_sales:
       title: <&6>Farming Tools
       trades:
@@ -299,8 +307,12 @@ shop_data:
             trade_condition_tag: true
             item1: COIN_COPPER[quantity=2]
             result: empty_bundle
+        2:
+            trade_condition_tag: <player.flag[character.capability.mercantile].is_more_than[100]||false>
+            item1: COIN_COPPER
+            result: empty_bundle
     newbie_shop:
-      title: <&6>Tourist Shop
+      title: <&6>New Arrivals Shop
       trades:
         1:
             trade_condition_tag: true
@@ -310,12 +322,16 @@ shop_data:
             trade_condition_tag: true
             item1: COIN_COPPER[quantity=2]
             result: <item[wallet].with[lore=<&6>Owner<&co> <&e><player.name>].with_flag[owner:<player.uuid>]>
+        3:
+            trade_condition_tag: true
+            item1: COIN_COPPER[quantity=2]
+            result: <item[toughasnails_empty_canteen]>
     lockpick_sales:
       title: <&6>Shady Dealer
       trades:
         1:
             trade_condition_tag: true
-            item1: COIN_DIAMOND
+            item1: COIN_GOLD
             result: cuffed_lockpick[display=<&c>Lockpick]
     ranger_sales:
       title: <&a>Beginner Ranger Tools
@@ -352,27 +368,27 @@ shop_data:
       title: <&d>Beginner Mage Supplies
       trades:
         1:
-            trade_condition_tag: <player.flag[character.guild.name].equals[mage]||false>
+            trade_condition_tag: <player.flag[character.capabilities.spell_creation].is_more_than[0]||false>
             item1: COIN_GOLD
             result: mage_beginner_book
         2:
-            trade_condition_tag: <player.flag[character.guild.name].equals[mage]||false>
+            trade_condition_tag: <player.flag[character.capabilities.spell_creation].is_more_than[<script[capabilities_data].data_key[capability.spell_creation.checks.underfoot]>]||false>
             item1: COIN_SILVER[quantity=4]
             result: mage_glyph_underfoot
         3:
-            trade_condition_tag: <player.flag[character.guild.name].equals[mage]||false>
+            trade_condition_tag: <player.flag[character.capabilities.spell_creation].is_more_than[<script[capabilities_data].data_key[capability.spell_creation.checks.toss]>]||false>
             item1: COIN_SILVER[quantity=2]
             result: mage_glyph_toss
         4:
-            trade_condition_tag: <player.flag[character.guild.name].equals[mage]||false>
+            trade_condition_tag: <player.flag[character.capabilities.spell_creation].is_more_than[<script[capabilities_data].data_key[capability.spell_creation.checks.bounce]>]||false>
             item1: COIN_SILVER[quantity=2]
             result: mage_glyph_bounce
         5:
-            trade_condition_tag: <player.flag[character.guild.name].equals[mage]||false>
+            trade_condition_tag: <player.flag[character.capabilities.spell_creation].is_more_than[<script[capabilities_data].data_key[capability.spell_creation.checks.ignite]>]||false>
             item1: COIN_SILVER[quantity=2]
             result: mage_glyph_ignite
         6:
-            trade_condition_tag: <player.flag[character.guild.name].equals[mage]||false>
+            trade_condition_tag: <player.flag[character.capabilities.spell_creation].is_more_than[<script[capabilities_data].data_key[capability.spell_creation.checks.amplify]>]||false>
             item1: COIN_SILVER[quantity=5]
             result: mage_glyph_amplify
     warrior_sales_1:
@@ -381,30 +397,39 @@ shop_data:
         1:
             trade_condition_tag: <player.flag[character.guild.name].equals[warrior]||false>
             item1: COIN_GOLD
-            result: stick
+            result: stick[display=<&c>Not a Stick]
         2:
             trade_condition_tag: <player.flag[character.guild.name].equals[warrior]||false>
             item1: COIN_SILVER[quantity=4]
-            result: warrior_skill_book_guard
+            #result: warrior_skill_book_guard
+            result: stick[display=<&c>Not a Stick]
         3:
             trade_condition_tag: <player.flag[character.guild.name].equals[warrior]||false>
             item1: COIN_SILVER[quantity=2]
-            result: warrior_skill_book_parrying
+            #result: warrior_skill_book_parrying
+            result: stick[display=<&c>Not a Stick]
         4:
             trade_condition_tag: <player.flag[character.guild.name].equals[warrior]||false>
             item1: COIN_SILVER[quantity=2]
-            result: warrior_skill_book_tenacity
+            #result: warrior_skill_book_tenacity
+            result: stick[display=<&c>Not a Stick]
         5:
             trade_condition_tag: <player.flag[character.guild.name].equals[warrior]||false>
             item1: COIN_SILVER[quantity=2]
-            result: warrior_skill_book_stamina_pillager
+            #result: warrior_skill_book_stamina_pillager
+            result: stick[display=<&c>Not a Stick]
         6:
             trade_condition_tag: <player.flag[character.guild.name].equals[warrior]||false>
             item1: COIN_SILVER[quantity=5]
-            result: warrior_skill_book_dodge_master
-
-
-
+            #result: warrior_skill_book_dodge_master
+            result: stick[display=<&c>Not a Stick]
+    misc_shop:
+      title: <&7>Street Vendor
+      trades:
+        1:
+            trade_condition_tag: true
+            item1: COIN_SILVER
+            result: writable_book
 
 shop_open:
   type: command
@@ -417,10 +442,11 @@ shop_open:
   script:
     - define trades <list>
     - adjust <queue> linked_player:<server.match_player[<context.args.get[2]>]>
+    - define level <player.flag[character.capabilities.mercantile].round_to_precision[100].div[100].add[1]||1>
     - if <server.has_flag[shops.<context.args.get[1]>]>:
       - define merchant <context.args.get[1].starts_with[merchant_]>
-      - if <[merchant]> && <player.flag[character.guild.name]> == merchant:
-        - opentrades <server.flag[shops.<context.args.get[1]>]> "title:<&6><context.args.get[1].before[_sales].replace[_].with[<&sp>].to_titlecase> Sales"
+      - if <[merchant]>:
+        - opentrades <server.flag[shops.<context.args.get[1]>_<[level]>]> "title:<&6><context.args.get[1].before[_sales].replace[_].with[<&sp>].to_titlecase> Sales"
       - else if !<[merchant]>:
         - opentrades <server.flag[shops.<context.args.get[1]>]> "title:<&6><context.args.get[1].before[_].to_titlecase> Sales"
       - else:
@@ -449,7 +475,7 @@ shop_data_retrieve:
       bundles_needed: <[bundles_needed]>
   script:
     - flag server google_data:!
-    - ~webget "headers:<map.with[X-goog-api-key].as[AIzaSyA061Mj-AGTbQxUTD0kflDMVRDTzMoKZds].with[Content-Type].as[application/json].with[Accept].as[application/json]>" https://sheets.googleapis.com/v4/spreadsheets/17pKdiEAfBsMi80aRYptHT1QQAYN075G-o6O3IOSoRNg/values:batchGet?ranges=Mining!B4:H8&ranges=Lumberjack!B4:H9&ranges=Farming!B4:H8&ranges=Fishing!B4:H8&valueRenderOption=UNFORMATTED_VALUE&majorDimension=ROWS save:data
+    - ~webget "headers:<map.with[X-goog-api-key].as[AIzaSyA061Mj-AGTbQxUTD0kflDMVRDTzMoKZds].with[Content-Type].as[application/json].with[Accept].as[application/json]>" https://sheets.googleapis.com/v4/spreadsheets/17pKdiEAfBsMi80aRYptHT1QQAYN075G-o6O3IOSoRNg/values:batchGet?ranges=Mining!B4:H8&ranges=Lumberjack!B4:H9&ranges=Farming!B4:H13&ranges=Fishing!B4:H8&valueRenderOption=UNFORMATTED_VALUE&majorDimension=ROWS save:data
     - yaml loadtext:<entry[data].result> id:job_data
     - foreach <yaml[job_data].read[valueRanges]> as:jobMap:
       - define jobName <[jobMap].get[range].before[!]>
@@ -478,13 +504,15 @@ shop_build_job_shops:
         - define trades <[trades].include[<[trade]>]>
       - flag server shops.<[jobName]>_sales:<[trades]>
     # Merchant Job Sales
-    - foreach <server.flag[google_data].keys> as:jobName:
-      - define trades <list>
-      - foreach <server.flag[google_data.<[jobName]>].keys> as:material:
-        - define data <server.flag[google_data.<[jobName]>.<[material]>]>
-        - if <[data].get[bundles_needed]> == 2:
-          - define trade trade[max_uses=99999;inputs=<list.pad_right[2].with[<[jobName]>_<[material]>_bundle]>;result=COIN_COPPER[quantity=<[data].get[value].add[4]>];has_xp=false]
-        - else:
-          - define trade trade[max_uses=99999;inputs=<[jobName]>_<[material]>_bundle;result=COIN_COPPER[quantity=<[data].get[value].add[4]>];has_xp=false]
-        - define trades <[trades].include[<[trade]>]>
-      - flag server shops.merchant_<[jobName]>_sales:<[trades]>
+    - repeat 6 as:level:
+      - foreach <server.flag[google_data].keys> as:jobName:
+        - define trades <list>
+        - foreach <server.flag[google_data.<[jobName]>].keys> as:material:
+          - define data <server.flag[google_data.<[jobName]>.<[material]>]>
+          - if <[data].get[bundles_needed]> == 2:
+            - define trade trade[max_uses=99999;inputs=<list.pad_right[2].with[<[jobName]>_<[material]>_bundle]>;result=COIN_COPPER[quantity=<[data].get[value].add[<[level]>]>];has_xp=false]
+          - else:
+            - define trade trade[max_uses=99999;inputs=<[jobName]>_<[material]>_bundle;result=COIN_COPPER[quantity=<[data].get[value].add[<[level]>]>];has_xp=false]
+          - define trades <[trades].include[<[trade]>]>
+        - flag server shops.merchant_<[jobName]>_sales_<[level]>:<[trades]>
+        - flag server shops.merchant_<[jobName]>_sales

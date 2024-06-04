@@ -170,6 +170,7 @@ mark_local_command:
   debug: false
   description: mark where you stand for a spot for local spawn
   usage: /local_mark_spawn
+  permission: not.a.perm
   script:
     - define UUID <util.random_uuid>
     - flag server local_locations.<[uuid]>.location:<player.location>
@@ -182,6 +183,7 @@ local_purge:
   debug: false
   description: remove a local spawn spot
   usage: /local_purge
+  permission: not.a.perm
   script:
     - foreach <server.flag[local_locations].keys>:
       - run remove_local def:<server.flag[local_locations.<[value]>.local]>
@@ -192,6 +194,7 @@ remove_local_command:
   debug: false
   description: remove a local spawn spot
   usage: /local_remove_spawn
+  permission: not.a.perm
   script:
     - foreach <server.flag[local_locations]>:
       - if <[value].get[location].distance[<player.location>]> < 1 :
@@ -204,6 +207,7 @@ visualize_local_command:
   debug: false
   description: show local spawn spots nearby
   usage: /local_show_spawns
+  permission: not.a.perm
   script:
     - foreach <server.flag[local_locations]>:
       - if <[value].get[location].distance[<player.location>]> < 25 :
@@ -222,6 +226,7 @@ local_set_type:
   name: local_set_type
   debug: false
   description: set local variant
+  permission: not.a.perm
   usage: /local_set_type
   tab completions:
     1: RANDOM|DESERT|JUNGLE|PLAINS|SAVANNA|SNOW|SWAMP|TAIGA
@@ -240,6 +245,7 @@ local_set_profession:
   name: local_set_profession
   debug: false
   description: set local variant
+  permission: not.a.perm
   usage: /local_set_profession
   tab completions:
     1: RANDOM|ARMORER|BUTCHER|CARTOGRAPHER|CLERIC|FARMER|FISHERMAN|FLETCHER|LEATHERWORKER|LIBRARIAN|MASON|NITWIT|NONE|SHEPHERD|TOOLSMITH|WEAPONSMITH
