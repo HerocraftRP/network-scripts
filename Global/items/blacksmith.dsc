@@ -197,3 +197,9 @@ blacksmith_magistuarmory_stone_kiteshield:
   display name: <&7>Stone Kiteshield
   flags:
     display: <&7>Stone Kiteshield
+
+blacksmith_stone_nails:
+  type: item
+  debug: false
+  material: tripwire_hook
+  display name: <&7>Stone Nails

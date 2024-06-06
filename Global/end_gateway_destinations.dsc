@@ -15,6 +15,11 @@ gateway_teleport:
           - if <[gateway].has_flag[destination.location]>:
             - bungeerun <[gateway].flag[destination.server]> gateway_teleport_bungee def:<player.uuid>|<[gateway].flag[destination.location]>
           - wait 1t
+          - run tab_list_remove_single def:<[target]>
+          - ~run sql_set_inventory def:<[target]>
+          - ~run sql_set_character_data def:<[target]>
+          - ~run sql_set_player_data def:<[target]>
+          - wait 1s
           - adjust <player> send_to:<[gateway].flag[destination.server]>
           - wait 1t
           - stop
@@ -27,7 +32,7 @@ gateway_teleport_bungee:
   debug: false
   definitions: uuid|location
   script:
-    - flag server join_location.<[uuid]>:<[location]>
+    - flag server join_location.<[uuid]>.temp:<[location]>
 
 gateway_teleport_force:
   type: world

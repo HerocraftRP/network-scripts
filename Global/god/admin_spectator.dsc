@@ -6,12 +6,6 @@ divine_mode_spectator:
   description: spectator mode, with particles!
   permission: herocraft.divine.form
   script:
-    - if !<player.has_flag[data.preferences.color1]>:
-      - narrate "<&c>You must set your [data.preferences.color1] flag, first!"
-      - stop
-    - if !<player.has_flag[data.preferences.colorBase]>:
-      - narrate "<&c>You must set your [data.preferences.colorBase] flag, first!"
-      - stop
     - if !<player.has_flag[character.god]>:
       - narrate "<&c>You lack a divine form, mortal."
       - stop
@@ -109,23 +103,23 @@ admin_mode_spectator_loop:
     - if <[god_script].data_key[data.color3].exists>:
       - while <player.is_online> && <player.gamemode> == SPECTATOR:
         - define targets <player.location.find_players_within[100]> if:<[loop_index].mod[10].equals[0]>
-        - playeffect at:<player.location> quantity:<[data].get[quantity1]> effect:REDSTONE offset:<[data].get[offset1]> special_data:<[data].get[size1]>|<player.flag[data.preferences.colorBase]> targets:<[targets]>
-        - playeffect at:<player.location> quantity:<[data].get[quantity2].div[3].round> effect:REDSTONE offset:<[data].get[offset2]> special_data:<[data].get[size2]>|<player.flag[data.preferences.color1]> targets:<[targets]>
-        - playeffect at:<player.location> quantity:<[data].get[quantity2].div[3].round> effect:REDSTONE offset:<[data].get[offset2]> special_data:<[data].get[size2]>|<player.flag[data.preferences.color2]> targets:<[targets]>
-        - playeffect at:<player.location> quantity:<[data].get[quantity2].div[3].round> effect:REDSTONE offset:<[data].get[offset2]> special_data:<[data].get[size2]>|<player.flag[data.preferences.color3]> targets:<[targets]>
+        - playeffect at:<player.location> quantity:<[data].get[quantity1]> effect:REDSTONE offset:<[data].get[offset1]> special_data:<[data].get[size1]>|<[god_script].data_key[data.colorBase]> targets:<[targets]>
+        - playeffect at:<player.location> quantity:<[data].get[quantity2].div[3].round> effect:REDSTONE offset:<[data].get[offset2]> special_data:<[data].get[size2]>|<[god_script].data_key[data.color1]> targets:<[targets]>
+        - playeffect at:<player.location> quantity:<[data].get[quantity2].div[3].round> effect:REDSTONE offset:<[data].get[offset2]> special_data:<[data].get[size2]>|<[god_script].data_key[data.color2]> targets:<[targets]>
+        - playeffect at:<player.location> quantity:<[data].get[quantity2].div[3].round> effect:REDSTONE offset:<[data].get[offset2]> special_data:<[data].get[size2]>|<[god_script].data_key[data.color3]> targets:<[targets]>
         - wait 2t
     - else if <[god_script].data_key[data.color2].exists>:
       - while <player.is_online> && <player.gamemode> == SPECTATOR:
         - define targets <player.location.find_players_within[100]> if:<[loop_index].mod[10].equals[0]>
-        - playeffect at:<player.location> quantity:<[data].get[quantity1]> effect:REDSTONE offset:<[data].get[offset1]> special_data:<[data].get[size1]>|<player.flag[data.preferences.colorBase]> targets:<[targets]>
-        - playeffect at:<player.location> quantity:<[data].get[quantity2].div[2].round> effect:REDSTONE offset:<[data].get[offset2]> special_data:<[data].get[size2]>|<player.flag[data.preferences.color1]> targets:<[targets]>
-        - playeffect at:<player.location> quantity:<[data].get[quantity2].div[2].round> effect:REDSTONE offset:<[data].get[offset2]> special_data:<[data].get[size2]>|<player.flag[data.preferences.color2]> targets:<[targets]>
+        - playeffect at:<player.location> quantity:<[data].get[quantity1]> effect:REDSTONE offset:<[data].get[offset1]> special_data:<[data].get[size1]>|<[god_script].data_key[data.colorBase]> targets:<[targets]>
+        - playeffect at:<player.location> quantity:<[data].get[quantity2].div[2].round> effect:REDSTONE offset:<[data].get[offset2]> special_data:<[data].get[size2]>|<[god_script].data_key[data.color1]> targets:<[targets]>
+        - playeffect at:<player.location> quantity:<[data].get[quantity2].div[2].round> effect:REDSTONE offset:<[data].get[offset2]> special_data:<[data].get[size2]>|<[god_script].data_key[data.color2]> targets:<[targets]>
         - wait 2t
     - else:
       - while <player.is_online> && <player.gamemode> == SPECTATOR:
         - define targets <player.location.find_players_within[100]> if:<[loop_index].mod[10].equals[0]>
-        - playeffect at:<player.location> quantity:<[data].get[quantity1]> effect:REDSTONE offset:<[data].get[offset1]> special_data:<[data].get[size1]>|<player.flag[data.preferences.colorBase]> targets:<[targets]>
-        - playeffect at:<player.location> quantity:<[data].get[quantity2]> effect:REDSTONE offset:<[data].get[offset2]> special_data:<[data].get[size2]>|<player.flag[data.preferences.color1]> targets:<[targets]>
+        - playeffect at:<player.location> quantity:<[data].get[quantity1]> effect:REDSTONE offset:<[data].get[offset1]> special_data:<[data].get[size1]>|<[god_script].data_key[data.colorBase]> targets:<[targets]>
+        - playeffect at:<player.location> quantity:<[data].get[quantity2]> effect:REDSTONE offset:<[data].get[offset2]> special_data:<[data].get[size2]>|<[god_script].data_key[data.color1]> targets:<[targets]>
         - wait 2t
 
 divine_mode_spectator_landing:
@@ -140,8 +134,8 @@ divine_mode_spectator_landing:
     - define targets <player.location.find_players_within[100]>
     - define god_script <script[god_<player.flag[character.god]>]>
     - repeat 2:
-      - playeffect at:<player.location.above[0.5]> quantity:20 effect:REDSTONE offset:0.4,0.6,0.4 special_data:4|<player.flag[data.preferences.colorBase]> targets:<[targets]>
-      - playeffect at:<player.location.above[0.5]> quantity:10 effect:REDSTONE offset:0.45,0.65,0.45 special_data:1|<player.flag[data.preferences.color1]> targets:<[targets]>
-      - playeffect at:<player.location.above[0.5]> quantity:10 effect:REDSTONE offset:0.45,0.65,0.45 special_data:1|<player.flag[data.preferences.color2]> targets:<[targets]> if:<[god_script].data_key[data.color2].exists>
-      - playeffect at:<player.location.above[0.5]> quantity:10 effect:REDSTONE offset:0.45,0.65,0.45 special_data:1|<player.flag[data.preferences.color3]> targets:<[targets]> if:<[god_script].data_key[data.color3].exists>
+      - playeffect at:<player.location.above[0.5]> quantity:20 effect:REDSTONE offset:0.4,0.6,0.4 special_data:4|<[god_script].data_key[data.colorBase]> targets:<[targets]>
+      - playeffect at:<player.location.above[0.5]> quantity:10 effect:REDSTONE offset:0.45,0.65,0.45 special_data:1|<[god_script].data_key[data.color1]> targets:<[targets]>
+      - playeffect at:<player.location.above[0.5]> quantity:10 effect:REDSTONE offset:0.45,0.65,0.45 special_data:1|<[god_script].data_key[data.color2]> targets:<[targets]> if:<[god_script].data_key[data.color2].exists>
+      - playeffect at:<player.location.above[0.5]> quantity:10 effect:REDSTONE offset:0.45,0.65,0.45 special_data:1|<[god_script].data_key[data.color3]> targets:<[targets]> if:<[god_script].data_key[data.color3].exists>
       - wait 2t

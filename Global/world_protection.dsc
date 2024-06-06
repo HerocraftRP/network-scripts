@@ -35,7 +35,7 @@ cancel:
   type: task
   debug: false
   script:
-    - determine cancelled if:<player.item_in_hand.material.name.ends_with[spell_book].not||true>
+    - determine passively cancelled if:<player.item_in_hand.material.name.ends_with[spell_book].not||true>
     - inventory close if:<context.location.inventory.exists>
     - wait 1t
     - inventory close if:<context.location.inventory.exists>

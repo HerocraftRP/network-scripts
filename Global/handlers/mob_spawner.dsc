@@ -73,6 +73,16 @@ mob_spawner_try_spawn:
               - flag <context.entity> spawned:->:<entry[spawned].entity>
       - wait 1m
 
+mob_no_xp:
+  type: world
+  debug: false
+  events:
+    on entity dies bukkit_priority:lowest:
+      - determine passively NO_XP
+      - determine passively NO_DROPS
+      - if <context.entity.has_flag[drops]>:
+        - drop <context.entity.flag[drops]> <context.entity.location>
+
 mob_spawner_check_mob:
   type: task
   debug: false

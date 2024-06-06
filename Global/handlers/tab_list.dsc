@@ -30,6 +30,9 @@ tab_list_update_single:
   debug: false
   definitions: target
   script:
+    - if <server.online_players.size> == 0:
+      - flag server tab_list_map:!
+      - stop
     - define target <player> if:<[target].exists.not>
     - repeat 5:
       - if <[value]> == 5:

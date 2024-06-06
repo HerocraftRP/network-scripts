@@ -15,8 +15,11 @@ player_join:
       - flag <player> temp:!
       # Feed and Water my little pretties
       - heal <player> 100
-      - adjust <player> food_level:5 if:<player.food_level.is_less_than[5]>
-      - adjust <player> thirst:5 if:<player.thirst.is_less_than[5]>
+      - if <player.has_flag[character.thirst]>:
+        - adjust <player> thirst:<player.flag[character.thirst]>
+      - if <player.has_flag[character.hunger]>:
+        - adjust <player> food_level:<player.flag[character.hunger]>
+      - heal <player> 100
       - wait 1s
       # Name Map for the reasons
       - flag server name_map.<player.flag[data.name]>:<player>
@@ -36,6 +39,13 @@ player_join:
       # Endurance
       - adjust <player> health_vessels:<player.flag[character.endurance_level]||0>
       - adjust <player> stamina_vessels:<player.flag[character.endurance_level]||0>
+      - flag <player> character.walk_speed:0.2
+      - adjust <player> walk_speed:<player.flag[character.walk_speed]>
+      # Set their Clothes
+      - repeat 4:
+        - define slot <[value].sub[1]>
+        - define player_clothes <player.flag[character.cosmetic_armor.<[slot]>]||0>
+        - adjust player cosmetic_armor:<list[<[slot]>|<script[clothing_data].data_key[clothes.<[slot]>.<[player_clothes]>.material]>]>
     on player quits:
       - define target <player||null>
       - if <[target]> == null:

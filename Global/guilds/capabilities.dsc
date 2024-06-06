@@ -402,6 +402,13 @@ capabilities_data:
               rep_gained: 0.1
               need_shift: true
               shift: <[passthrough].above[0.1].forward[0.4].right[0.2]>
+            blacksmith_stone_nails:
+              material_cost:
+                mining_stone: 6
+              capability_needed: 74
+              rep_gained: 0.1
+              need_shift: false
+              shift: none
             blacksmith_magistuarmory_stone_lucernhammer:
               material_cost:
                 mining_stone: 15
@@ -953,6 +960,11 @@ capabilities_data:
                 oak_planks: 5
               capability_needed: 20
               rep_gained: 0.1
+            tailor_padding:
+              material_cost:
+                white_wool: 5
+              capability_needed: 24
+              rep_gained: 0.1
             leather_boots:
               material_cost:
                 oak_planks: 5
@@ -1084,92 +1096,230 @@ capabilities_data:
             oak_stairs:
               material_cost:
                 lumberjack_oak_planks: 6
-              capability_needed: 2
+              capability_needed: 5
               rep_gained: 0.1
               needs_downshift: false
             stripped_oak_log:
               material_cost:
                 lumberjack_oak_planks: 5
-              capability_needed: 4
+              capability_needed: 10
               rep_gained: 0.1
               needs_downshift: false
-            ##
-            woodwork_wooden_tool_handle:
+            oak_trapdoor:
               material_cost:
                 lumberjack_oak_planks: 15
               capability_needed: 15
               rep_gained: 0.1
               needs_downshift: false
-            oak_trapdoor:
-              material_cost:
-                lumberjack_oak_planks: 15
-              capability_needed: 6
-              rep_gained: 0.1
-              needs_downshift: false
             oak_fence:
               material_cost:
                 lumberjack_oak_planks: 5
-              capability_needed: 8
+              capability_needed: 20
               rep_gained: 0.1
               needs_downshift: false
             oak_fence_gate:
               material_cost:
                 lumberjack_oak_planks: 6
-              capability_needed: 10
+              capability_needed: 25
               rep_gained: 0.1
               needs_downshift: false
             oak_door:
               material_cost:
                 lumberjack_oak_planks: 6
-              capability_needed: 12
+              capability_needed: 30
               rep_gained: 0.1
               needs_downshift: false
-            oak_trapdoor:
+            woodwork_wooden_tool_handle:
               material_cost:
-                lumberjack_oak_planks: 30
+                lumberjack_oak_planks: 5
               capability_needed: 35
               rep_gained: 0.1
               needs_downshift: false
             oak_pressure_plate:
               material_cost:
-                lumberjack_oak_planks: 35
+                lumberjack_oak_planks: 3
               capability_needed: 40
               rep_gained: 0.1
               needs_downshift: false
             oak_button:
               material_cost:
-                lumberjack_oak_planks: 40
+                lumberjack_oak_planks: 2
               capability_needed: 45
               rep_gained: 0.1
               needs_downshift: false
             oak_sign:
               material_cost:
-                lumberjack_oak_planks: 45
+                lumberjack_oak_planks: 4
               capability_needed: 50
               rep_gained: 0.1
               needs_downshift: false
             oak_hanging_sign:
               material_cost:
-                lumberjack_oak_planks: 50
+                lumberjack_oak_planks: 5
               capability_needed: 55
               rep_gained: 0.1
               needs_downshift: false
             farmersdelight_oak_cabinet:
               material_cost:
-                lumberjack_oak_planks: 55
+                lumberjack_oak_planks: 8
               capability_needed: 60
               rep_gained: 0.1
               needs_downshift: false
             create_oak_window:
               material_cost:
-                lumberjack_oak_planks: 60
-              capability_needed: 70
+                lumberjack_oak_planks: 8
+              capability_needed: 65
               rep_gained: 0.1
               needs_downshift: false
             aquaculture_oak_fish_mount:
               material_cost:
-                lumberjack_oak_planks: 65
+                lumberjack_oak_planks: 6
+              capability_needed: 70
+              rep_gained: 0.1
+              needs_downshift: false
+            fantasyfurniture_nordictable_small:
+              material_cost:
+                lumberjack_oak_planks: 12
+                blacksmith_stone_nails: 4
               capability_needed: 75
+              rep_gained: 0.1
+              needs_downshift: false
+            fantasyfurniture_nordictable_wide:
+              material_cost:
+                lumberjack_oak_planks: 16
+                blacksmith_stone_nails: 4
+              capability_needed: 76
+              rep_gained: 0.1
+              needs_downshift: false
+            fantasyfurniture_nordictable_large:
+              material_cost:
+                lumberjack_oak_planks: 24
+                blacksmith_stone_nails: 8
+              capability_needed: 77
+              rep_gained: 0.1
+              needs_downshift: false
+            fantasyfurniture_nordicstool:
+              material_cost:
+                lumberjack_oak_planks: 6
+                blacksmith_stone_nails: 4
+              capability_needed: 80
+              rep_gained: 0.1
+              needs_downshift: false
+            fantasyfurniture_nordicdrawer:
+              material_cost:
+                lumberjack_oak_planks: 8
+                blacksmith_stone_nails: 12
+              capability_needed: 81
+              rep_gained: 0.1
+              needs_downshift: false
+            fantasyfurniture_nordicshelf:
+              material_cost:
+                lumberjack_oak_planks: 8
+                blacksmith_stone_nails: 4
+              capability_needed: 82
+              rep_gained: 0.1
+              needs_downshift: false
+            fantasyfurniture_nordicsofa:
+              material_cost:
+                lumberjack_oak_planks: 8
+                blacksmith_stone_nails: 4
+                tailor_padding: 12
+              capability_needed: 85
+              rep_gained: 0.1
+              needs_downshift: false
+            fantasyfurniture_nordicchair:
+              material_cost:
+                lumberjack_oak_planks: 8
+                blacksmith_stone_nails: 4
+                tailor_padding: 2
+              capability_needed: 86
+              rep_gained: 0.1
+              needs_downshift: false
+            fantasyfurniture_nordicbench:
+              material_cost:
+                lumberjack_oak_planks: 12
+                blacksmith_stone_nails: 6
+                tailor_padding: 4
+              capability_needed: 87
+              rep_gained: 0.1
+              needs_downshift: false
+            fantasyfurniture_nordicbookshelf:
+              material_cost:
+                lumberjack_oak_planks: 12
+                blacksmith_stone_nails: 6
+              capability_needed: 88
+              rep_gained: 0.1
+              needs_downshift: false
+            fantasyfurniture_nordicchest:
+              material_cost:
+                lumberjack_oak_planks: 24
+                blacksmith_stone_nails: 12
+              capability_needed: 90
+              rep_gained: 0.1
+              needs_downshift: false
+            fantasyfurniture_nordicdresser:
+              material_cost:
+                lumberjack_oak_planks: 24
+                blacksmith_stone_nails: 12
+              capability_needed: 91
+              rep_gained: 0.1
+              needs_downshift: false
+            fantasyfurniture_nordicbed_single:
+              material_cost:
+                lumberjack_oak_planks: 12
+                blacksmith_stone_nails: 12
+                tailor_padding: 4
+              capability_needed: 92
+              rep_gained: 0.1
+              needs_downshift: false
+            fantasyfurniture_nordicbed_double:
+              material_cost:
+                lumberjack_oak_planks: 12
+                blacksmith_stone_nails: 12
+                tailor_padding: 8
+              capability_needed: 93
+              rep_gained: 0.1
+              needs_downshift: false
+            fantasyfurniture_nordicchandelier:
+              material_cost:
+                lumberjack_oak_planks: 6
+                blacksmith_stone_nails: 12
+              capability_needed: 94
+              rep_gained: 0.1
+              needs_downshift: false
+            fantasyfurniture_nordicdoor_single:
+              material_cost:
+                lumberjack_oak_planks: 6
+                blacksmith_stone_nails: 6
+              capability_needed: 95
+              rep_gained: 0.1
+              needs_downshift: false
+            fantasyfurniture_nordicdoor_double:
+              material_cost:
+                lumberjack_oak_planks: 12
+                blacksmith_stone_nails: 12
+              capability_needed: 96
+              rep_gained: 0.1
+              needs_downshift: false
+            fantasyfurniture_nordiclockbox:
+              material_cost:
+                lumberjack_oak_planks: 6
+                blacksmith_stone_nails: 8
+              capability_needed: 97
+              rep_gained: 0.1
+              needs_downshift: false
+            fantasyfurniture_nordiccounter:
+              material_cost:
+                lumberjack_oak_planks: 12
+                blacksmith_stone_nails: 8
+              capability_needed: 98
+              rep_gained: 0.1
+              needs_downshift: false
+            fantasyfurniture_nordicoven:
+              material_cost:
+                lumberjack_oak_planks: 16
+                blacksmith_stone_nails: 12
+              capability_needed: 99
               rep_gained: 0.1
               needs_downshift: false
     fletching:

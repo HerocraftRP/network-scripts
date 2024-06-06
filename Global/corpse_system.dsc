@@ -3,18 +3,14 @@ corpse_system_events:
   debug: false
   events:
     on player dies:
+      - adjust <queue> linked_player:<context.entity>
       - determine passively NO_MESSAGE
-      - define location <context.entity.location>
+      - define location <player.location>
       - wait 1t
       - adjust <player> gamemode:spectator
-      #- adjust <context.entity.location.world> spawn_location:<context.entity.location>
-      - adjust <player> bed_spawn_location:<[location]>
-      - adjust <player> spawn_forced:true
-      - teleport <[location]>
-      - wait 1t
-      - title title:<&c>Downed stay:2s
+      - title title:<&c>Downed stay:3s
       - define corpse <[location].find_entities[corpse_corpse].within[5].first||null>
-      - repeat 4:
+      - repeat 8:
         - if <[corpse].equals[null]>:
           - wait 5t
           - define corpse <[location].find_entities[corpse_corpse].within[5].first||null>
@@ -28,11 +24,12 @@ corpse_system_events:
         - cast remove <[value].get[type]>
       - teleport <[corpse]> <[corpse].location.above>
       - define death_location <[corpse].location>
-      - mount <player>|<[corpse]>
+      #- mount <player>|<[corpse]>
       - run add_framework_flag def:on_dismounted|cancel|<[corpse]>
       #- adjust <player> spectate:<[corpse]>
-      - run add_framework_flag def:on_teleport|cancel
+      #- run add_framework_flag def:on_teleport|cancel
       - flag <player> dead:<[corpse]>
+      - run corpse_teleport_loop
       - flag <[corpse]> owner:<player>
       - flag <[corpse]> right_click_script:corpse_interact
       - flag player giveup_timer:<util.time_now>
@@ -44,14 +41,26 @@ corpse_system_events:
         - title title:<&c>Downed "subtitle:/giveup to respawn in <&e><element[60].sub[<[value]>]>" fade_in:0t stay:1.5s
       - wait 1s
       - title title:<&c>Downed "subtitle:/giveup to respawn" fade_in:0t stay:10m
+    on player damaged:
+      - if <context.final_damage> > <player.health>:
+        - adjust <player> bed_spawn_location:<player.location>
+        - adjust <player> spawn_forced:true
 
     on player quits flagged:dead:
       - stop if:<player.flag[dead].is_spawned.not>
       - teleport <player.flag[dead].location>
       - remove <player.flag[dead]>
-      - flag <player> on_teleport:!
+      #- flag <player> on_teleport:!
       - title title:<&c>Downed "subtitle:/giveup to respawn in <&e>60 seconds..." stay:2s
       - wait 1t
+
+corpse_teleport_loop:
+  type: task
+  debug: false
+  script:
+    - while <player.has_flag[dead]> && <player.is_online>:
+      - teleport <player.flag[dead].location>
+      - wait 5t
 
 corpse_giveup:
   type: command
@@ -69,7 +78,7 @@ corpse_giveup:
       - adjust <player.flag[dead].vehicle> walk_speed:0.2
       - flag <player.flag[dead].vehicle> on_sneak:!
       - flag <player.flag[dead].vehicle> carried_corpse:!
-    - run remove_framework_flag def:on_teleport|cancel
+    #- run remove_framework_flag def:on_teleport|cancel
     - run corpse_revive def:<player.flag[dead]> def.new_life:true
 
 corpse_resurrect:
@@ -186,9 +195,9 @@ corpse_pickup:
         - run remove_framework_flag def:right_click_script|get_corpse_entity|<[old_carrier]>
       - flag <[old_carrier]> carried_corpse:!
     # Handle New Carrier
-    - run remove_framework_flag def:on_teleport|cancel|<[corpse]>
+    #- run remove_framework_flag def:on_teleport|cancel|<[corpse]>
     - mount <[corpse]>|<player>
-    - run add_framework_flag def:on_teleport|cancel|<[corpse]>
+    #- run add_framework_flag def:on_teleport|cancel|<[corpse]>
     - adjust <player> walk_speed:0.075
     - flag <[corpse]> carried_by:<player>
     - run add_framework_flag def:on_sneak|corpse_drop_start
@@ -213,7 +222,7 @@ corpse_drop:
     - adjust <player> walk_speed:0.2
     - run remove_framework_flag def:on_sneak|corpse_drop_start
     - if <player.flag[carried_corpse].is_spawned>:
-      - run remove_framework_flag def:on_teleport|cancel|<player.flag[carried_corpse]>
+      #- run remove_framework_flag def:on_teleport|cancel|<player.flag[carried_corpse]>
       - define corpse <player.flag[carried_corpse]>
       - define rp <player.location.forward_flat[2].find_blocks_flagged[respawn_point].within[2].first.if_null[null]>
       - define respawn_point <[rp].flag[respawn_point].if_null[<[rp]>]>
@@ -267,7 +276,7 @@ corpse_revive:
         - foreach continue if:<[key].equals[41]>
         - inventory set slot:<script[corpse_inventory].data_key[data.replacement_slots.<[key]>]||<[key]>> d:<[inv]> o:<[value]>
     - adjust <player> spawn_forced:false
-    - run remove_framework_flag def:on_teleport|cancel
+    #- run remove_framework_flag def:on_teleport|cancel
     - teleport <[location]>
     # Restore Items
     - define inv <inventory[CORPSE_<player.uuid>]||null>

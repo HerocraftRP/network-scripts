@@ -87,9 +87,12 @@ entity_flags:
     # Server Flag "join_location" - will teleport the player on join, if no player flag is present
     after player joins:
         - wait 1s
-        - if <server.has_flag[join_location.<player.uuid>]>:
-          - teleport <player> <server.flag[join_location.<player.uuid>].parsed>
-          - flag server join_location.<player.uuid>:!
+        - if <server.has_flag[join_location.<player.uuid>.temp]>:
+          - teleport <player> <server.flag[join_location.<player.uuid>.temp].parsed>
+          - flag server join_location.<player.uuid>.temp:!
+          - stop
+        - if <server.has_flag[join_location.<player.uuid>.primary]>:
+          - teleport <player> <server.flag[join_location.<player.uuid>.primary].parsed>
           - stop
         - if <server.has_flag[join_location.main]>:
           - teleport <server.flag[join_location.main].parsed>
@@ -291,3 +294,9 @@ entity_flags:
               - inject <[value]>
           - else:
             - inject <player.flag[on_basic_attack]>
+    on slime splits:
+      - if <context.entity.flag[on_split].object_type> == List:
+        - foreach <context.entity.flag[on_split]>:
+          - inject <[on_split]>
+      - else:
+        - inject <context.entity.flag[on_split]>
