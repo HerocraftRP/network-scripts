@@ -152,11 +152,12 @@ housing_use_check:
   type: task
   debug: false
   script:
-    - define uuid <context.location.flag[housing.id]>
-    - if <server.flag[housing.<[uuid]>.members].keys.contains[<player.uuid>]>:
-      - if <server.flag[housing.<[uuid]>.members.<player.uuid>.use]>:
-        - stop
-    - determine cancelled
+    - if !<player.has_flag[character.god]>:
+      - define uuid <context.location.flag[housing.id]>
+      - if <server.flag[housing.<[uuid]>.members].keys.contains[<player.uuid>]>:
+        - if <server.flag[housing.<[uuid]>.members.<player.uuid>.use]>:
+          - stop
+      - determine cancelled
 
 housing_set_owner:
   type: task

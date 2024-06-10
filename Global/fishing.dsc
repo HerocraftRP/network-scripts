@@ -231,6 +231,15 @@ basic_fishing_rod:
   material: fishing_rod
   flags:
     right_click_script: fishing_start
+    interaction:
+      1:
+        script: mage_book_teleport
+        display: <&b>Fishing<&co> <&6>Manage Rod
+  lore:
+    - "<&7>___________________"
+    - ""
+    - <&a>Interaction 1<&co> <&b>Fishing<&co> <&6>Manage Rod
+    - "<&7>___________________"
 
 iron_fishing_rod:
   type: item

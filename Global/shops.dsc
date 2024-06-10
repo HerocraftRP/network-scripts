@@ -279,12 +279,12 @@ shop_data:
             item1: COIN_SILVER[quantity=2]
             result: MAGISTUARMORY_BLACKSMITH_HAMMER
     hospital_shop:
-      title: <&6>Farming Tools
+      title: <&6>Hospital Goods (Out of Stock)
       trades:
         1:
-            trade_condition_tag: true
+            trade_condition_tag: false
             item1: COIN_COPPER[quantity=1]
-            result: FIRSTAID_PLASTER[quantity=2]
+            result: air[display_name=<&6>Premium, High Quality, Air]
     bartender_shop:
       title: <&6>Farming Tools
       trades:
@@ -391,6 +391,32 @@ shop_data:
             trade_condition_tag: <player.flag[character.capabilities.spell_creation].is_more_than[<script[capabilities_data].data_key[capability.spell_creation.checks.amplify]>]||false>
             item1: COIN_SILVER[quantity=5]
             result: mage_glyph_amplify
+        7:
+            trade_condition_tag: <player.flag[character.capabilities.spell_creation].is_more_than[<script[capabilities_data].data_key[capability.spell_creation.checks.freeze]>]||false>
+            item1: COIN_SILVER[quantity=7]
+            result: mage_glyph_freeze
+        8:
+            trade_condition_tag: <player.flag[character.capabilities.spell_creation].is_more_than[<script[capabilities_data].data_key[capability.spell_creation.checks.gust]>]||false>
+            item1: COIN_GOLD
+            result: mage_glyph_gust
+        9:
+            trade_condition_tag: <player.flag[character.capabilities.spell_creation].is_more_than[<script[capabilities_data].data_key[capability.spell_creation.checks.light]>]||false>
+            item1: COIN_GOLD
+            item2: COIN_SILVER[quantity=5]
+            result: mage_glyph_light
+        10:
+            trade_condition_tag: <player.flag[character.capabilities.spell_creation].is_more_than[<script[capabilities_data].data_key[capability.spell_creation.checks.rune]>]||false>
+            item1: COIN_GOLD
+            item2: COIN_SILVER[quantity=7]
+            result: mage_glyph_rune
+        11:
+            trade_condition_tag: <player.flag[character.capabilities.spell_creation].is_more_than[<script[capabilities_data].data_key[capability.spell_creation.checks.pickup]>]||false>
+            item1: COIN_GOLD[quantity=2]
+            result: mage_glyph_pickup
+        12:
+            trade_condition_tag: <player.flag[character.capabilities.spell_creation].is_more_than[<script[capabilities_data].data_key[capability.spell_creation.checks.summon_steed]>]||false>
+            item1: COIN_GOLD[quantity=5]
+            result: mage_glyph_summon_steed
     warrior_sales_1:
       title: <&c>Beginner Warrior Skills
       trades:
@@ -430,6 +456,21 @@ shop_data:
             trade_condition_tag: true
             item1: COIN_SILVER
             result: writable_book
+    guard_tools:
+      title: <&6>Guard Requisitions
+      trades:
+        1:
+            trade_condition_tag: <player.has_flag[temp.active_duty_guard]>
+            item1: COIN_GOLD
+            result: handcuffs
+        2:
+            trade_condition_tag: <player.has_flag[temp.active_duty_guard]>
+            item1: COIN_GOLD
+            result: handcuffs_key
+        3:
+            trade_condition_tag: <player.has_flag[temp.active_duty_guard]>
+            item1: COIN_SILVER
+            result: chain
 
 shop_open:
   type: command

@@ -103,7 +103,7 @@ sql_set_player_data:
 
 sql_get_player_data:
   type: task
-  debug: true
+  debug: false
   definitions: target
   script:
     - define target <player> if:<[target].exists.not>

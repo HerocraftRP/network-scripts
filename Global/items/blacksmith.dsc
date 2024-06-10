@@ -22,13 +22,13 @@ blacksmith_magistuarmory_stone_katzbalger:
   flags:
     display: <&7>Stone Katzbalger
 
-blacksmith_magistuarmory_stone_pike:
+blacksmith_epicfight_stone_spear:
   type: item
   debug: false
-  material: magistuarmory_stone_pike
-  display name: <&7>Stone Stylet
+  material: epicfight_stone_spear
+  display name: <&7>Stone Spear
   flags:
-    display: <&7>Stone Stylet
+    display: <&7>Stone Spear
 
 blacksmith_magistuarmory_stone_ahlspiess:
   type: item

@@ -7,7 +7,7 @@ mage_beginner_book:
     interaction:
       1:
         script: mage_book_teleport
-        display: <&d>Teleport<&co> <&6>Mage Tower
+        display: <&d>Teleport<&co> <&6>Spell Creation Tower
   lore:
     - "<&7>___________________"
     - ""
@@ -25,6 +25,8 @@ mage_book_teleport:
     - if !<player.has_flag[character.guild.name]> || <player.flag[character.guild.name]> != mage:
       - narrate "<&c>You lack the magical prowess to harness this power."
       - stop
+    - foreach <player.location.cuboids.filter[has_flag[on_teleport]]>:
+      - inject <[value].flag[on_teleport]>
     - define color <script[guild_data].parsed_key[data.mage.color]>
     - define destination <server.flag[mage_tower.lower]>
     - define gamemode <player.gamemode>
@@ -50,17 +52,18 @@ mage_book_teleport:
       - adjust <player> velocity:0,-0.51,0
       - wait 2t
     - adjust <player> gamemode:<[gamemode]>
+    - adjust <player> fall_distance:0
+    - adjust <player> gravity:true
+    - teleport <player> <[destination]>
     - repeat 3:
       - playeffect at:<[destination]> offset:<element[1].mul[<[value]>]> effect:redstone special_data:5|<[color]> quantity:<element[30].mul[<[value]>]> targets:<[targets]>
       - wait 1t
-    - adjust <player> fall_distance:0
-    - adjust <player> gravity:true
 
 mage_glyph_amplify:
   type: item
   debug: false
   material: ars_nouveau_glyph_amplify
-  display name: <&d>Mage Glyph<&co> <&e>Amplify
+  display name: <&d>Spell Glyph<&co> <&e>Amplify
   lore:
     - <&6>Skill<&co> <script[capabilities_data].parsed_key[capability.spell_creation.color]>Spell Creation
     - <&6>Reputation Needed<&co> <&e><script[capabilities_data].parsed_key[capability.spell_creation.checks.amplify]>
@@ -73,7 +76,7 @@ mage_glyph_underfoot:
   type: item
   debug: false
   material: ars_nouveau_glyph_underfoot
-  display name: <&d>Mage Glyph<&co> <&e>Underfoot
+  display name: <&d>Spell Glyph<&co> <&e>Underfoot
   lore:
     - <&6>Guild<&co> <script[capabilities_data].parsed_key[capability.spell_creation.color]>Spell Creation
     - <&6>Reputation Needed<&co> <&e><script[capabilities_data].parsed_key[capability.spell_creation.checks.underfoot]>
@@ -86,7 +89,7 @@ mage_glyph_toss:
   type: item
   debug: false
   material: ars_nouveau_glyph_toss
-  display name: <&d>Mage Glyph<&co> <&e>Toss
+  display name: <&d>Spell Glyph<&co> <&e>Toss
   lore:
     - <&6>Guild<&co> <script[capabilities_data].parsed_key[capability.spell_creation.color]>Spell Creation
     - <&6>Reputation Needed<&co> <&e><script[capabilities_data].parsed_key[capability.spell_creation.checks.toss]>
@@ -99,7 +102,7 @@ mage_glyph_bounce:
   type: item
   debug: false
   material: ars_nouveau_glyph_bounce
-  display name: <&d>Mage Glyph<&co> <&e>Bounce
+  display name: <&d>Spell Glyph<&co> <&e>Bounce
   lore:
     - <&6>Guild<&co> <script[capabilities_data].parsed_key[capability.spell_creation.color]>Spell Creation
     - <&6>Reputation Needed<&co> <&e><script[capabilities_data].parsed_key[capability.spell_creation.checks.bounce]>
@@ -112,11 +115,89 @@ mage_glyph_ignite:
   type: item
   debug: false
   material: ars_nouveau_glyph_ignite
-  display name: <&d>Mage Glyph<&co> <&e>Ignite
+  display name: <&d>Spell Glyph<&co> <&e>Ignite
   lore:
     - <&6>Guild<&co> <script[capabilities_data].parsed_key[capability.spell_creation.color]>Spell Creation
     - <&6>Reputation Needed<&co> <&e><script[capabilities_data].parsed_key[capability.spell_creation.checks.ignite]>
   flags:
     capability: spell_creation
     skill: ignite
+    right_click_script: guild_learn_check
+
+mage_glyph_freeze:
+  type: item
+  debug: false
+  material: ars_nouveau_glyph_freeze
+  display name: <&d>Spell Glyph<&co> <&e>Freeze
+  lore:
+    - <&6>Guild<&co> <script[capabilities_data].parsed_key[capability.spell_creation.color]>Spell Creation
+    - <&6>Reputation Needed<&co> <&e><script[capabilities_data].parsed_key[capability.spell_creation.checks.freeze]>
+  flags:
+    capability: spell_creation
+    skill: freeze
+    right_click_script: guild_learn_check
+
+mage_glyph_gust:
+  type: item
+  debug: false
+  material: ars_nouveau_glyph_gust
+  display name: <&d>Spell Glyph<&co> <&e>Gust
+  lore:
+    - <&6>Guild<&co> <script[capabilities_data].parsed_key[capability.spell_creation.color]>Spell Creation
+    - <&6>Reputation Needed<&co> <&e><script[capabilities_data].parsed_key[capability.spell_creation.checks.gust]>
+  flags:
+    capability: spell_creation
+    skill: gust
+    right_click_script: guild_learn_check
+
+mage_glyph_light:
+  type: item
+  debug: false
+  material: ars_nouveau_glyph_light
+  display name: <&d>Spell Glyph<&co> <&e>Light
+  lore:
+    - <&6>Guild<&co> <script[capabilities_data].parsed_key[capability.spell_creation.color]>Spell Creation
+    - <&6>Reputation Needed<&co> <&e><script[capabilities_data].parsed_key[capability.spell_creation.checks.light]>
+  flags:
+    capability: spell_creation
+    skill: light
+    right_click_script: guild_learn_check
+
+mage_glyph_rune:
+  type: item
+  debug: false
+  material: ars_nouveau_glyph_rune
+  display name: <&d>Spell Glyph<&co> <&e>Rune
+  lore:
+    - <&6>Guild<&co> <script[capabilities_data].parsed_key[capability.spell_creation.color]>Spell Creation
+    - <&6>Reputation Needed<&co> <&e><script[capabilities_data].parsed_key[capability.spell_creation.checks.rune]>
+  flags:
+    capability: spell_creation
+    skill: rune
+    right_click_script: guild_learn_check
+
+mage_glyph_pickup:
+  type: item
+  debug: false
+  material: ars_nouveau_glyph_pickup
+  display name: <&d>Spell Glyph<&co> <&e>Pickup
+  lore:
+    - <&6>Guild<&co> <script[capabilities_data].parsed_key[capability.spell_creation.color]>Spell Creation
+    - <&6>Reputation Needed<&co> <&e><script[capabilities_data].parsed_key[capability.spell_creation.checks.pickup]>
+  flags:
+    capability: spell_creation
+    skill: pickup
+    right_click_script: guild_learn_check
+
+mage_glyph_summon_steed:
+  type: item
+  debug: false
+  material: ars_nouveau_glyph_summon_steed
+  display name: <&d>Spell Glyph<&co> <&e>Summon Steed
+  lore:
+    - <&6>Guild<&co> <script[capabilities_data].parsed_key[capability.spell_creation.color]>Spell Creation
+    - <&6>Reputation Needed<&co> <&e><script[capabilities_data].parsed_key[capability.spell_creation.checks.summon_steed]>
+  flags:
+    capability: spell_creation
+    skill: summon_steed
     right_click_script: guild_learn_check

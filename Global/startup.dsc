@@ -5,6 +5,8 @@ startup:
     on server start:
       # Clear Server Temp Flags
       - flag server temp:!
+      # clear Tab List
+      - flag server tab_list_map:!
       # Establish SQL Connection
       - ~sql id:players connect:localhost:3306/players?autoReconnect=true username:denizen password:denizen
       # Prevent Players from joining

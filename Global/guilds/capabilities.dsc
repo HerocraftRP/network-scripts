@@ -21,28 +21,28 @@ capabilities_data:
           quantity_given: 1
           seconds_needed: 5
           capability_gained: 0.001
-          capability_needed: 1
+          capability_needed: 100
         spruce_*:
           material_given: spruce_log
           quantity_given: 1
           seconds_needed: 5
           capability_gained: 0.001
-          capability_needed: 100
+          capability_needed: 200
         jungle_*:
           material_given: jungle_log
           quantity_given: 1
           capability_gained: 0.001
-          capability_needed: 200
+          capability_needed: 300
         acacia_*:
           material_given: acacia_log
           quantity_given: 1
           capability_gained: 0.001
-          capability_needed: 300
+          capability_needed: 400
         dark_oak_*:
           material_given: dark_oak_log
           quantity_given: 1
           capability_gained: 0.001
-          capability_needed: 400
+          capability_needed: 500
     lumberjack_chop:
       type: gathering
       capability: lumberjack
@@ -288,8 +288,8 @@ capabilities_data:
       capability: blacksmith
       tool: magistuarmory_blacksmith_hammer
       action_string: <&6>Smithing Item
-      action_time: 9s
-      animation_task: noop
+      action_time: 10s
+      animation_task: blacksmithing_animation
       cancel_task: profession_refund_production
       crafting_menu: true
       materials:
@@ -305,7 +305,7 @@ capabilities_data:
               capability_needed: 0
               rep_gained: 0.1
               need_shift: true
-              shift: <[passthrough].above[0.1].forward[0.4].right[0.2]>
+              shift: <[passthrough].above[0.1].forward_flat.left[0.2]>
             blacksmith_magistuarmory_stone_shortsword:
               material_cost:
                 mining_stone: 6
@@ -322,7 +322,7 @@ capabilities_data:
               rep_gained: 0.1
               need_shift: true
               shift: <[passthrough].above[0.1].forward[0.4].right[0.2]>
-            blacksmith_magistuarmory_stone_pike:
+            blacksmith_epicfight_stone_spear:
               material_cost:
                 mining_stone: 10
                 woodwork_wooden_tool_handle: 2
@@ -918,7 +918,7 @@ capabilities_data:
       capability: tailoring
       tool: tailoring_sewing_needle
       action_string: <&6>Sewing
-      action_time: 6s
+      action_time: 8s
       animation_task: noop
       cancel_task: profession_refund_production
       crafting_menu: true
@@ -1411,10 +1411,16 @@ capabilities_data:
       check_on_knowledge_gain: false
       checks:
         underfoot: 1
-        toss: 15
-        bounce: 30
-        ignite: 45
-        amplify: 60
+        toss: 20
+        bounce: 40
+        ignite: 60
+        amplify: 80
+        freeze: 100
+        gust: 120
+        light: 140
+        rune: 160
+        pickup: 180
+        summon_steed: 200
     parkour:
       no_parse: true
       color: <&color[#00FFFF]>
@@ -1631,7 +1637,11 @@ profession_refund_production:
 profession_craft_production_callback:
   type: task
   debug: false
+  definitions: location
   script:
+    - if <[location].has_flag[armor_stand]>:
+      - remove <[location].flag[armor_stand]>
+      - flag <[location]> armor_stand:!
     - run profession_generic_callback def:<player.flag[temp.timed_action.capability_used]>|true
 
 profession_crafting_menu_open:
@@ -1829,6 +1839,7 @@ profession_interact_place_production:
   definitions: capability
   script:
     - define material <player.item_in_hand.material.name>
+    - define item_script <player.item_in_hand.script.name||null>
     # Get item off workspace, if placed
     - if <[material]> == air:
       - if <[passthrough].has_flag[armor_stand]>:
@@ -1839,9 +1850,9 @@ profession_interact_place_production:
     - else if !<[passthrough].has_flag[armor_stand]>:
       - stop if:<script[capabilities_data].data_key[capability.<[capability]>.materials.<[material]>].exists.not>
       - if <script[capabilities_data].data_key[capability.<[capability]>.materials.<[material]>.need_shift]>:
-        - spawn <entity[blacksmith_armor_stand].with[equipment=<list[air|air|air|<[material]>]>]> <script[capabilities_data].parsed_key[capability.<[capability]>.materials.<[material]>.shift]> save:as
+        - spawn <entity[blacksmith_armor_stand].with[equipment=<list[air|air|air|<[item_script]>]>]> <script[capabilities_data].parsed_key[capability.<[capability]>.materials.<[material]>.shift]> save:as
       - else:
-        - spawn <entity[blacksmith_armor_stand].with[equipment=<list[air|air|air|<[material]>]>]> <[location].center.below[0.65].forward[0.8]> save:as
+        - spawn <entity[blacksmith_armor_stand].with[equipment=<list[air|air|air|<[item_script]>]>]> <[location].center.below[0.65].forward[0.8]> save:as
       - inventory set slot:<player.held_item_slot> o:air
       - flag <[passthrough]> armor_stand:<entry[as].spawned_entity>
     # Using tool on Workspace
@@ -1877,7 +1888,9 @@ fishing:
       - inject <script.name> path:startup
     on server start:
       - inject <script.name> path:startup
-    on player fishes item while CAUGHT_FISH:
+    on player fishes item while CAUGHT_FISH bukkit_priority:LOWEST:
+      - narrate leather_boots
+      - determine CAUGHT:leather_boots[display=noop]
       - define rng <util.random_decimal.mul[100].truncate>
       - foreach <server.flag[fishing_loot_table.<player.flag[character.capabilities.fishing].round_down_to_precision[100]||0>].keys>:
         - if <[rng]> < <[value]>:

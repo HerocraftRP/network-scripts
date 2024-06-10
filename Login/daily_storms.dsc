@@ -8,7 +8,7 @@ twice_daily_storms:
     - wait 5s
     - adjust server shutdown
   events:
-    on system time 0:00:
+    on system time 9:00:
       - run <script> path:restart
-    on system time 12:00:
+    on system time 21:00:
       - run <script> path:restart

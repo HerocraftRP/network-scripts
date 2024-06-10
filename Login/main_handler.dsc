@@ -25,8 +25,11 @@ lobby_send_to_server:
     #- adjust <queue> linked_player:<server.match_player[<context.args.get[1]>]>
     - if !<player.has_flag[data.name]>:
       - narrate "<&c>You need to choose or create a character first"
-      - narrate "<&b>/character select (name)"
-      - narrate "<&b>/character new"
+      - if !<player.has_flag[temp.character_creation]>:
+        - narrate "<&b>/character select (name)"
+        - narrate "<&b>/character new"
+      - else:
+        - narrate "<&6>Use <&b>/character save <&6>to save the character, and change in to it."
       - stop
     - ~run sql_set_player_data
     - adjust <player> send_to:herocraft

@@ -74,6 +74,8 @@ use_knowledge_points:
       - flag <player> temp.teaching_request:<[amount]>$<[capability]>
       - narrate "<&e>You request <[target].flag[character.name.full_display]> to teach you <[amount]> knowledge of <[capability]>"
       - narrate "<&e><player.flag[character.name.full_display]> has requested you to teach them <[amount]> knowledge of <[capability]><&nl><&a><element[Accept].on_click[/confirm_teaching <player.name>]>" targets:<[target]>
+      - if <[target].has_flag[character.god]>:
+        - narrate "<&e>This would bring them to <&b><player.flag[character.capabilities.<[capability]>].add[<[amount].mul[2]>]> <&e><[capability]>" targets:<[target]>
 
 confirm_learning:
   type: command
@@ -94,7 +96,7 @@ confirm_learning:
       - stop
     - define amount <[target].flag[temp.teaching_request].before[$]>
     - define skill <[target].flag[temp.teaching_request].after[$]>
-    - narrate "<&e>You begin the lesson of <[skill]>" targets:<[target]>|<player>
+    - narrate "<&e>You begin the lesson of <[skill].replace[_].with[<&sp>].to_titlecase>" targets:<[target]>|<player>
     - run start_timed_action "def:<&e>Teaching <[skill].replace[_].with[<&sp>].to_titlecase>|<[amount].mul[3]>s|knowledge_point_spent_teacher|<[skill]>$<[amount]>" def.distance_from_origin:2 def.cancel_script:teaching_cancel_other
     - run start_timed_action "def:<&e>Learning <[skill].replace[_].with[<&sp>].to_titlecase>|<[amount].mul[3]>s|knowledge_point_spent_doubled|<[skill]>$<[amount]>" def.distance_from_origin:2 def.cancel_script:teaching_cancel_other player:<[target]>
     - flag <[target]> temp.timed_action.teaching:<player>
@@ -104,6 +106,7 @@ teaching_cancel_other:
   type: task
   debug: false
   script:
+    - stop if:<player.has_flag[temp.timed_action.teaching].not>
     - define target <player.flag[temp.timed_action.teaching]>
     - flag <player> temp.timed_action:!
     - flag <player> timed_action:!
@@ -149,7 +152,7 @@ knowledge_point_spent_doubled:
   debug: false
   definitions: skill_amount
   script:
-    - if <player.has_flag[temp.timed_action.teaching]>:
+    - if !<player.has_flag[temp.timed_action.teaching]>:
       - narrate "<&c>The teaching session was interrupted"
       - stop
     - define skill <[skill_amount].before[$]>
@@ -166,7 +169,7 @@ knowledge_point_spent_teacher:
   debug: false
   definitions: skill_amount
   script:
-    - if <player.has_flag[temp.timed_action.teaching]>:
+    - if !<player.has_flag[temp.timed_action.teaching]>:
       - narrate "<&c>The teaching session was interrupted"
       - stop
     - define skill <[skill_amount].before[$]>

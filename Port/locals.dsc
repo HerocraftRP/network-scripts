@@ -261,10 +261,11 @@ local_set_profession:
 
 local_call_for_help:
   type: task
-  debug: false
+  debug: true
   script:
     - wait 1t
     - if !<context.entity.is_spawned>:
       - flag server locals_killed:++
       - flag server local_locations.<context.entity.flag[LocationID]>.local:!
-    #- run ping_guards def:<context.entity.location>|local_assaulted
+    - ratelimit <context.entity> 1m
+    - run guards_report_crime "def:<context.entity.location>|Local Assaulted|<context.damager||<player>>"

@@ -131,6 +131,7 @@ criminal_loot_small_chest_callback:
   script:
     - flag <player> temp.criminal_job:!
     - playsound sound:entity_item_pickup <player> volume:0.1
+    - run guards_report_crime "def:<player.location>|Small Merchant Ship Robbery|<player>"
     - narrate "<&c>You got the goods, and the Guards have been alerted!"
     - narrate "<&c>Get out of there!"
     - repeat <list[2|4|6].random>:
@@ -160,6 +161,7 @@ criminal_loot_large_chest_callback:
   script:
     - flag <player> temp.criminal_job:!
     - playsound sound:entity_item_pickup <player> volume:0.1
+    - run guards_report_crime "def:<player.location>|Large Merchant Ship Robbery|<player>"
     - narrate "<&c>You got the goods, and the Guards have been alerted!"
     - narrate "<&c>Get out of there!"
     - repeat <list[12|14|16].random>:
@@ -206,6 +208,7 @@ criminal_smuggle_job_villager:
         - give coin_copper quantity:5
         - narrate "<&e>He takes the goods, and hands you 5 copper coins."
       - else:
+        - run guards_report_crime "def:<player.location>|Smuggling Illegal Goods|<player>"
         - narrate "<&c>He called the Guards on you!"
         - narrate "<&c>Get out of there!"
       - flag player temp.criminal_job:!

@@ -13,6 +13,7 @@ player_join:
       - wait 10t
       # Remove temp data, shit is useless
       - flag <player> temp:!
+      - flag <player> timed_action:!
       # Feed and Water my little pretties
       - heal <player> 100
       - if <player.has_flag[character.thirst]>:
@@ -45,7 +46,7 @@ player_join:
       - repeat 4:
         - define slot <[value].sub[1]>
         - define player_clothes <player.flag[character.cosmetic_armor.<[slot]>]||0>
-        - adjust player cosmetic_armor:<list[<[slot]>|<script[clothing_data].data_key[clothes.<[slot]>.<[player_clothes]>.material]>]>
+        - adjust player cosmetic_armor:<list[<[slot]>|<item[<script[clothing_data].data_key[clothes.<[slot]>.<[player_clothes]>.material]>].with_flag[run_script:cancel]>]>
     on player quits:
       - define target <player||null>
       - if <[target]> == null:

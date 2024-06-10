@@ -9,8 +9,7 @@ pray_command:
     middle: noop
     higher: noop
   tab completions:
-    1: Progenitus
-    2: Zephyrin
+    1: Progenitus|Zephyrin|Deus_Mortis
   script:
     - narrate <&e>[<&b>Prayer<&e>]<&r><player.flag[data.name]><&co><&sp><context.args.separated_by[<&sp>]> targets:<server.online_players.filter[has_permission[herocraft.god]]>
     - ~webget <script.parsed_key[data.lower]> headers:<map.with[Content-Type].as[application/json]> 'data:{"content":"<player.flag[data.name]><&co><&sp><context.args.separated_by[<&sp>]>"}'

@@ -31,9 +31,10 @@ god_progenitus:
     power: 10
     realm: Time
     vision_level: 5
-    colorBase: orange
-    color1: aqua
-    wings: icarus_orange_dragon_wings
+    colorBase: white
+    color1: blue
+    color2: aqua
+    wings: particles
 
 god_zephyrin:
   type: data
@@ -78,8 +79,8 @@ god_deus_mortis:
     power: 1
     realm: Death
     vision_level: 1
-    colorBase: purple
-    color1: black
+    colorBase: black
+    color1: purple
     wings: icarus_black_feathered_wings
 
 god_pax_dei:

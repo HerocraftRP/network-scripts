@@ -79,7 +79,7 @@ custom_placeable:
     - flag server custom_placeables.locations.<[location].simple>.uuid:<[uuid]>
     - flag server custom_placeables.locations.<[location].simple>.placed_by:<player.flag[data.name]>
     - run add_framework_flag def:on_right_click|custom_placeable_destroy|<[location]>
-    - run add_framework_flag def:on_right_click|custom_placeable_interact|<[location]>
+    - run add_framework_flag def:on_right_click|custom_placeable_interact|<[location]> if:<[item_script].data_key[data.scripts.interact].exists>
     - if <[item_script].data_key[data.scripts.on_place].exists>:
       - inject <script[<context.item.script.name>]> path:data.scripts.on_place
     # Finished building, take the item and schedule the next time it ticks
@@ -126,10 +126,10 @@ custom_placeable_destroy_callback:
   definitions: location
   script:
     - if <server.has_flag[custom_placeables.locations.<[location].simple>.script]>:
-      - define item_script <server.flag[custom_placeables.locations.<[location].simple>.script]>
-      - define display <item[<[item_script]>].display>
+      - define item_script <script[<server.flag[custom_placeables.locations.<[location].simple>.script]>]>
+      - define display <item[<[item_script].name>].display>
       - if <[item_script].data_key[data.scripts.on_break].exists>:
-        - inject <script[<context.item.script.name>]> path:data.scripts.on_break
+        - inject <[item_script].name> path:data.scripts.on_break
       - run clear_custom_placeable def:<[location]>
       - narrate "<&c>Destroyed <[display]>."
 

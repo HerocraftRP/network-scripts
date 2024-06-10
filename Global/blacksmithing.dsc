@@ -342,27 +342,29 @@ blacksmith_cancelled:
 blacksmithing_animation:
   type: task
   debug: false
+  definitions: passthrough
   script:
-    - if !<player.flag[temp.timed_action.smithing_location].has_flag[armor_stand]>:
+    - define passthrough <[passthrough].with_yaw[0]>
+    - if !<[passthrough].has_flag[armor_stand]>:
       - flag <player> timed_action:!
       - stop
     - animate animation:ARM_SWING <player>
     - wait 7t
     - flag <player> temp.timed_action.count:<player.flag[temp.timed_action.count].add[1]||1>
     - if <player.flag[temp.timed_action.count]> == 8:
-      - playeffect effect:redstone special_data:1.75|white at:<player.flag[temp.timed_action.smithing_location].center.above[0.8]> quantity:20 offset:0.25,0.25,0.25
-      - playsound sound:create:confirm <player> volume:0.5 custom
-      - if <script[blacksmith_data].data_key[data.craftables.<player.flag[temp.timed_action.material]>.items.<player.flag[temp.timed_action.smithing_result]>.need_shift]>:
-        - define location <player.flag[temp.timed_action.smithing_location].flag[armor_stand].location>
-        - remove <player.flag[temp.timed_action.smithing_location].flag[armor_stand]>
-        - define new_location <script[blacksmith_data].parsed_key[data.craftables.<player.flag[temp.timed_action.material]>.items.<player.flag[temp.timed_action.smithing_result]>.shift]>
-        - spawn <entity[blacksmith_armor_stand].with[equipment=<list[air|air|air|<player.flag[temp.timed_action.smithing_result]>]>]> <[new_location]> save:as
-        - flag <player.flag[temp.timed_action.smithing_location]> armor_stand:<entry[as].spawned_entity>
-      - equip <player.flag[temp.timed_action.smithing_location].flag[armor_stand]> head:<player.flag[temp.timed_action.smithing_result]>
+      - playeffect effect:redstone special_data:1.75|white at:<[passthrough].center.above[0.8]> quantity:20 offset:0.25,0.25,0.25
+      - playsound sound:create:confirm <player> volume:0.1 custom
+      - if <script[capabilities_data].data_key[capability.blacksmith.materials.<player.flag[temp.timed_action.material]>.items.<player.flag[temp.timed_action.results].first>.need_shift]>:
+        - define location <[passthrough].flag[armor_stand].location>
+        - remove <[passthrough].flag[armor_stand]>
+        - define new_location <script[capabilities_data].parsed_key[capability.blacksmith.materials.<player.flag[temp.timed_action.material]>.items.<player.flag[temp.timed_action.results].first>.shift]>
+        - spawn <entity[blacksmith_armor_stand].with[equipment=<list[air|air|air|<player.flag[temp.timed_action.results].first>]>]> <[new_location]> save:as
+        - flag <[passthrough]> armor_stand:<entry[as].spawned_entity>
+      - equip <[passthrough].flag[armor_stand]> head:<player.flag[temp.timed_action.results].first>
       - wait 2t
-      - playsound sound:BLOCK_ANVIL_LAND <player.flag[temp.timed_action.smithing_location]> volume:0.25
+      - playsound sound:BLOCK_ANVIL_LAND <[passthrough]> volume:0.25
     - else:
-      - playsound sound:BLOCK_ANVIL_LAND <player.flag[temp.timed_action.smithing_location]> volume:0.25
+      - playsound sound:BLOCK_ANVIL_LAND <[passthrough]> volume:0.25
 
 blacksmith_job_inventory:
   type: inventory

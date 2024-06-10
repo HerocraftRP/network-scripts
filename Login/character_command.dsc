@@ -23,6 +23,8 @@ temporary_character_creation:
       lookatthisgod: https://herocraft.world/images/drew_god.png
       tsukia1: https://herocraft.world/images/player_tsukia.png
       redmason: https://herocraft.world/images/player_red.png
+      nemaito: https://herocraft.world/images/player_nemaito.png
+      watta: https://herocraft.world/images/god_syn.png
   tab completions:
     1: select|first_name|last_name|skin|save|skin_code|new
     2: <script.parsed_key[data.tab.<context.args.get[1]>]||<list[]>>

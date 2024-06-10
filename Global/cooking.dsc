@@ -43,6 +43,8 @@ cooking_cancel2:
       farmersdelight_apple_pie: true
       FARMERSDELIGHT_CABBAGE: true
       FARMERSDELIGHT_wheat_dough: true
+      FARMERSDELIGHT_sweet_berry_cheesecake: true
+      cake: true
       chicken: true
       beef: true
       porkchop: true

@@ -40,35 +40,21 @@ dm_revive:
   usage: /dm_revive
   description: resurrect a player
   permission: herocraft.divine.revive
+  tab completions:
+    1: <list[self].include[<server.online_players.parse[flag[data.name]]>]>
   script:
-    - define target <player.target||null>
-    - if <[target]> == null:
-      - narrate "<&c>Invalid Target"
+    - if <context.args.size> > 0:
+      - if <context.args.get[1]> == self:
+        - define target self
+      - else:
+        - define target <server.flag[name_map.<context.args.get[1]>]||null>
+    - else:
+      - define target <player.target||<player>>
+    - if !<[target].has_flag[dead]>:
+      - narrate "<&c>They are not dead."
       - stop
-    - define targets <player.location.find_players_within[100]>
-    - repeat 30:
-      - define targets <player.location.find_players_within[100]> if:<[value].mod[10].equals[0]>
-      - define location <player.location.above[0.66].right[0.33]>
-      - playeffect at:<[location]> quantity:5 effect:REDSTONE offset:0.1 special_data:1|black targets:<[targets]>
-      - playeffect at:<[location]> quantity:10 effect:REDSTONE offset:0.1 special_data:0.25|<player.flag[data.preferences.color1]> targets:<[targets]>
-      - wait 2t
-    - define target_location <[target].location>
-    - define locations <proc[define_curve1].context[<player.location.above[0.66].right[0.33]>|<[target_location]>|2|90|0.5]>
-    - animate <player> animation:ARM_SWING
-    - define targets <player.location.find_players_within[100]>
-    - foreach <[locations]>:
-      - define targets <player.location.find_players_within[100]> if:<[loop_index].mod[10].equals[0]>
-      - playeffect at:<[value]> quantity:5 effect:REDSTONE offset:0.1 special_data:1|black targets:<[targets]>
-      - playeffect at:<[value]> quantity:10 effect:REDSTONE offset:0.1 special_data:0.25|<player.flag[data.preferences.color1]> targets:<[targets]>
-      - wait 2t
-    - define targets <player.location.find_players_within[100]>
-    - define location <[locations].last.above[0.2]>
-    - repeat 30:
-      - define targets <player.location.find_players_within[100]> if:<[value].mod[10].equals[0]>
-      - playeffect at:<[location]> quantity:20 effect:REDSTONE offset:1 special_data:5|black targets:<[targets]>
-      - playeffect at:<[location]> quantity:30 effect:REDSTONE offset:1.25 special_data:1|<player.flag[data.preferences.color1]> targets:<[targets]>
-      - wait 2t
-    - run corpse_resurrect def:<[target]>
+    - ~run divine_particles def.target:<[target]> def.count:30 def.size:10
+    - run corpse_resurrect def:<[target].flag[dead]>
 
 dm_heal:
   type: command
@@ -78,60 +64,35 @@ dm_heal:
   description: heal and feed a player, target is optional.
   permission: herocraft.divine.heal
   tab completions:
-    1: <list[self].include[<server.online_players.parsed[flag[data.name]]>]>
+    1: <list[self].include[<server.online_players.parse[flag[data.name]]>]>
   script:
     - if <context.args.size> > 0:
       - if <context.args.get[1]> == self:
         - define target self
       - else:
-        - define target <server.match_player[<context.args.get[1]>]||null>
+        - define target <server.flag[name_map.<context.args.get[1]>]||null>
     - else:
-      - define target <player.target||null>
+      - define target <player.target||<player>>
     - define targets <player.location.find_players_within[100]>
+    - define god_script <script[god_<player.flag[character.god]>]>
     # Targets Self
     - if <[target]> == self || <[target]> == null:
-      - define target <player>
       - repeat 30:
         - define targets <player.location.find_players_within[100]> if:<[value].mod[10].equals[0]>
         - define location <player.location.above[0.66]>
-        - playeffect at:<[location]> quantity:5 effect:REDSTONE offset:0.25,0.75,0.25 special_data:5|black targets:<[targets]>
-        - playeffect at:<[location]> quantity:10 effect:REDSTONE offset:0.25,0.75,0.25 special_data:1|<player.flag[data.preferences.color1]> targets:<[targets]>
+        - playeffect at:<[location]> quantity:5 effect:REDSTONE offset:0.25,0.75,0.25 special_data:5|<[god_script].data_key[data.colorBase]> targets:<[targets]>
+        - playeffect at:<[location]> quantity:10 effect:REDSTONE offset:0.25,0.75,0.25 special_data:1|<[god_script].data_key[data.color1]> targets:<[targets]>
+        - playeffect at:<[location]> quantity:10 effect:REDSTONE offset:0.25,0.75,0.25 special_data:1|<[god_script].data_key[data.color2]> targets:<[targets]> if:<[god_script].data_key[data.color2].exists>
+        - playeffect at:<[location]> quantity:10 effect:REDSTONE offset:0.25,0.75,0.25 special_data:1|<[god_script].data_key[data.color3]> targets:<[targets]> if:<[god_script].data_key[data.color3].exists>
         - heal <[target]> 1
         - feed <[target]> amount:1
         - adjust <[target]> thirst:<[target].thirst.add[1]>
         - wait 2t
       - stop
     # Targets Others
-    - repeat 30:
-      - define targets <player.location.find_players_within[100]> if:<[value].mod[10].equals[0]>
-      - define location <player.location.above[0.66].right[0.33]>
-      - playeffect at:<[location]> quantity:5 effect:REDSTONE offset:0.1 special_data:1|black targets:<[targets]>
-      - playeffect at:<[location]> quantity:10 effect:REDSTONE offset:0.1 special_data:0.25|<player.flag[data.preferences.color1]> targets:<[targets]>
-      - wait 2t
-    - define target_location <[target].location>
-    - define locations <proc[define_curve1].context[<player.location.above[0.66].right[0.33]>|<[target_location]>|2|90|0.5]>
-    - animate <player> animation:ARM_SWING
-    - define targets <player.location.find_players_within[100]>
-    - foreach <[locations]>:
-      - define targets <player.location.find_players_within[100]> if:<[loop_index].mod[10].equals[0]>
-      - playeffect at:<[value]> quantity:5 effect:REDSTONE offset:0.1 special_data:1|black targets:<[targets]>
-      - playeffect at:<[value]> quantity:10 effect:REDSTONE offset:0.1 special_data:0.25|<player.flag[data.preferences.color1]> targets:<[targets]>
-      - define current_location <[value]>
-      - foreach stop if:<[loop_index].is_more_than_or_equal_to[<[locations].size.div[2]>]>
-      - wait 2t
-    - repeat 9999:
-      - define current_location <[current_location].points_between[<[target].eye_location>].distance[0.5].get[2]>
-      - define targets <player.location.find_players_within[100]> if:<[value].mod[10].equals[0]>
-      - playeffect at:<[current_location]> quantity:5 effect:REDSTONE offset:0.1 special_data:1|black targets:<[targets]>
-      - playeffect at:<[current_location]> quantity:10 effect:REDSTONE offset:0.1 special_data:0.25|<player.flag[data.preferences.color1]> targets:<[targets]>
-      - repeat stop if:<[current_location].distance[<[target].eye_location>].is_less_than[1.25]>
-      - wait 2t
-    - define targets <player.location.find_players_within[100]>
+    - ~run divine_particles def.target:<[target]> def.count:30 def.size:10
     - repeat 20:
-      - define targets <player.location.find_players_within[100]> if:<[value].mod[10].equals[0]>
-      - playeffect at:<[target].location.above[0.75]> quantity:20 effect:REDSTONE offset:0.25,0.75,0.25 special_data:5|black targets:<[targets]>
-      - playeffect at:<[target].location.above[0.75]> quantity:30 effect:REDSTONE offset:0.3,1.05,0.3 special_data:1|<player.flag[data.preferences.color1]> targets:<[targets]>
-      - heal <[target]> 1
+      - heal <[target]> 10
       - feed <[target]> amount:1
       - adjust <[target]> thirst:<[target].thirst.add[1]>
       - wait 2t
@@ -186,28 +147,7 @@ dm_events:
   type: world
   debug: false
   events:
-    on player starts flying permission:herocraft.divine.flying:
-      - stop if:<player.has_flag[character.god].not>
-      - wait 1t
-      - define targets <player.location.find_players_within[100].exclude[<player>]>
-      - if <player.has_flag[data.preferences.color2]>:
-        - repeat 999999:
-          - if !<player.is_online> || !<player.is_flying>:
-            - stop
-          - define targets <player.location.find_players_within[100].exclude[<player>]> if:<[value].mod[10].equals[0]>
-          - playeffect at:<player.location.above[0.75]> quantity:20 effect:REDSTONE offset:0.15,0.5,0.15 special_data:5|black targets:<[targets]>
-          - playeffect at:<player.location.above[0.75]> quantity:20 effect:REDSTONE offset:0.2,0.6,0.2 special_data:1|<player.flag[data.preferences.color1]> targets:<[targets]>
-          - playeffect at:<player.location.above[0.75]> quantity:20 effect:REDSTONE offset:0.2,0.6,0.2 special_data:1|<player.flag[data.preferences.color2]> targets:<[targets]>
-          - wait 2t
-      - else if <player.has_flag[data.preferences.color1]>:
-        - repeat 999999:
-          - if !<player.is_online> || !<player.is_flying>:
-            - stop
-          - define targets <player.location.find_players_within[100].exclude[<player>]> if:<[value].mod[10].equals[0]>
-          - playeffect at:<player.location.above[0.75]> quantity:20 effect:REDSTONE offset:0.15,0.5,0.15 special_data:5|black targets:<[targets]>
-          - playeffect at:<player.location.above[0.75]> quantity:40 effect:REDSTONE offset:0.2,0.6,0.2 special_data:1|<player.flag[data.preferences.color1]> targets:<[targets]>
-          - wait 2t
-    on player changes gamemode to adventure|survival permission:herocraft.divine.flying:
+    on player changes gamemode to adventure|survival flagged:character.god:
       - repeat 20:
         - feed <player> amount:1
         - adjust <player> thirst:<player.thirst.add[1]>
@@ -327,11 +267,21 @@ dm_wings:
     - stop if:<player.has_flag[character.god].not>
     - define god_script <script[god_<player.flag[character.god]>]>
     - define targets <player.location.find_players_within[100]>
-    - ~run divine_particles def.location:<player.location.above[0.7].backward_flat[0.7]> def.count:10 def.size:7
-    - if <player.curios_item[back].advanced_matches[*wings]>:
-      - adjust <player> curios_item:<list[back|<item[air]>]>
+    - if <[god_script].data_key[data.wings]> == particles:
+      - if !<player.has_flag[temp.god.particles]>:
+        - flag <player> temp.god.particles
+        - adjust <player> can_fly:true
+        - while <player.has_flag[temp.god.particles]>:
+          - ~run divine_particles def.target:<player> def.count:20 def.size:10
+      - else:
+        - flag <player> temp.god.particles:!
+        - adjust <player> can_fly:false
     - else:
-      - adjust <player> curios_item:<list[back|<item[<[god_script].data_key[data.wings]>].with_flag[run_script:cancel]>]>
+      - ~run divine_particles def.location:<player.location.above[0.7].backward_flat[0.7]> def.count:10 def.size:5
+      - if <player.curios_item[back].advanced_matches[*wings]>:
+        - adjust <player> curios_item:<list[back|<item[air]>]>
+      - else:
+        - adjust <player> curios_item:<list[back|<item[<[god_script].data_key[data.wings]>].with_flag[run_script:cancel]>]>
 
 dm_storage_inventory:
   type: inventory
@@ -381,6 +331,7 @@ dm_storage:
   description: Store yer shit
   permission: herocraft.divine.storage
   script:
+    - stop if:<player.has_flag[character.god].not>
     - if <player.has_flag[temp.dm_storage]>:
       - flag <player> temp.dm_storage:!
       - stop
@@ -485,7 +436,14 @@ divine_particles:
         offset2: 0.6,0.6,0.6
         quantity1: 30
         quantity2: 40
-  definitions: location|count|location_list|size
+      wings:
+        size1: 0.4
+        size2: 0.25
+        offset1: 0.5,0.5,0.5
+        offset2: 0.5,0.5,0.5
+        quantity1: 10
+        quantity2: 20
+  definitions: location|count|location_list|size|target
   script:
     - stop if:<player.has_flag[character.god].not>
     - define god_script <script[god_<player.flag[character.god]>]>
@@ -493,59 +451,90 @@ divine_particles:
       - define data_map <script.data_key[data.size_settings.<[size]>]>
     - else:
       - define data_map <script.data_key[data.size_settings.<[god_script].data_key[data.power]>]>
-    - if !<[location].exists>:
+    - if <[location_list].exists>:
       - define targets <[location_list].first.find_players_within[100]>
+    - else if <[target]>:
+      - define targets <[target].location.find_players_within[100]>
     - else:
       - define targets <[location].find_players_within[100]>
-    - if !<[location_list].exists>:
-      - if <player.has_flag[data.preferences.color3]>:
-        - repeat <[count]>:
+    - define color3 <[god_script].parsed_key[data.color3]||null>
+    - define color2 <[god_script].parsed_key[data.color2]||null>
+    - define color1 <[god_script].parsed_key[data.color1]||null>
+    - define colorBase <[god_script].parsed_key[data.colorBase]>
+    - if <[location_list].exists>:
+      - if <[color3]> != null:
+        - foreach <[location_list]> as:location:
           - stop if:<player.is_online.not>
-          - define targets <player.location.find_players_within[100]> if:<[value].mod[10].equals[0]>
-          - playeffect at:<[location]> quantity:<[data_map].get[quantity1]> effect:REDSTONE offset:<[data_map].get[offset1]> special_data:<[data_map].get[size1]>|<player.flag[data.preferences.colorBase]> targets:<[targets]>
-          - playeffect at:<[location]> quantity:<[data_map].get[quantity2]> effect:REDSTONE offset:<[data_map].get[offset2]> special_data:<[data_map].get[size2]>|<player.flag[data.preferences.color1]> targets:<[targets]>
-          - playeffect at:<[location]> quantity:<[data_map].get[quantity2]> effect:REDSTONE offset:<[data_map].get[offset2]> special_data:<[data_map].get[size2]>|<player.flag[data.preferences.color2]> targets:<[targets]>
-          - playeffect at:<[location]> quantity:<[data_map].get[quantity2]> effect:REDSTONE offset:<[data_map].get[offset2]> special_data:<[data_map].get[size2]>|<player.flag[data.preferences.color3]> targets:<[targets]>
+          - define targets <[location].find_players_within[100]> if:<[loop_index].mod[10].equals[0]>
+          - playeffect at:<[location]> quantity:<[data_map].get[quantity1]> effect:REDSTONE offset:<[data_map].get[offset1]> special_data:<[data_map].get[size1]>|<[colorBase]> targets:<[targets]>
+          - playeffect at:<[location]> quantity:<[data_map].get[quantity2]> effect:REDSTONE offset:<[data_map].get[offset2]> special_data:<[data_map].get[size2]>|<[color1]> targets:<[targets]>
+          - playeffect at:<[location]> quantity:<[data_map].get[quantity2]> effect:REDSTONE offset:<[data_map].get[offset2]> special_data:<[data_map].get[size2]>|<[color2]> targets:<[targets]>
+          - playeffect at:<[location]> quantity:<[data_map].get[quantity2]> effect:REDSTONE offset:<[data_map].get[offset2]> special_data:<[data_map].get[size2]>|<[color3]> targets:<[targets]>
           - wait 2t
-      - else if <player.has_flag[data.preferences.color2]>:
-        - repeat <[count]>:
+      - else if <[color2]> != null:
+        - foreach <[location_list]> as:location:
           - stop if:<player.is_online.not>
-          - define targets <player.location.find_players_within[100]> if:<[value].mod[10].equals[0]>
-          - playeffect at:<[location]> quantity:<[data_map].get[quantity1]> effect:REDSTONE offset:<[data_map].get[offset1]> special_data:<[data_map].get[size1]>|<player.flag[data.preferences.colorBase]> targets:<[targets]>
-          - playeffect at:<[location]> quantity:<[data_map].get[quantity2]> effect:REDSTONE offset:<[data_map].get[offset2]> special_data:<[data_map].get[size2]>|<player.flag[data.preferences.color1]> targets:<[targets]>
-          - playeffect at:<[location]> quantity:<[data_map].get[quantity2]> effect:REDSTONE offset:<[data_map].get[offset2]> special_data:<[data_map].get[size2]>|<player.flag[data.preferences.color2]> targets:<[targets]>
+          - define targets <[location].find_players_within[100]> if:<[loop_index].mod[10].equals[0]>
+          - playeffect at:<[location]> quantity:<[data_map].get[quantity1]> effect:REDSTONE offset:<[data_map].get[offset1]> special_data:<[data_map].get[size1]>|<[colorBase]> targets:<[targets]>
+          - playeffect at:<[location]> quantity:<[data_map].get[quantity2]> effect:REDSTONE offset:<[data_map].get[offset2]> special_data:<[data_map].get[size2]>|<[color1]> targets:<[targets]>
+          - playeffect at:<[location]> quantity:<[data_map].get[quantity2]> effect:REDSTONE offset:<[data_map].get[offset2]> special_data:<[data_map].get[size2]>|<[color2]> targets:<[targets]>
           - wait 2t
-      - else if <player.has_flag[data.preferences.color1]>:
+      - else if <[color1]> != null:
+        - foreach <[location_list]> as:location:
+          - stop if:<player.is_online.not>
+          - define targets <[location].find_players_within[100]> if:<[loop_index].mod[10].equals[0]>
+          - playeffect at:<[location]> quantity:<[data_map].get[quantity1]> effect:REDSTONE offset:<[data_map].get[offset1]> special_data:<[data_map].get[size1]>|<[colorBase]> targets:<[targets]>
+          - playeffect at:<[location]> quantity:<[data_map].get[quantity2]> effect:REDSTONE offset:<[data_map].get[offset2]> special_data:<[data_map].get[size2]>|<[color1]> targets:<[targets]>
+          - wait 2t
+    - else if <[target].exists>:
+      - if <[color3]> != null:
         - repeat <[count]>:
           - stop if:<player.is_online.not>
-          - define targets <player.location.find_players_within[100]> if:<[value].mod[10].equals[0]>
-          - playeffect at:<[location]> quantity:<[data_map].get[quantity1]> effect:REDSTONE offset:<[data_map].get[offset1]> special_data:<[data_map].get[size1]>|<player.flag[data.preferences.colorBase]> targets:<[targets]>
-          - playeffect at:<[location]> quantity:<[data_map].get[quantity2]> effect:REDSTONE offset:<[data_map].get[offset2]> special_data:<[data_map].get[size2]>|<player.flag[data.preferences.color1]> targets:<[targets]>
+          - define targets <[target].location.find_players_within[100]> if:<[value].mod[10].equals[0]>
+          - playeffect at:<[target].location.above> quantity:<[data_map].get[quantity1]> effect:REDSTONE offset:<[data_map].get[offset1]> special_data:<[data_map].get[size1]>|<[colorBase]> targets:<[targets]>
+          - playeffect at:<[target].location.above> quantity:<[data_map].get[quantity2]> effect:REDSTONE offset:<[data_map].get[offset2]> special_data:<[data_map].get[size2]>|<[color1]> targets:<[targets]>
+          - playeffect at:<[target].location.above> quantity:<[data_map].get[quantity2]> effect:REDSTONE offset:<[data_map].get[offset2]> special_data:<[data_map].get[size2]>|<[color2]> targets:<[targets]>
+          - playeffect at:<[target].location.above> quantity:<[data_map].get[quantity2]> effect:REDSTONE offset:<[data_map].get[offset2]> special_data:<[data_map].get[size2]>|<[color3]> targets:<[targets]>
+          - wait 2t
+      - else if <[color2]> != null:
+        - repeat <[count]>:
+          - stop if:<player.is_online.not>
+          - define targets <[target].location.find_players_within[100]> if:<[value].mod[10].equals[0]>
+          - playeffect at:<[target].location.above> quantity:<[data_map].get[quantity1]> effect:REDSTONE offset:<[data_map].get[offset1]> special_data:<[data_map].get[size1]>|<[colorBase]> targets:<[targets]>
+          - playeffect at:<[target].location.above> quantity:<[data_map].get[quantity2]> effect:REDSTONE offset:<[data_map].get[offset2]> special_data:<[data_map].get[size2]>|<[color1]> targets:<[targets]>
+          - playeffect at:<[target].location.above> quantity:<[data_map].get[quantity2]> effect:REDSTONE offset:<[data_map].get[offset2]> special_data:<[data_map].get[size2]>|<[color2]> targets:<[targets]>
+          - wait 2t
+      - else:
+        - repeat <[count]>:
+          - stop if:<player.is_online.not>
+          - define targets <[target].location.find_players_within[100]> if:<[value].mod[10].equals[0]>
+          - playeffect at:<[target].location.above> quantity:<[data_map].get[quantity1]> effect:REDSTONE offset:<[data_map].get[offset1]> special_data:<[data_map].get[size1]>|<[colorBase]> targets:<[targets]>
+          - playeffect at:<[target].location.above> quantity:<[data_map].get[quantity2]> effect:REDSTONE offset:<[data_map].get[offset2]> special_data:<[data_map].get[size2]>|<[color1]> targets:<[targets]>
           - wait 2t
     - else:
-      - if <player.has_flag[data.preferences.color3]>:
-        - foreach <[location_list]> as:location:
+      - if <[color3]> != null:
+        - repeat <[count]>:
           - stop if:<player.is_online.not>
-          - define targets <player.location.find_players_within[100]> if:<[loop_index].mod[10].equals[0]>
-          - playeffect at:<[location]> quantity:<[data_map].get[quantity1]> effect:REDSTONE offset:<[data_map].get[offset1]> special_data:<[data_map].get[size1]>|<player.flag[data.preferences.colorBase]> targets:<[targets]>
-          - playeffect at:<[location]> quantity:<[data_map].get[quantity2]> effect:REDSTONE offset:<[data_map].get[offset2]> special_data:<[data_map].get[size2]>|<player.flag[data.preferences.color1]> targets:<[targets]>
-          - playeffect at:<[location]> quantity:<[data_map].get[quantity2]> effect:REDSTONE offset:<[data_map].get[offset2]> special_data:<[data_map].get[size2]>|<player.flag[data.preferences.color2]> targets:<[targets]>
-          - playeffect at:<[location]> quantity:<[data_map].get[quantity2]> effect:REDSTONE offset:<[data_map].get[offset2]> special_data:<[data_map].get[size2]>|<player.flag[data.preferences.color3]> targets:<[targets]>
+          - define targets <[location].find_players_within[100]> if:<[value].mod[10].equals[0]>
+          - playeffect at:<[location]> quantity:<[data_map].get[quantity1]> effect:REDSTONE offset:<[data_map].get[offset1]> special_data:<[data_map].get[size1]>|<[colorBase]> targets:<[targets]>
+          - playeffect at:<[location]> quantity:<[data_map].get[quantity2]> effect:REDSTONE offset:<[data_map].get[offset2]> special_data:<[data_map].get[size2]>|<[color1]> targets:<[targets]>
+          - playeffect at:<[location]> quantity:<[data_map].get[quantity2]> effect:REDSTONE offset:<[data_map].get[offset2]> special_data:<[data_map].get[size2]>|<[color2]> targets:<[targets]>
+          - playeffect at:<[location]> quantity:<[data_map].get[quantity2]> effect:REDSTONE offset:<[data_map].get[offset2]> special_data:<[data_map].get[size2]>|<[color3]> targets:<[targets]>
           - wait 2t
-      - else if <player.has_flag[data.preferences.color2]>:
-        - foreach <[location_list]> as:location:
+      - else if <[color2]> != null:
+        - repeat <[count]>:
           - stop if:<player.is_online.not>
-          - define targets <player.location.find_players_within[100]> if:<[loop_index].mod[10].equals[0]>
-          - playeffect at:<[location]> quantity:<[data_map].get[quantity1]> effect:REDSTONE offset:<[data_map].get[offset1]> special_data:<[data_map].get[size1]>|<player.flag[data.preferences.colorBase]> targets:<[targets]>
-          - playeffect at:<[location]> quantity:<[data_map].get[quantity2]> effect:REDSTONE offset:<[data_map].get[offset2]> special_data:<[data_map].get[size2]>|<player.flag[data.preferences.color1]> targets:<[targets]>
-          - playeffect at:<[location]> quantity:<[data_map].get[quantity2]> effect:REDSTONE offset:<[data_map].get[offset2]> special_data:<[data_map].get[size2]>|<player.flag[data.preferences.color2]> targets:<[targets]>
+          - define targets <[location].find_players_within[100]> if:<[value].mod[10].equals[0]>
+          - playeffect at:<[location]> quantity:<[data_map].get[quantity1]> effect:REDSTONE offset:<[data_map].get[offset1]> special_data:<[data_map].get[size1]>|<[colorBase]> targets:<[targets]>
+          - playeffect at:<[location]> quantity:<[data_map].get[quantity2]> effect:REDSTONE offset:<[data_map].get[offset2]> special_data:<[data_map].get[size2]>|<[color1]> targets:<[targets]>
+          - playeffect at:<[location]> quantity:<[data_map].get[quantity2]> effect:REDSTONE offset:<[data_map].get[offset2]> special_data:<[data_map].get[size2]>|<[color2]> targets:<[targets]>
           - wait 2t
-      - else if <player.has_flag[data.preferences.color1]>:
-        - foreach <[location_list]> as:location:
+      - else if <[color1]> != null:
+        - repeat <[count]>:
           - stop if:<player.is_online.not>
-          - define targets <player.location.find_players_within[100]> if:<[loop_index].mod[10].equals[0]>
-          - playeffect at:<[location]> quantity:<[data_map].get[quantity1]> effect:REDSTONE offset:<[data_map].get[offset1]> special_data:<[data_map].get[size1]>|<player.flag[data.preferences.colorBase]> targets:<[targets]>
-          - playeffect at:<[location]> quantity:<[data_map].get[quantity2]> effect:REDSTONE offset:<[data_map].get[offset2]> special_data:<[data_map].get[size2]>|<player.flag[data.preferences.color1]> targets:<[targets]>
+          - define targets <[location].find_players_within[100]> if:<[value].mod[10].equals[0]>
+          - playeffect at:<[location]> quantity:<[data_map].get[quantity1]> effect:REDSTONE offset:<[data_map].get[offset1]> special_data:<[data_map].get[size1]>|<[colorBase]> targets:<[targets]>
+          - playeffect at:<[location]> quantity:<[data_map].get[quantity2]> effect:REDSTONE offset:<[data_map].get[offset2]> special_data:<[data_map].get[size2]>|<[color1]> targets:<[targets]>
           - wait 2t
 
 divine_creative_mode:
@@ -556,3 +545,9 @@ divine_creative_mode:
       - stop if:<player.has_flag[character.god.creative].not>
       - wait 5s
       - adjust <player> gamemode:creative
+
+divine_flight_enable:
+  type: task
+  debug: false
+  script:
+    - adjust <player> can_fly:true

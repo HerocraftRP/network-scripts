@@ -392,19 +392,26 @@ clothing_outfit_command:
   type: command
   debug: false
   name: outfit
-  usage: /outfit (save/use/change) (name)
+  usage: /outfit (save/use/change/clear/delete) (name)
   data:
     2:
       save: <list[(outfit_name)].include[<player.flag[character.outfits].keys||<list>>]>
       load: <player.flag[character.outfits].keys||<empty>>
+      delete: <player.flag[character.outfits].keys||<list>>
   tab completions:
-    1: save|load|change
+    1: save|load|change|clear|delete
     2: <script.parsed_key[data.2.<context.args.get[1]>]||<empty>>
   script:
     - if <player.has_flag[dead]>:
       - narrate "<&c>You cannot use change your clothes while downed!"
       - stop
-    - if !<script.data_key[tab completions.1].contains[<context.args.get[1]>]>:
+    - if <player.location.cuboids.filter[has_flag[change_clothes]].size> < 1:
+      - narrate "<&c>You must go to a clothing area to use this."
+      - stop
+    - if <context.args.size> < 1:
+      - narrate "<&c>What do you want to do with your outfit?"
+      - stop
+    - if !<script.data_key[tab completions.1].contains[<context.args.get[1]||null>]>:
       - narrate "<&c>Unknown Argument: <context.args.get[1]>"
       - stop
     - if <context.args.get[1]> == use && !<player.has_flag[character.outfits.<context.args.get[2]>]>:
@@ -412,23 +419,43 @@ clothing_outfit_command:
       - stop
     - choose <context.args.get[1]>:
       - case save:
+        - if <context.args.size> != 2:
+          - narrate "<&c>You have to name your outfit!"
+          - stop
         - flag player character.outfits.<context.args.get[2]>:!
         - repeat 4:
           - define slot <[value].sub[1]>
-          - flag player character.outfits.<context.args.get[2]>.<[slot]>:<player.flag[character.cosmetic_armor.<[slot]>]>
+          - flag player character.outfits.<context.args.get[2]>.<[slot]>:<player.flag[character.cosmetic_armor.<[slot]>]||0>
         - narrate "<&e>Outfit Saved as<&co> <context.args.get[2]>"
       - case load:
+        - if <context.args.size> != 2:
+          - narrate "<&c>You have to choose an outfit!"
+          - stop
         - if !<player.has_flag[character.outfits.<context.args.get[2]>]>:
           - narrate "<&c>You do not have a saved <context.args.get[2]> outfit."
           - stop
         - repeat 4:
           - define slot <[value].sub[1]>
           - define player_clothes <player.flag[character.outfits.<context.args.get[2]>.<[slot]>]>
-          - adjust player cosmetic_armor:<list[<[slot]>|<script[clothing_data].data_key[clothes.<[slot]>.<[player_clothes]>.material]>]>
+          - adjust player cosmetic_armor:<list[<[slot]>|<item[<script[clothing_data].data_key[clothes.<[slot]>.<[player_clothes]>.material]>].with_flag[run_script:cancel]>]>
           - flag player character.cosmetic_armor.<[slot]>:<[player_clothes]>
         - narrate "<&e>You put on your <context.args.get[2]> outfit"
       - case change:
         - run clothing_system_narrate
+      - case clear:
+        - repeat 4:
+          - define slot <[value].sub[1]>
+          - adjust player cosmetic_armor:<list[<[slot]>|air]>
+          - flag player character.cosmetic_armor.<[slot]>:0
+      - case delete:
+        - if <context.args.size> != 2:
+          - narrate "<&c>You have to name the outfit to delete!"
+          - stop
+        - if !<player.has_flag[character.outfits.<context.args.get[2]>]>:
+          - narrate "<&c>You do not have a saved <context.args.get[2]> outfit."
+          - stop
+        - flag player character.outfits.<context.args.get[2]>:!
+        - narrate "<&e>You have deleted your <context.args.get[2]> outfit."
     
 
 clothing_command_change:
@@ -442,6 +469,9 @@ clothing_command_change:
     2: bad
     3: monkey
   script:
+    - if <player.location.cuboids.filter[has_flag[change_clothes]].size> < 1:
+      - narrate "<&c>You must go to a clothing area to use this."
+      - stop
     - if <context.args.size> != 2:
       - stop
     - if <context.args.get[2]> != next && <context.args.get[2]> != previous:
@@ -451,6 +481,8 @@ clothing_command_change:
     - define player_clothes <player.flag[character.cosmetic_armor.<[slot]>]||0>
     - define player_unlocks <player.flag[character_unlocks.armor.<[slot]>].include[0|1|2|3|4|5|6].sort_by_value||<script[clothing_data].data_key[clothes.<[slot]>].keys>>
     - define index <[player_unlocks].find[<[player_clothes]>]>
+    - if <[index]> == -1:
+      - stop
     - if <context.args.get[2]> == previous:
       - if <[index]> == 1:
         - define new_clothes <[player_unlocks].get[last]>

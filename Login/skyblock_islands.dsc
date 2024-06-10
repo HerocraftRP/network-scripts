@@ -41,7 +41,7 @@ initiate_player_skyblock:
     - worldedit paste file:lobby_template position:<[center_location]>
     - wait 1s
     - define n <[center_location].find_blocks[glowstone].within[7].first.center.above[0.51]>
-    - flag <player> character_location:<[n].add[0,2,-11]>
+    - flag <player> character_location:<[n].add[0,2,-11].with_yaw[180]>
     - flag <player> info_location:<[n].add[-5,2,0]>
     - run create_new_character_start_buttons
     - run create_server_infogram
