@@ -79,7 +79,7 @@ sql_set_player_data:
 
 sql_get_player_data:
   type: task
-  debug: true
+  debug: false
   script:
     - ~sql id:players "query:SELECT data FROM player_data WHERE uuid = '<player.uuid>';" save:inv
     - if <entry[inv].result_list.first.first.unescaped||null> == null:

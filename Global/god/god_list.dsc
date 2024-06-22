@@ -32,7 +32,7 @@ god_progenitus:
     realm: Time
     vision_level: 5
     colorBase: white
-    color1: blue
+    color1: orange
     color2: aqua
     wings: particles
 

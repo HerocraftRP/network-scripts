@@ -106,37 +106,6 @@ temporary_character_creation:
         - wait 4s
         - remove <[last_as]>
 
-temporary_character_initialize:
-  type: task
-  debug: false
-  script:
-    - inventory clear
-    - flag player character:!
-    - if <player.has_flag[temp.new_character.last_name]>:
-      - flag player data.name:<player.flag[temp.new_character.first_name]>_<player.flag[temp.new_character.last_name]>
-    - else:
-      - flag player data.name:<player.flag[temp.new_character.first_name]>
-    - flag player character.name.first:<player.flag[temp.new_character.first_name]>
-    - if <player.has_flag[temp.new_character.last_name]>:
-      - flag player "character.name.display:<player.flag[temp.new_character.first_name]> <player.flag[temp.new_character.last_name]>"
-      - flag player character.name.last:<player.flag[temp.new_character.last_name]>
-    - else:
-      - flag player character.name.display:<player.flag[temp.new_character.first_name]>
-    - flag player character.name.color:<&7>
-    - flag player character.skin:<player.flag[temp.new_character.skin]>
-    - execute as_server "setskin <player.flag[character.skin]> <player.name>"
-    - flag player character.name.full_display:<&7><player.flag[character.name.display]>
-    - flag player character.knowledge.total:25
-    - flag player character.knowledge.current:25
-    - flag player character.vision_level:1
-    - flag player data.characters.<player.uuid>_<player.flag[data.name]>.initialized:2
-    - flag player temp:!
-    - ~run sql_init_inventory
-    - ~run sql_init_character_data
-    - ~run sql_set_character_data
-    - ~run sql_set_player_data
-    - narrate "<&e>Character <&b><player.flag[character.name.display]> <&e>has been saved."
-
 temporary_character_change:
   type: task
   debug: false

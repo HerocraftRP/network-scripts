@@ -4,7 +4,7 @@ goto_command:
   debug: false
   tab completions:
     1: <bungee.list_servers>
-    permission: herocraft.goto
+  permission: herocraft.goto
   script:
     - if <context.args.size> == 2:
       - define target <server.match_player[<context.args.get[2]>]>

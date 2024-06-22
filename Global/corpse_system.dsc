@@ -1,8 +1,10 @@
 corpse_system_events:
   type: world
   debug: false
+  enabled: false
   events:
     on player dies:
+      - announce WRONG
       - adjust <queue> linked_player:<context.entity>
       - determine passively NO_MESSAGE
       - define location <player.location>
@@ -20,6 +22,9 @@ corpse_system_events:
         - adjust <player> gamemode:adventure
         - teleport <player> <server.flag[respawn_points].random>
         - stop
+      - execute as_server "scale set pehkui:base <script[set_character_traits].data_key[data.races.<player.flag[character.race]>.base_scale]> <[corpse].uuid>"
+      - execute as_server "scale set pehkui:width <player.flag[character.weight]> <[corpse].uuid>"
+      - execute as_server "scale set pehkui:height <player.flag[character.height]> <[corpse].uuid>"
       - foreach <player.effects_data>:
         - cast remove <[value].get[type]>
       - teleport <[corpse]> <[corpse].location.above>
@@ -53,14 +58,6 @@ corpse_system_events:
       #- flag <player> on_teleport:!
       - title title:<&c>Downed "subtitle:/giveup to respawn in <&e>60 seconds..." stay:2s
       - wait 1t
-
-corpse_teleport_loop:
-  type: task
-  debug: false
-  script:
-    - while <player.has_flag[dead]> && <player.is_online>:
-      - teleport <player.flag[dead].location>
-      - wait 5t
 
 corpse_giveup:
   type: command
@@ -262,6 +259,9 @@ corpse_revive:
     - stop if:<player.is_online.not||true>
     - mount cancel <player>
     - adjust <player> gamemode:adventure
+    - execute as_server "scale set pehkui:base <script[set_character_traits].data_key[data.races.<player.flag[character.race]>.base_scale]> <player.name>"
+    - execute as_server "scale set pehkui:width <player.flag[character.weight]> <player.name>"
+    - execute as_server "scale set pehkui:height <player.flag[character.height]> <player.name>"
     - adjust <player> thirst:4 if:<player.thirst.is_less_than[4]>
     - adjust <player> food_level:4 if:<player.food_level.is_less_than[4]>
     - define location <player.flag[dead].location>

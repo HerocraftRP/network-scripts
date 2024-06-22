@@ -191,49 +191,17 @@ fishing_table:
         fishing_bone: 10
         fishing_kelp: 10
 
-fishing:
-  type: world
-  debug: false
-  enabled: false
-  startup:
-    - flag server fishing_loot_table:!
-    - foreach <script[fishing_table].data_key[data.loot_table_per_level].keys> as:level:
-      - foreach <script[fishing_table].data_key[data.loot_table_per_level.<[level]>]> key:catch as:weight:
-        - define levelTotal_<[level]>.<[catch]>:<[weight].div[<script[fishing_table].data_key[data.loot_table_per_level.<[level]>].values.sum>].round_to[2]>
-    - foreach <script[fishing_table].data_key[data.loot_table_per_level].keys> as:level:
-      - define count 0
-      - foreach <[levelTotal_<[level]>]> key:fish as:percentage_chance:
-        - flag server fishing_loot_table.<[level]>.<[count].add[<[percentage_chance]>].mul[100]>:<[fish]>
-        - define count:+:<[percentage_chance]>
-  events:
-    on script reload:
-      - inject <script.name> path:startup
-    on server start:
-      - inject <script.name> path:startup
-    on player fishes item while CAUGHT_FISH:
-      - define rng <util.random_decimal.mul[100].truncate>
-      - foreach <server.flag[fishing_loot_table.<player.flag[job.fishing.reputation].round_down_to_precision[100]||0>].keys>:
-        - if <[rng]> < <[value]>:
-          - determine passively CAUGHT:<item[<server.flag[fishing_loot_table.<player.flag[job.fishing.reputation].round_down_to_precision[100]||0>.<[value]>]>].with_flag[uuid:<util.random_uuid>]>
-          - wait 1t
-          - run job_get_rep def:fishing|0.05
-          - foreach stop
-      - inventory adjust slot:<player.held_item_slot> durability:0
-      - wait 5t
-      - give item:<context.entity.item>
-      - run narrate_empty_inventory_slots
-      - remove <context.entity>
-
 basic_fishing_rod:
   type: item
   debug: false
   display name: <&r>Basic Fishing Rod
   material: fishing_rod
   flags:
+    hook: iron_hook
     right_click_script: fishing_start
     interaction:
       1:
-        script: mage_book_teleport
+        script: fishing_rod_open
         display: <&b>Fishing<&co> <&6>Manage Rod
   lore:
     - "<&7>___________________"
@@ -285,7 +253,12 @@ fishing_start:
   type: task
   debug: false
   script:
-    - stop
+    - define hook <context.item.flag[hook]>
+    - define capability_needed <script[capabilities_data].data_key[capability.fishing.capability_for_hook.<[hook]>]>
+    - if <player.flag[character.capabilities.fishing]||0> < <[capability_needed]>:
+      - narrate "<&c>You lack the capability to use this hook."
+      - narrate "<&e>Learn more Fishing, or change Hooks."
+      - determine cancelled
 
 fishing_packaging_command:
   type: command
@@ -340,3 +313,125 @@ fishing_packaging:
       - if <player.inventory.contains_item[<[item].script.name>].quantity[<[quantity]>]>:
         - take item:<[item].script.name> quantity:<[quantity]>
         - give item:fishing_<[item].material.name>_bundle
+
+fishing_hook_iron:
+  type: item
+  debug: false
+  material: aquaculture_iron_hook
+  display name: <&7>Iron Hook
+  lore:
+    - "<&6>Fishing: <&b>1"
+    - <&e>String up an Iron Hook
+    - <&e>This Hook catches <&b>Cod
+  flags:
+    run_script: fishing_set_hook
+    hook: iron_hook
+  mechanisms:
+    hides: all
+
+fishing_hook_gold:
+  type: item
+  debug: false
+  material: aquaculture_gold_hook
+  display name: <&7>Gold Hook
+  lore:
+    - "<&6>Fishing: <&b>100"
+    - <&e>String up an Gold Hook
+    - <&e>This Hook catches <&b>Salmon
+  flags:
+    run_script: fishing_set_hook
+    hook: gold_hook
+  mechanisms:
+    hides: all
+
+fishing_hook_diamond:
+  type: item
+  debug: false
+  material: aquaculture_diamond_hook
+  display name: <&7>Diamond Hook
+  lore:
+    - "<&6>Fishing: <&b>200"
+    - <&e>String up an Diamond Hook
+    - <&e>This Hook catches <&b>Ink Sacs
+  flags:
+    run_script: fishing_set_hook
+    hook: diamond_hook
+  mechanisms:
+    hides: all
+
+fishing_hook_light:
+  type: item
+  debug: false
+  material: aquaculture_light_hook
+  display name: <&7>Light Hook
+  lore:
+    - "<&6>Fishing: <&b>300"
+    - <&e>String up an Light Hook
+    - <&e>This Hook catches <&b>Bones
+  flags:
+    run_script: fishing_set_hook
+    hook: light_hook
+  mechanisms:
+    hides: all
+
+fishing_hook_heavy:
+  type: item
+  debug: false
+  material: aquaculture_heavy_hook
+  display name: <&7>Heavy Hook
+  lore:
+    - "<&6>Fishing: <&b>400"
+    - <&e>String up an Heavy Hook
+    - <&e>This Hook catches <&b>Kelp
+  flags:
+    run_script: fishing_set_hook
+    hook: heavy_hook
+  mechanisms:
+    hides: all
+
+fishing_hook_redstone:
+  type: item
+  debug: false
+  material: aquaculture_redstone_hook
+  display name: <&7>Redstone Hook
+  lore:
+    - "<&6>Fishing: <&b>500"
+    - <&e>String up an Redstone Hook
+    - <&e>This Hook catches <&b>?????
+  flags:
+    run_script: fishing_set_hook
+    hook: redstone_hook
+  mechanisms:
+    hides: all
+
+
+fishing_rod_inventory:
+  type: inventory
+  debug: false
+  inventory: chest
+  title: <&7>Tacklebox
+  slots:
+    - [fishing_hook_iron] [fishing_hook_gold] [fishing_hook_diamond] [fishing_hook_light] [fishing_hook_heavy] [fishing_hook_redstone] [] [] []
+  data:
+    drag: cancel
+    any_click: cancel
+
+fishing_rod_open:
+  type: task
+  debug: false
+  script:
+    - inventory open d:fishing_rod_inventory
+
+fishing_set_hook:
+  type: task
+  debug: false
+  script:
+    - define hook <context.item.flag[hook]>
+    - define capability_needed <script[capabilities_data].data_key[capability.fishing.capability_for_hook.<[hook]>]>
+    - if <player.flag[character.capabilities.fishing]||0> < <[capability_needed]>:
+      - narrate "<&c>You lack the capability to use this hook."
+      - narrate "<&e>Learn more Fishing, or choose another Hook."
+      - determine cancelled
+    - else:
+      - narrate "<&e>You string up your rod with a <context.item.display>"
+      - inventory flag slot:<player.held_item_slot> hook:<[hook]>

@@ -71,6 +71,10 @@ create_local:
     - adjust <[local]> health:6
     - adjust <[local]> has_ai:false
     - adjust <[local]> persistent:true
+    - define height <util.random_decimal.mul[100].mod[20].div[100].round_to[2].add[0.9]>
+    - execute as_server "scale set pehkui:height <[height]> <[local].uuid>"
+    - define width <util.random_decimal.mul[100].mod[40].div[100].round_to[2].add[0.8]>
+    - execute as_server "scale set pehkui:width <[height]> <[local].uuid>"
     #- adjust <[local]> custom_name:<&7>Local
     - define profession <server.flag[locals.<[locationID]>.profession]||RANDOM>
     - if <[profession]> == RANDOM:
@@ -261,11 +265,40 @@ local_set_profession:
 
 local_call_for_help:
   type: task
-  debug: true
+  debug: false
   script:
+    - define loc <context.entity.location>
+    - if !<context.entity.has_flag[attacked]>:
+      - define locals <[loc].find_entities[villager].within[12]>
+      - adjust <[locals]> has_ai:true
+      - adjust <[locals]> speed:1
+      - flag <context.entity> attacked
+      - flag server local_locations.<context.entity.flag[LocationID]>.local:!
+      - run local_remove def:<list_single[<[locals]>]>
     - wait 1t
     - if !<context.entity.is_spawned>:
       - flag server locals_killed:++
-      - flag server local_locations.<context.entity.flag[LocationID]>.local:!
     - ratelimit <context.entity> 1m
-    - run guards_report_crime "def:<context.entity.location>|Local Assaulted|<context.damager||<player>>"
+    - run guards_report_crime "def:<[loc]>|Local Assaulted|<context.damager||<player||null>>"
+
+local_remove:
+  type: task
+  debug: false
+  definitions: locals
+  script:
+    - define locals_left <[locals]>
+    - while <[locals_left].size> > 0:
+      - foreach <[locals]> as:local:
+        - define can_see 0
+        - foreach <server.online_players>:
+          - if !<[local].is_spawned>:
+            - define <[locals_left]> <[locals_left].exclude[<[local]>]>
+            - foreach next
+          - if <[value].can_see[<[local]>]> && <[value].location.distance[<[local].location>]> < 20:
+            - define can_see <[can_see].add[1]>
+          - wait 1t
+        - if <[can_see]> == 0 && <[local].is_spawned>:
+          - remove <[local]>
+        - if !<[local].is_spawned>:
+          - define <[locals_left]> <[locals_left].exclude[<[local]>]>
+        - wait 1s

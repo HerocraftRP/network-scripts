@@ -3,7 +3,8 @@ manual_item_pickup:
   debug: false
   events:
     on player picks up item:
-      - determine cancelled
+      - stop if:<bungee.server.equals[smp]>
+      - determine cancelled if:<context.entity.has_flag[pickup_bypass].not>
     on player right clicks block ignorecancelled:true:
       - ratelimit <player> 5t
       - stop if:<player.is_sneaking.not>

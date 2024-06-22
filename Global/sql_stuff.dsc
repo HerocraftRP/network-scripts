@@ -14,7 +14,9 @@ sql_init_inventory:
   definitions: target
   script:
     - define target <player> if:<[target].exists.not>
-    - ~sql id:players "update:INSERT INTO player_inventory (uuid, inventory, curios) VALUES ('<player.uuid>_<player.flag[data.name].escaped>', '<player.inventory.map_slots.escaped>', '{}') ON DUPLICATE KEY UPDATE uuid = values(uuid);"
+    - define identifier <[target].uuid>_<[target].flag[data.name].escaped>
+    - define inventory_map <[target].inventory.map_slots.escaped>
+    - ~sql id:players "update:INSERT INTO player_inventory (uuid, inventory, curios) VALUES ('<[identifier]>', '<[inventory_map]>', '{}') ON DUPLICATE KEY UPDATE uuid = values(uuid);"
 
 sql_set_inventory:
   type: task
@@ -24,7 +26,11 @@ sql_set_inventory:
     - define target <player> if:<[target].exists.not>
     - if <[target].object_type> != PLAYER:
       - stop
-    - ~sql id:players "update:UPDATE player_inventory SET inventory = '<[target].inventory.map_slots.escaped>' WHERE uuid = '<[target].uuid>_<[target].flag[data.name].escaped>';"
+    - define identifier <[target].uuid>_<[target].flag[data.name].escaped||null>
+    - define inventory_map <[target].inventory.map_slots.escaped||null>
+    - if <[inventory_map]> == null || <[identifier]> == null:
+      - stop
+    - ~sql id:players "update:UPDATE player_inventory SET inventory = '<[inventory_map]>' WHERE uuid = '<[identifier]>';"
 
 sql_set_inventory2:
   type: task
@@ -65,14 +71,6 @@ sql_restore_inventory:
         #- foreach next
       #- adjust <player> curios_item:<[key]>|<item[<[value]>]>
 
-player_transfer_server:
-  type: task
-  debug: false
-  definitions: target|server
-  script:
-    - run sql_set_inventory
-    - execute as_server "sync console bungee send <[target].name> <[server]>"
-
 ###Player Data
 
 sql_init_player_data_table:
@@ -99,7 +97,11 @@ sql_set_player_data:
     - define target <player> if:<[target].exists.not>
     - if <[target].object_type> != PLAYER:
       - stop
-    - ~sql id:players "update:UPDATE player_data SET data = '<[target].flag[data].to_json.escaped>' WHERE uuid = '<[target].uuid>';"
+    - define data <[target].flag[data].to_json.escaped||null>
+    - define uuid <[target].uuid||null>
+    - if <[data]> == null || <[uuid]> == null:
+      - stop
+    - ~sql id:players "update:UPDATE player_data SET data = '<[data]>' WHERE uuid = '<[uuid]>';"
 
 sql_get_player_data:
   type: task
@@ -150,7 +152,11 @@ sql_set_character_data:
     - define target <player> if:<[target].exists.not>
     - if <[target].object_type> != PLAYER:
       - stop
-    - ~sql id:players "update:UPDATE character_data SET data = '<[target].flag[character].to_json.escaped>' WHERE uuid = '<[target].uuid>_<[target].flag[data.name].escaped>';"
+    - define data <[target].flag[character].to_json.escaped||null>
+    - define identifier <[target].uuid>_<[target].flag[data.name].escaped||null>
+    - if <[data]> == null || <[identifier]> == null:
+      - stop
+    - ~sql id:players "update:UPDATE character_data SET data = '<[data]>' WHERE uuid = '<[identifier]>';"
 
 sql_get_character_data:
   type: task

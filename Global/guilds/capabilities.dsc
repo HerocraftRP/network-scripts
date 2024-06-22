@@ -1342,40 +1342,31 @@ capabilities_data:
               needs_downshift: false
     fishing:
       type: fishing
-      capability: tailoring
+      capability: fishing
+      capability_for_hook:
+        iron_hook: 1
+        gold_hook: 100
+        diamond_hook: 200
+        light_hook: 300
+        heavy_hook: 400
+        redstone_hook: 500
       loot_table:
-        0:
-          fishing_cod: 20
-          leather_boots[durability=60]: 30
-        1:
-          fishing_cod: 20
-          fishing_salmon: 20
-          leather_boots[durability=60]: 30
-        2:
-          fishing_cod: 20
-          fishing_salmon: 20
-          fishing_ink_sac: 20
-          leather_boots[durability=60]: 20
-        3:
+        iron_hook:
+          fishing_cod: 30
+        gold_hook:
+          fishing_salmon: 30
+        diamond_hook:
+          fishing_ink_sac: 30
+        light_hook:
+          fishing_bone: 30
+        heavy_hook:
+          fishing_kelp: 30
+        redstone_hook:
           fishing_cod: 20
           fishing_salmon: 20
           fishing_ink_sac: 20
-          fishing_bone: 10
-          leather_boots[durability=60]: 15
-        4:
-          fishing_cod: 20
-          fishing_salmon: 20
-          fishing_ink_sac: 20
-          leather_boots[durability=60]: 10
-          fishing_bone: 10
-          fishing_kelp: 10
-        5:
-          fishing_cod: 20
-          fishing_salmon: 20
-          fishing_ink_sac: 20
-          leather_boots[durability=60]: 5
-          fishing_bone: 10
-          fishing_kelp: 10
+          fishing_bone: 20
+          fishing_kelp: 20
     endurance:
       no_parse: true
       color: <&color[#FF0000]>
@@ -1869,16 +1860,16 @@ profession_interact_place_production:
       # Open Crafting Inventory
       - run profession_crafting_menu_open def:<[capability]>|<[working_material]>|<[passthrough]>
 
-## Fishing (Cause it's fuckin VANILLA)
+## Fishing
 fishing:
   type: world
   debug: false
   startup:
     - flag server fishing_loot_table:!
-    - foreach <script[fishing_table].data_key[data.loot_table_per_level].keys> as:level:
-      - foreach <script[fishing_table].data_key[data.loot_table_per_level.<[level]>]> key:catch as:weight:
-        - define levelTotal_<[level]>.<[catch]>:<[weight].div[<script[fishing_table].data_key[data.loot_table_per_level.<[level]>].values.sum>].round_to[2]>
-    - foreach <script[fishing_table].data_key[data.loot_table_per_level].keys> as:level:
+    - foreach <script[capabilities_data].data_key[capability.fishing.loot_table].keys> as:level:
+      - foreach <script[capabilities_data].data_key[capability.fishing.loot_table.<[level]>]> key:catch as:weight:
+        - define levelTotal_<[level]>.<[catch]>:<[weight].div[<script[capabilities_data].data_key[capability.fishing.loot_table.<[level]>].values.sum>].round_to[2]>
+    - foreach <script[capabilities_data].data_key[capability.fishing.loot_table].keys> as:level:
       - define count 0
       - foreach <[levelTotal_<[level]>]> key:fish as:percentage_chance:
         - flag server fishing_loot_table.<[level]>.<[count].add[<[percentage_chance]>].mul[100]>:<[fish]>
@@ -1889,10 +1880,8 @@ fishing:
     on server start:
       - inject <script.name> path:startup
     on player fishes item while CAUGHT_FISH bukkit_priority:LOWEST:
-      - narrate leather_boots
-      - determine CAUGHT:leather_boots[display=noop]
       - define rng <util.random_decimal.mul[100].truncate>
-      - foreach <server.flag[fishing_loot_table.<player.flag[character.capabilities.fishing].round_down_to_precision[100]||0>].keys>:
+      - foreach <server.flag[fishing_loot_table.<player.item_in_hand.flag[hook]>].keys>:
         - if <[rng]> < <[value]>:
           - determine passively CAUGHT:<item[<server.flag[fishing_loot_table.<player.flag[character.capabilities.fishing].round_down_to_precision[100]||0>.<[value]>]>].with_flag[uuid:<util.random_uuid>]>
           - wait 1t
@@ -1902,3 +1891,15 @@ fishing:
       - give item:<context.entity.item>
       - run narrate_empty_inventory_slots
       - remove <context.entity>
+    on item fished:
+      - determine passively cancelled
+      - define rng <util.random_decimal.mul[100].truncate>
+      - foreach <server.flag[fishing_loot_table.<player.item_in_hand.flag[hook]>].keys>:
+        - if <[rng]> < <[value]>:
+          - define item <item[<server.flag[fishing_loot_table.<player.item_in_hand.flag[hook]>.<[value]>]>].with_flag[uuid:<util.random_uuid>]>
+          - give <[item]>
+          - narrate "<&e>You have caught <[item].display||<[item].material.name.replace[_].with[<&sp>].to_titlecase>>"
+          - foreach stop
+      - inventory adjust slot:<player.held_item_slot> durability:0
+      - wait 1t
+      - run narrate_empty_inventory_slots

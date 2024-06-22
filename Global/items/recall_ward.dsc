@@ -24,7 +24,7 @@ placeable_recall_ward:
         on_place:
           - give <item[ward_recall_scroll_item].with[raw_nbt=<script[ward_recall_scroll_item].parsed_key[data.raw_nbt.an_warp_scroll]>].with_flag[location:<[location]>]>
           - narrate "<&e>You retrieve the <item[ward_recall_scroll_item].display>."
-          - run add_placeable_data def:<[location]>|tp_location|<[location].above[0.3].with_yaw[<player.location.yaw.add[180]>]>
+          - run add_placeable_data def:<[location]>|tp_location|<[location].with_yaw[<player.location.yaw.sub[-180]>].forward_flat>
 
 ward_recall_scroll_item:
   type: item
@@ -35,6 +35,7 @@ ward_recall_scroll_item:
     right_click_script: placeable_recall_scroll_use
   data:
     raw_nbt:
+      unique: <util.random_uuid>
       an_warp_scroll:
         yRot: float:<[location].pitch>
         x: int:<[location].x>

@@ -14,7 +14,7 @@ horse_sales:
     - if !<player.inventory.contains_item[COIN_SILVER].quantity[2]>:
       - narrate "<&e>You don't seem to have enough cash."
       - stop
-    - take item:COIN_SILVER quantity:2
+    - take item:COIN_COPPER quantity:2
     - spawn horse[speed=0.18;jump_strength=0.5;max_health=20;health=20;owner=<player>;persistent=false] <server.flag[horse_rental_location]> save:horse
     - equip <entry[horse].spawned_entity> saddle:saddle
     - flag <entry[horse].spawned_entity> owner:<player>

@@ -139,8 +139,24 @@ entity_flags:
       - stop if:<context.entity.exists.not>
       - stop if:<context.entity.has_flag[right_click_script].not>
       - inject <context.entity.flag[right_click_script]>
-    on player right clicks block flagged:player_right_clicks:
-      - inject <player.flag[player_right_clicks]>
+    on player right clicks block flagged:player_right_clicks bukkit_priority:LOWEST:
+      - if <player.flag[player_right_clicks].object_type> == List:
+        - foreach <player.flag[player_right_clicks]>:
+          - inject <[value]>
+      - else:
+        - inject <player.flag[player_right_clicks]>
+    on player right clicks entity flagged:player_right_clicks bukkit_priority:LOWEST:
+      - if <player.flag[player_right_clicks].object_type> == List:
+        - foreach <player.flag[player_right_clicks]>:
+          - inject <[value]>
+      - else:
+        - inject <player.flag[player_right_clicks]>
+    on modded player right clicks block flagged:modded_player_right_clicks:
+      - if <player.flag[modded_player_right_clicks].object_type> == List:
+        - foreach <player.flag[modded_player_right_clicks]>:
+          - inject <[value]>
+      - else:
+        - inject <player.flag[modded_player_right_clicks]>
     on player right clicks block flagged:shift_player_right_clicks:
       - if <player.is_sneaking>:
         - if <player.flag[shift_player_right_clicks].object_type> == List:
@@ -197,6 +213,12 @@ entity_flags:
       - else:
         - inject <context.hanging.flag[on_break]>
     on entity_flagged:on_item_pickup picks up item bukkit_priority:low:
+      - if <context.pickup_entity.flag[on_item_pickup].object_type> == List:
+        - foreach <context.pickup_entity.flag[on_item_pickup]>:
+          - inject <[value]>
+      - else:
+        - inject <context.pickup_entity.flag[on_item_pickup]>
+    on player picks up entity_flagged:on_item_pickup bukkit_priority:low:
       - if <context.pickup_entity.flag[on_item_pickup].object_type> == List:
         - foreach <context.pickup_entity.flag[on_item_pickup]>:
           - inject <[value]>
