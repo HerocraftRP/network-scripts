@@ -1,10 +1,12 @@
-toggle_bridge:
-  type: task
+overworld_plains_timed_events:
+  type: world
   debug: false
-  script:
-     - switch <server.flag[data.bridge_button]> on
-     - wait 5t
-     - switch <server.flag[data.bridge_button]> off
+  events:
+    #Bridge
+    on time 19:
+      - run chime_bells
+    on time 6:
+      - run chime_bells
 
 chime_bells:
   type: task

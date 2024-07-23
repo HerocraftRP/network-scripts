@@ -1,3 +1,15 @@
+city_timed_events:
+  type: world
+  debug: false
+  events:
+    #Bridge
+    on time 19:
+      - run toggle_bridge
+      - run chime_bells
+    on time 6:
+      - run toggle_bridge
+      - run chime_bells
+
 toggle_bridge:
   type: task
   debug: false

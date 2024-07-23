@@ -1,0 +1,67 @@
+tab_list_update_players:
+  type: task
+  debug: false
+  script:
+    - foreach <server.online_players>:
+      - adjust <[value]> tab_list_info:<server.flag[tab_list.<[value].flag[character.vision_level]>]>
+
+tab_list_update:
+  type: task
+  debug: false
+  script:
+    - flag server tab_list_map:!
+    - repeat 5:
+      - foreach <server.online_players> as:target:
+        - if <[value]> == 5:
+            - flag server "tab_list_map.<[value]>.<[target].uuid>:<[target].flag[character.name.full_display]><&sp>(<[target].name>)"
+            - foreach next
+        - if <[target].has_flag[temp.true_invisibility]> && <[target].flag[temp.true_invisibility]> > <[value]>:
+          - flag server tab_list_map.<[value]>.<[target].uuid>:!
+        - else if <[target].has_flag[temp.invisibility]> && <[target].flag[temp.invisibility]> > <[value]>:
+          - flag server "tab_list_map.<[value]>.<[target].uuid>:<&d>An Inivisible Person"
+        - else if <[target].has_flag[temp.hidden]> && <[target].flag[temp.hidden]> > <[value]>:
+          - flag server "tab_list_map.<[value]>.<[target].uuid>:<&7>A Shadowy Figure"
+        - else:
+          - flag server tab_list_map.<[value]>.<[target].uuid>:<[target].flag[character.name.full_display]>
+    - run tab_list_build_sendables
+
+tab_list_update_single:
+  type: task
+  debug: false
+  definitions: target
+  script:
+    - if <server.online_players.size> == 0:
+      - flag server tab_list_map:!
+      - stop
+    - define target <player> if:<[target].exists.not>
+    - repeat 5:
+      - if <[value]> == 5:
+        - flag server "tab_list_map.<[value]>.<[target].uuid>:<[target].flag[character.name.full_display]><&sp>(<[target].name>)"
+        - repeat next
+      - if <[target].has_flag[temp.true_invisibility]> && <[target].flag[temp.true_invisibility]> > <[value]> :
+        - flag server tab_list_map.<[value]>.<[target].uuid>:!
+      - else if <[target].has_flag[temp.invisibility]> && <[target].flag[temp.invisibility]> > <[value]> :
+        - flag server "tab_list_map.<[value]>.<[target].uuid>:<&d>An Inivisible Person"
+      - else if <[target].has_flag[temp.hidden]> && <[target].flag[temp.hidden]> > <[value]> :
+        - flag server "tab_list_map.<[value]>.<[target].uuid>:<&8>A Shadowy Figure"
+      - else:
+        - flag server tab_list_map.<[value]>.<[target].uuid>:<[target].flag[character.name.full_display]>
+    - run tab_list_build_sendables
+
+tab_list_remove_single:
+  type: task
+  debug: false
+  definitions: target
+  script:
+    - define target <player> if:<[target].exists.not>
+    - repeat 5:
+      - flag server tab_list_map.<[value]>.<[target].uuid>:!
+    - run tab_list_build_sendables
+
+tab_list_build_sendables:
+  type: task
+  debug: false
+  script:
+    - repeat 5:
+      - flag server tab_list.<[value]>:<server.flag[tab_list_map.<[value]>].values.separated_by[<&nl>]>
+    - run tab_list_update_players
